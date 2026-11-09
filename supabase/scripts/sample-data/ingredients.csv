@@ -1,0 +1,29 @@
+name,aisle,avg_price_usd,unit
+Chicken breast,Meat and Seafood,4.49,lb
+Ground turkey,Meat and Seafood,5.49,lb
+Salmon fillet,Meat and Seafood,9.99,lb
+Beef chuck roast,Meat and Seafood,6.99,lb
+Sweet potato,Produce,1.49,lb
+Bell pepper,Produce,1.25,each
+Yellow onion,Produce,1.10,each
+Garlic,Produce,0.50,head
+Broccoli crowns,Produce,1.99,lb
+Lemon,Produce,0.69,each
+Cilantro,Produce,0.99,bunch
+Basil,Produce,2.49,bunch
+Corn tortillas,Bakery,0.15,each
+Pizza dough,Bakery,3.49,ball
+Spaghetti,Pantry,1.50,lb
+Marinara sauce,Pantry,2.49,jar
+Rice,Pantry,1.20,lb
+Black beans (canned),Pantry,1.19,can
+Kidney beans (canned),Pantry,1.19,can
+Diced tomatoes (canned),Pantry,1.39,can
+Soy sauce,Pantry,0.15,tbsp
+Olive oil,Pantry,0.35,tbsp
+Cumin,Pantry,0.20,tsp
+Chili powder,Pantry,0.20,tsp
+Mozzarella,Dairy and Eggs,5.99,lb
+Parmesan,Dairy and Eggs,7.99,lb
+Eggs,Dairy and Eggs,0.40,each
+Frozen peas and carrots,Frozen,2.29,bag

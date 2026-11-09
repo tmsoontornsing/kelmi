@@ -1,0 +1,23 @@
+# Local development settings only (supabase start). Nothing here is read from or sent to the cloud project.
+project_id = "kavi"
+
+[api]
+enabled = true
+port = 54321
+
+[db]
+port = 54322
+major_version = 17
+
+# These functions check the caller's token themselves (asCaller in _shared/http.ts), so the gateway's JWT check is off.
+[functions.generate-plan]
+verify_jwt = false
+
+[functions.grocery-list]
+verify_jwt = false
+
+[functions.meal-options]
+verify_jwt = false
+
+[functions.delete-account]
+verify_jwt = false

@@ -1,0 +1,105 @@
+name,aisle,avg_price_usd,unit
+Chicken breast,Meat and Seafood,4.49,lb
+Chicken thighs,Meat and Seafood,2.99,lb
+Ground turkey,Meat and Seafood,5.49,lb
+Ground beef,Meat and Seafood,5.99,lb
+Flank steak,Meat and Seafood,9.99,lb
+Pork tenderloin,Meat and Seafood,4.99,lb
+Salmon fillet,Meat and Seafood,9.99,lb
+White fish fillets,Meat and Seafood,8.99,lb
+Shrimp,Meat and Seafood,8.99,lb
+Canned tuna,Pantry,1.29,can
+Yellow onion,Produce,1.10,each
+Red onion,Produce,1.20,each
+Garlic,Produce,0.10,clove
+Ginger,Produce,0.15,tbsp
+Bell pepper,Produce,1.25,each
+Jalapeno pepper,Produce,0.30,each
+Sweet potato,Produce,1.49,lb
+Russet potato,Produce,0.99,lb
+Carrots,Produce,1.19,lb
+Celery,Produce,1.49,bunch
+Broccoli crowns,Produce,1.99,lb
+Cauliflower,Produce,3.49,each
+Green beans,Produce,2.49,lb
+Zucchini,Produce,1.49,lb
+Eggplant,Produce,1.99,each
+Mushrooms,Produce,3.99,lb
+Spinach,Produce,3.49,bag
+Cabbage,Produce,0.89,lb
+Tomato,Produce,1.99,lb
+Cucumber,Produce,0.89,each
+Avocado,Produce,1.25,each
+Lemon,Produce,0.69,each
+Lime,Produce,0.50,each
+Cilantro,Produce,0.99,bunch
+Basil,Produce,2.49,bunch
+Parsley,Produce,1.29,bunch
+Green onions,Produce,0.99,bunch
+Eggs,Dairy and Eggs,0.40,each
+Butter,Dairy and Eggs,0.20,tbsp
+Milk,Dairy and Eggs,0.25,cup
+Plain yogurt,Dairy and Eggs,0.60,cup
+Cheddar,Dairy and Eggs,5.99,lb
+Mozzarella,Dairy and Eggs,5.99,lb
+Parmesan,Dairy and Eggs,7.99,lb
+Feta,Dairy and Eggs,6.99,lb
+Corn tortillas,Bakery,0.15,each
+Flour tortillas,Bakery,0.30,each
+Pizza dough,Bakery,3.49,ball
+Burger buns,Bakery,0.50,each
+Pita bread,Bakery,0.60,each
+Sandwich bread,Bakery,0.25,slice
+Rice,Pantry,1.20,lb
+Quinoa,Pantry,4.99,lb
+Spaghetti,Pantry,1.50,lb
+Penne,Pantry,1.50,lb
+Egg noodles,Pantry,2.49,lb
+Lentils,Pantry,1.99,lb
+Black beans (canned),Pantry,1.19,can
+Kidney beans (canned),Pantry,1.19,can
+Chickpeas (canned),Pantry,1.19,can
+Diced tomatoes (canned),Pantry,1.39,can
+Tomato paste,Pantry,0.99,can
+Marinara sauce,Pantry,2.49,jar
+Salsa,Pantry,3.49,jar
+Chicken broth,Pantry,0.55,cup
+Vegetable broth,Pantry,0.55,cup
+Tofu (firm),Dairy and Eggs,2.49,block
+Soy sauce,Pantry,0.15,tbsp
+Olive oil,Pantry,0.35,tbsp
+Sesame oil,Pantry,0.25,tbsp
+Rice vinegar,Pantry,0.20,tbsp
+Honey,Pantry,0.30,tbsp
+Sugar,Pantry,0.10,tbsp
+Cornstarch,Pantry,0.08,tbsp
+Mustard,Pantry,0.15,tbsp
+Ketchup,Pantry,0.10,tbsp
+Almonds,Pantry,0.60,oz
+Salt,Pantry,0.02,tsp
+Black pepper,Pantry,0.05,tsp
+Cumin,Pantry,0.20,tsp
+Chili powder,Pantry,0.20,tsp
+Paprika,Pantry,0.20,tsp
+Oregano,Pantry,0.20,tsp
+Italian seasoning,Pantry,0.20,tsp
+Curry powder,Pantry,0.25,tsp
+Red pepper flakes,Pantry,0.15,tsp
+Frozen peas and carrots,Frozen,2.29,bag
+Frozen corn,Frozen,1.79,bag
+Rolled oats,Pantry,0.70,cup
+Flour,Pantry,0.12,cup
+Baking powder,Pantry,0.05,tsp
+Cinnamon,Pantry,0.10,tsp
+Maple syrup,Pantry,0.25,tbsp
+Bananas,Produce,0.25,each
+Apples,Produce,0.80,each
+Baby carrots,Produce,1.49,bag
+Frozen berries,Frozen,3.29,bag
+Orange juice,Dairy and Eggs,0.45,cup
+English muffins,Bakery,0.45,each
+Bacon,Meat and Seafood,6.49,lb
+Deli turkey,Meat and Seafood,4.99,pack
+Rotisserie chicken,Meat and Seafood,5.99,each
+Hummus,Pantry,3.29,tub
+Mayonnaise,Pantry,0.12,tbsp
