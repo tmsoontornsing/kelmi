@@ -15,7 +15,7 @@ export function ThemeToggle() {
   function flip() {
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('kavi-theme', next); } catch {}
+    try { localStorage.setItem('kelmi-theme', next); } catch {}
     setTheme(next);
   }
 
