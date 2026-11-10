@@ -639,5 +639,11 @@
   "Too many foods": "बहुत ज़्यादा पसंदीदा खाने",
   "You can list up to {n} foods you like.": "आप अधिकतम {n} पसंदीदा खाने सूचीबद्ध कर सकते हैं।",
   "Couldn’t add to the pantry": "पेंट्री में जोड़ा नहीं जा सका",
-  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "ईमानदारी से बताने के लिए धन्यवाद। Kelmi 13 साल और उससे अधिक उम्र के लोगों के लिए है, इसलिए 13 साल से कम उम्र का कोई भी इसका उपयोग नहीं कर सकता।"
+  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "ईमानदारी से बताने के लिए धन्यवाद। Kelmi 13 साल और उससे अधिक उम्र के लोगों के लिए है, इसलिए 13 साल से कम उम्र का कोई भी इसका उपयोग नहीं कर सकता।",
+  "Purchases restored": "खरीदारी बहाल हो गई",
+  "Kelmi Plus is active on this account.": "इस खाते में Kelmi Plus चालू है।",
+  "Could not restore purchases": "खरीदारी बहाल नहीं हो सकी",
+  "Purchases are not available": "खरीदारी अभी उपलब्ध नहीं है",
+  "Kelmi could not reach the store. Check your connection and try again.": "Kelmi स्टोर तक नहीं पहुँच सका। अपना कनेक्शन जाँचें और फिर कोशिश करें।",
+  "Purchase did not go through": "खरीदारी पूरी नहीं हुई"
 }

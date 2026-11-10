@@ -21,3 +21,7 @@ verify_jwt = false
 
 [functions.delete-account]
 verify_jwt = false
+
+# Called by RevenueCat, which can't send a Supabase JWT; the function checks REVENUECAT_WEBHOOK_SECRET itself.
+[functions.revenuecat-webhook]
+verify_jwt = false

@@ -639,5 +639,11 @@
   "Too many foods": "Demasiados alimentos",
   "You can list up to {n} foods you like.": "Puedes indicar hasta {n} alimentos que te gustan.",
   "Couldn’t add to the pantry": "No se pudo añadir a la despensa",
-  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "Gracias por ser sincero. Kelmi es para personas de 13 años o más, así que no pueden usarlo menores de 13 años."
+  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "Gracias por ser sincero. Kelmi es para personas de 13 años o más, así que no pueden usarlo menores de 13 años.",
+  "Purchases restored": "Compras restauradas",
+  "Kelmi Plus is active on this account.": "Kelmi Plus está activo en esta cuenta.",
+  "Could not restore purchases": "No se pudieron restaurar las compras",
+  "Purchases are not available": "Las compras no están disponibles",
+  "Kelmi could not reach the store. Check your connection and try again.": "Kelmi no pudo conectar con la tienda. Revisa tu conexión e inténtalo de nuevo.",
+  "Purchase did not go through": "La compra no se completó"
 }

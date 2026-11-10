@@ -10,6 +10,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.logicbaker.kavi",
+      "usesAppleSignIn": true,
       "icon": {
         "light": "./assets/icon.png",
         "dark": "./assets/ios-dark.png",
@@ -103,6 +104,13 @@
         { "color": "#3DAA84" }
       ],
       "expo-web-browser",
+      "expo-apple-authentication",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.REPLACE_WITH_REVERSED_IOS_CLIENT_ID"
+        }
+      ],
       [
         "expo-widgets",
         {

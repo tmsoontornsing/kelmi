@@ -155,7 +155,16 @@ export default function Settings() {
         {PLUS_ENABLED ? (
           <ActionRow
             label={t('Restore Purchases')}
-            onPress={() => Alert.alert(t('No purchases found'), t('There’s nothing to restore on this account.'))}
+            onPress={() =>
+              app
+                .restorePurchases()
+                .then((found) =>
+                  found
+                    ? Alert.alert(t('Purchases restored'), t('Kelmi Plus is active on this account.'))
+                    : Alert.alert(t('No purchases found'), t('There’s nothing to restore on this account.')),
+                )
+                .catch((e: Error) => Alert.alert(t('Could not restore purchases'), e.message))
+            }
           />
         ) : null}
         <ActionRow

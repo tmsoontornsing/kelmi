@@ -22,6 +22,7 @@ import * as WebBrowser from 'expo-web-browser';
 
 import { currentLanguage, LANGUAGES, t } from '../i18n';
 import { friendlyAmount } from './amounts';
+import { signInNative, signOutNative } from './nativeSignIn';
 import { FREE_PLANS_PER_MONTH } from './limits';
 import { findSwapConflict, type SwapConflict } from './swapSafety';
 import { perServing, type IngredientNutrition } from './nutrition';
@@ -70,9 +71,16 @@ export type Profile = {
 
 export type OAuthProvider = 'apple' | 'google';
 
-// Apple and Google sign in through the provider's own page in a system browser sheet, then return to
-// kavi://auth-callback with a one-time code. Returns false when the person closes the sheet.
+// Native first (Apple's sheet, Google's account picker), then the browser flow when this build can't do it natively,
+// such as Expo Go or a missing client ID. Returns false when the person closes the sheet.
 export async function signInWithProvider(provider: OAuthProvider): Promise<boolean> {
+  const native = await signInNative(provider);
+  if (native !== 'unavailable') return native === 'done';
+  return signInWithBrowser(provider);
+}
+
+// The provider's own page in a system browser sheet, which returns to kavi://auth-callback with a one-time code.
+async function signInWithBrowser(provider: OAuthProvider): Promise<boolean> {
   const redirectTo = Linking.createURL('auth-callback');
   const { data, error } = await db().auth.signInWithOAuth({
     provider,
@@ -127,6 +135,7 @@ export async function currentUserId(): Promise<string | null> {
 
 export async function signOut() {
   await db().auth.signOut();
+  await signOutNative();
 }
 
 // ---- Profile

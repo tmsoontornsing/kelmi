@@ -26,6 +26,7 @@ import {
 import { comma, t, useLanguage } from '../i18n';
 import { sundayReminderIsOn, setSundayReminder } from '../lib/timerAlert';
 import * as api from '../lib/api';
+import * as purchases from '../lib/purchases';
 import { getAgeStatus, getAiAsked, saveConsent, setAiAsked } from '../lib/consent';
 import { TERMS_VERSION } from '../legal/config';
 import { loadPlanInfo, savePlanInfo, type PlanInfo } from '../lib/planInfo';
@@ -108,6 +109,8 @@ type Actions = {
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   subscribe: () => void;
+  // True when the store found an active Plus subscription for this account.
+  restorePurchases: () => Promise<boolean>;
   setPlanStatus: (s: PlanStatus) => void;
   generatePlan: (keepLocked?: boolean) => void;
   plansUsed: number;
@@ -292,6 +295,23 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
     return () => data.subscription.unsubscribe();
   }, []);
+
+  // Subscriptions: RevenueCat follows the signed-in user (so Plus follows the account across devices) and tells us
+  // whenever it changes. Without RevenueCat keys this does nothing and `subscribed` stays false.
+  useEffect(() => {
+    if (!purchases.purchasesAvailable) return;
+    let cancelled = false;
+    purchases
+      .syncPurchasesUser(userId)
+      .then((info) => {
+        if (!cancelled && info) setSubscribed(purchases.isPlus(info));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+  useEffect(() => purchases.onPlusChange(setSubscribed), []);
 
   // On sign-in, bring the household together: a brand-new account takes what was set up during onboarding,
   // and a returning one loads what it saved before. Then load the week and its grocery list.
@@ -611,6 +631,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       }
     },
     subscribe: () => setSubscribed(true),
+    restorePurchases: async () => {
+      const plus = await purchases.restore();
+      setSubscribed(plus);
+      return plus;
+    },
     setPlanStatus,
     generatePlan: (keepLocked?: boolean) => {
       void generate(keepLocked);

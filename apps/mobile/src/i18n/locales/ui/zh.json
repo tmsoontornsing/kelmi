@@ -639,5 +639,11 @@
   "Too many foods": "喜欢的食物太多",
   "You can list up to {n} foods you like.": "最多可列出 {n} 项喜欢的食物。",
   "Couldn’t add to the pantry": "无法添加到储藏室",
-  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "感谢你的坦诚。Kelmi 适用于 13 岁及以上的人，13 岁以下的用户无法使用。"
+  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "感谢你的坦诚。Kelmi 适用于 13 岁及以上的人，13 岁以下的用户无法使用。",
+  "Purchases restored": "已恢复购买",
+  "Kelmi Plus is active on this account.": "此账户已启用 Kelmi Plus。",
+  "Could not restore purchases": "无法恢复购买",
+  "Purchases are not available": "暂时无法购买",
+  "Kelmi could not reach the store. Check your connection and try again.": "Kelmi 无法连接商店。请检查网络后重试。",
+  "Purchase did not go through": "购买未完成"
 }

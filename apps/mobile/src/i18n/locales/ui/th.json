@@ -639,5 +639,11 @@
   "Too many foods": "อาหารที่ชอบมากเกินไป",
   "You can list up to {n} foods you like.": "ระบุอาหารที่ชอบได้สูงสุด {n} รายการ",
   "Couldn’t add to the pantry": "เพิ่มลงตู้เก็บอาหารไม่ได้",
-  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "ขอบคุณที่ตอบตามจริง Kelmi สำหรับผู้ที่อายุ 13 ปีขึ้นไป จึงไม่สามารถใช้งานได้หากอายุต่ำกว่า 13 ปี"
+  "Thanks for being honest. Kelmi is for people 13 and older, so it can’t be used by anyone under 13.": "ขอบคุณที่ตอบตามจริง Kelmi สำหรับผู้ที่อายุ 13 ปีขึ้นไป จึงไม่สามารถใช้งานได้หากอายุต่ำกว่า 13 ปี",
+  "Purchases restored": "กู้คืนการซื้อแล้ว",
+  "Kelmi Plus is active on this account.": "Kelmi Plus ใช้งานได้ในบัญชีนี้",
+  "Could not restore purchases": "ไม่สามารถกู้คืนการซื้อได้",
+  "Purchases are not available": "ไม่สามารถซื้อได้ในขณะนี้",
+  "Kelmi could not reach the store. Check your connection and try again.": "Kelmi เชื่อมต่อกับสโตร์ไม่ได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+  "Purchase did not go through": "การซื้อไม่สำเร็จ"
 }
