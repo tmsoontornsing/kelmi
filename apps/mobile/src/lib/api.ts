@@ -79,7 +79,7 @@ export async function signInWithProvider(provider: OAuthProvider): Promise<boole
   return signInWithBrowser(provider);
 }
 
-// The provider's own page in a system browser sheet, which returns to kavi://auth-callback with a one-time code.
+// The provider's own page in a system browser sheet, which returns to kelmi://auth-callback with a one-time code.
 async function signInWithBrowser(provider: OAuthProvider): Promise<boolean> {
   const redirectTo = Linking.createURL('auth-callback');
   const { data, error } = await db().auth.signInWithOAuth({

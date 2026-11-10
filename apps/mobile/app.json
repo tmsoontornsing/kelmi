@@ -1,15 +1,15 @@
 {
   "expo": {
     "name": "Kelmi",
-    "slug": "kavi",
-    "scheme": "kavi",
+    "slug": "kelmi",
+    "scheme": "kelmi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.logicbaker.kavi",
+      "bundleIdentifier": "com.logicbaker.kelmi",
       "usesAppleSignIn": true,
       "icon": {
         "light": "./assets/icon.png",
@@ -66,7 +66,7 @@
       }
     },
     "android": {
-      "package": "com.usekavi.app",
+      "package": "com.logicbaker.kelmi",
       "adaptiveIcon": {
         "backgroundColor": "#3DAA84",
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -114,8 +114,8 @@
       [
         "expo-widgets",
         {
-          "bundleIdentifier": "com.logicbaker.kavi.widgets",
-          "groupIdentifier": "group.com.logicbaker.kavi",
+          "bundleIdentifier": "com.logicbaker.kelmi.widgets",
+          "groupIdentifier": "group.com.logicbaker.kelmi",
           "enableAndroid": false,
           "widgets": [
             {
