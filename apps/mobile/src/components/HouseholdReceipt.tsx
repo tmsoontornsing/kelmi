@@ -37,38 +37,23 @@ export function DroppingPip() {
 
 // The sign-in screen's proof of what is about to be saved: the person's own household answers, set out like a receipt.
 // Pip drops onto the top edge, and the budget counts up. Reduce Motion shows everything in place.
-export function HouseholdReceipt({ rows, budget, compact = false, summary }: { rows: [string, string][]; budget: number; compact?: boolean; summary?: string }) {
+// `compact` is the same receipt at its natural height, for when the email form is open and the sheet has no room to spare;
+// otherwise it grows to fill the sheet.
+export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [string, string][]; budget: number; compact?: boolean }) {
   const c = useTheme();
   const { t } = useT();
   const shownBudget = useCountUp(budget, 700);
 
-  // With the email form open there is no room for the full receipt or Pip: one line of answers, and the budget beside it.
-  if (compact) {
-    return (
-      <View style={[styles.mini, { backgroundColor: c.card, borderColor: c.line }]}>
-        <View style={styles.miniText}>
-          <AppText variant="eyebrow" color={c.muted}>
-            {t('Your household')}
-          </AppText>
-          <AppText variant="subhead" color={c.text} numberOfLines={2}>
-            {summary ?? rows.map(([, value]) => value).join(' · ')}
-          </AppText>
-        </View>
-        <AppText variant="money" color={c.primaryText} style={styles.miniBudget} accessibilityLabel={`${t('Weekly budget')} $${budget}`}>{`$${Math.round(shownBudget)}`}</AppText>
-      </View>
-    );
-  }
-
   return (
-    <View style={styles.wrap}>
-      <Reveal lift={22} style={styles.grow}>
-        <View style={[styles.paper, { backgroundColor: c.card, borderColor: c.line }]}>
+    <View style={compact ? styles.wrapTight : styles.wrap}>
+      <Reveal lift={22} style={compact ? undefined : styles.grow}>
+        <View style={[compact ? styles.paperTight : styles.paper, { backgroundColor: c.card, borderColor: c.line }]}>
           <AppText variant="eyebrow" color={c.muted}>
             {t('Your household')}
           </AppText>
           {rows.map(([label, value], i) => (
             <Reveal key={label} index={i + 1} lift={8}>
-              <View style={styles.row}>
+              <View style={compact ? styles.rowTight : styles.row}>
                 <AppText variant="subhead" color={c.muted}>
                   {label}
                 </AppText>
@@ -80,7 +65,7 @@ export function HouseholdReceipt({ rows, budget, compact = false, summary }: { r
           ))}
           <View style={[styles.tear, { borderColor: c.control }]}>
             <AppText variant="headline">{t('Weekly budget')}</AppText>
-            <AppText variant="money" color={c.primaryText} style={styles.budget} accessibilityLabel={`$${budget}`}>{`$${Math.round(shownBudget)}`}</AppText>
+            <AppText variant="money" color={c.primaryText} style={compact ? styles.budgetTight : styles.budget} accessibilityLabel={`$${budget}`}>{`$${Math.round(shownBudget)}`}</AppText>
           </View>
         </View>
         <Svg width="100%" height={9} viewBox="0 0 300 9" preserveAspectRatio="none" accessibilityElementsHidden importantForAccessibility="no">
@@ -97,9 +82,10 @@ export function HouseholdReceipt({ rows, budget, compact = false, summary }: { r
 }
 
 const styles = StyleSheet.create({
-  mini: { alignSelf: 'stretch', borderWidth: StyleSheet.hairlineWidth, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  miniText: { flex: 1, gap: 2 },
-  miniBudget: { fontFamily: fonts.display, fontSize: 32, lineHeight: 36, letterSpacing: -0.5 },
+  wrapTight: { alignSelf: 'stretch' },
+  paperTight: { borderWidth: StyleSheet.hairlineWidth, borderTopLeftRadius: 4, borderTopRightRadius: 4, paddingHorizontal: 18, paddingTop: 14, paddingBottom: 8 },
+  rowTight: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, paddingVertical: 5 },
+  budgetTight: { fontFamily: fonts.display, fontSize: 44, lineHeight: 48, letterSpacing: -1 },
   // No Pip here: the receipt takes all the room its parent gives it, with the rows spread evenly down the paper.
   wrap: { alignSelf: 'stretch', flexGrow: 1 },
   grow: { flex: 1 },

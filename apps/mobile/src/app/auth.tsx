@@ -191,13 +191,11 @@ export default function Auth() {
             <AppText variant="largeTitle" accessibilityRole="header">
               {hasWeek ? (overBudget ? t('Your week is over budget') : t('Your week fits your budget')) : t('Save Your Plan')}
             </AppText>
-            {emailOpen ? null : (
-              <AppText color={c.muted}>
-                {hasWeek
-                  ? t('You built it. Sign in and it\'s saved, with your grocery list.')
-                  : t('You set these up. Sign in and they are kept, ready on any phone you use.')}
-              </AppText>
-            )}
+            <AppText color={c.muted}>
+              {hasWeek
+                ? t('You built it. Sign in and it\'s saved, with your grocery list.')
+                : t('You set these up. Sign in and they are kept, ready on any phone you use.')}
+            </AppText>
           </View>
           )}
           {loginOnly ? (
@@ -240,7 +238,7 @@ export default function Auth() {
               fill={shortScreen && !emailOpen}
             />
           ) : (
-            <HouseholdReceipt rows={receiptRows} budget={app.budget} compact={emailOpen} summary={choiceChips.join(' · ')} />
+            <HouseholdReceipt rows={receiptRows} budget={app.budget} compact={emailOpen} />
           )}
 
           <View style={styles.bottom}>
