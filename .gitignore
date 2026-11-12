@@ -1,9 +1,4 @@
-node_modules/
 .DS_Store
-.env
-.env.*
-!.env.example
-.next/
-.expo/
-.vercel/
-*.tsbuildinfo
+
+# rendered launch videos and frames (large)
+brag-output*/

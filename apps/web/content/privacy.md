@@ -4,7 +4,7 @@
 
 Effective November 5, 2026
 
-This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekelmi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.
+This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekavi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.
 
 ## 1. Information you give us
 
@@ -78,10 +78,10 @@ To make a request, email [CONTACT EMAIL] from the address on your account. We wi
 
 ## 9. The website and the waitlist
 
-- Waitlist. If you join the waitlist on usekelmi.com, we collect your email address and the time you joined. We use it only to send you one email when Kelmi is available. We do not use it for anything else and do not sell or share it for advertising. The form has a link to this Policy.
+- Waitlist. If you join the waitlist on usekavi.com, we collect your email address and the time you joined. We use it only to send you one email when Kelmi is available. We do not use it for anything else and do not sell or share it for advertising. The form has a link to this Policy.
 - Getting off the waitlist. Email [CONTACT EMAIL] and ask us to remove you, or use the unsubscribe link in any email we send you. We will delete your address.
 - Hosting and logs. The website is served by a hosting provider, which, like most hosts, records technical information such as your IP address, browser type, the pages you request and the time, in server logs, to deliver and secure the site. We use this only for running and protecting the site.
-- Cookies and storage. The website sets no cookies. If you use the light/dark toggle, it saves your choice in your browser's local storage under the name "kelmi-theme". This stays on your device and is not sent to us. The website has no analytics and no advertising or tracking scripts.
+- Cookies and storage. The website sets no cookies. If you use the light/dark toggle, it saves your choice in your browser's local storage under the name "kavi-theme". This stays on your device and is not sent to us. The website has no analytics and no advertising or tracking scripts.
 
 ## 10. Consumer health data and state laws
 

@@ -40,12 +40,12 @@ Kelmi is not a medical tool. The ingredient filter is a helper, not a guarantee:
 **Keywords (100 characters max):**
 meal planner,budget,grocery list,meal prep,family meals,recipes,cheap meals,weekly plan,pantry
 
-**Privacy policy URL:** https://usekelmi.com/privacy (live only after the placeholders are filled and the site is deployed)
+**Privacy policy URL:** https://usekavi.com/privacy (live only after the placeholders are filled and the site is deployed)
 
-**Support URL:** [SUPPORT URL] (a page or mailbox the owner controls, for example https://usekelmi.com/support or a mailto page; must work before submission)
+**Support URL:** [SUPPORT URL] (a page or mailbox the owner controls, for example https://usekavi.com/support or a mailto page; must work before submission)
 
-**Terms (EULA) link:** https://usekelmi.com/terms
+**Terms (EULA) link:** https://usekavi.com/terms
 
-**Account deletion URL (Google Play requires it):** https://usekelmi.com/delete-account
+**Account deletion URL (Google Play requires it):** https://usekavi.com/delete-account
 
 Check each claim against the current app before you submit. Do not use the word "allergies" as a promise ("allergy-safe", "avoids your allergens"). The posters in this folder were generated earlier: look at each one and regenerate (edit `scripts/build-brand.mjs`) any that mention allergies as a promise, Plus, or paid plans before using it.
