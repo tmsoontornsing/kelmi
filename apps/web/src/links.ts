@@ -1,5 +1,5 @@
-// Fill these in once the listings are live. While they are empty, the store buttons point to the waitlist.
+// Fill these in once the listings are live. While they are empty, the store buttons show “Coming soon”.
 export const APP_STORE_URL = '';
 export const PLAY_STORE_URL = '';
-export const CONTACT_EMAIL = '';
+export const CONTACT_EMAIL = 'support@usekelmi.com';
 export const COMPANY = 'LOGICBAKER COMPANY LIMITED';

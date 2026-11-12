@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule ^([a-z-]+)/?$ $1.php [L]
+# Keep source files and legal text out of the web root.
+RedirectMatch 404 ^/(includes|content)/
+Options -Indexes

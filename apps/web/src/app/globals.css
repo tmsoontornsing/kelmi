@@ -755,3 +755,6 @@ section > .wrap { position: relative; z-index: 1; }
   .aurora, .au, .bub, .spark, .phone-body, .phone-screen::after, .ph-badge, .ph-today, .ph-track i, .ph-chip.on, .eyebrow-live i, .label::before, .step-n, .bigword span, .btn::after { animation: none !important; }
   .d-blob, .d-ring { animation: none !important; }
 }
+
+/* Store buttons that are not live yet */
+.btn.store.soon { cursor: default; opacity: 0.75; pointer-events: none; }

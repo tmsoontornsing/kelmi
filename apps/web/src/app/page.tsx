@@ -6,7 +6,6 @@ import { Motion } from '../components/Motion';
 import { Pip } from '../components/Pip';
 import { Pricing } from '../components/Pricing';
 import { ThemeToggle } from '../components/ThemeToggle';
-import { Waitlist } from '../components/Waitlist';
 import { Words } from '../components/Words';
 import { APP_STORE_URL, COMPANY, PLAY_STORE_URL } from '../links';
 
@@ -29,10 +28,11 @@ const DAYS: [string, number][] = [['M', 30], ['T', 24], ['W', 28], ['T', 21], ['
 
 function Store({ href, small, big }: { href: string; small: string; big: string }) {
   return (
-    <a className="btn store" href={href || '#join'}>
-      <small>{href ? small : 'Coming soon to'}</small>
-      <b>{big}</b>
-    </a>
+    href ? (
+      <a className="btn store" href={href}><small>{small}</small><b>{big}</b></a>
+    ) : (
+      <span className="btn store soon" aria-label={`${big}: coming soon`}><small>Coming soon to</small><b>{big}</b></span>
+    )
   );
 }
 
@@ -52,7 +52,7 @@ export default function Home() {
           </a>
           <div className="navright">
             <ThemeToggle />
-            <a className="btn small" href="#join">Join waitlist</a>
+            <a className="btn small" href="#features">See what’s coming</a>
           </div>
         </div>
       </header>
@@ -62,13 +62,9 @@ export default function Home() {
           <Depth set="hero" />
           <div className="wrap">
             <div>
-              <p className="eyebrow-live"><i />Meal plans on a budget</p>
+              <p className="eyebrow-live"><i />Coming soon to the App Store</p>
               <h1 className="display hero-title" data-words="load"><Words text="Every meal of the week, planned around your grocery budget." /></h1>
               <p className="lede">Meet Pip, the jar that plans your week. Tell Kelmi who you cook for and what you spend, and Pip fills the week with meals that fit.</p>
-              <div className="joinbox">
-                <p className="label">Get early access</p>
-                <Waitlist id="join" />
-              </div>
               <div className="ctas">
                 <Store href={APP_STORE_URL} small="Download on the" big="App Store" />
                 <Store href={PLAY_STORE_URL} small="Get it on" big="Google Play" />
@@ -226,14 +222,16 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="waitlist" id="waitlist">
+        <section className="waitlist" id="coming-soon">
           <div className="wrap">
             <div className="box">
               <Depth set="box" />
               <div className="perch"><Pip pose="cheer" /></div>
-              <h2 className="display" data-words><Words text="Be first to meet Pip." /></h2>
-              <p className="lede">Join the waitlist and we’ll email you when the app is in the stores.</p>
-              <Waitlist />
+              <h2 className="display" data-words><Words text="Meet Pip. Coming soon to the App Store." /></h2>
+              <p className="lede">A week of meals that fit your budget, in your pocket. Kelmi is on its way.</p>
+              <div className="ctas">
+                <Store href={APP_STORE_URL} small="Download on the" big="App Store" />
+              </div>
             </div>
           </div>
         </section>

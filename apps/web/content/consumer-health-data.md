@@ -36,7 +36,7 @@ We do not sell consumer health data and we do not share it for advertising. We d
 - Know who received it. Ask us for a list of the third parties and affiliates that received your consumer health data.
 - Appeal. If we deny a request, you can appeal, and if you are not satisfied you can contact your state attorney general.
 
-To make a request, email [CONTACT EMAIL] from the address on your account. We will respond within 45 days, and may extend that once by up to 45 more days if we tell you why.
+To make a request, email support@usekelmi.com from the address on your account. We will respond within 45 days, and may extend that once by up to 45 more days if we tell you why.
 
 ## 5. How long we keep it
 
@@ -49,5 +49,4 @@ We use encryption in transit and access controls that limit each account to its 
 ## 7. Contact
 
 LOGICBAKER COMPANY LIMITED  
-[MAILING ADDRESS]  
-[CONTACT EMAIL]
+support@usekelmi.com

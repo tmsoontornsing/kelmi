@@ -2,7 +2,7 @@
 
 Effective November 5, 2026
 
-This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekavi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.
+This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekelmi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.
 
 ## 1. Information you give us
 
@@ -68,16 +68,16 @@ We do not sell your personal information, share it for cross-context behavioral 
 
 - Change your details any time in Settings, and turn notifications on or off there or in your device settings.
 - Delete your account and its data: Settings, Delete account.
-- Ask for a copy of your information, or ask us to correct or delete it, by emailing [CONTACT EMAIL].
+- Ask for a copy of your information, or ask us to correct or delete it, by emailing support@usekelmi.com.
 
 Kelmi is offered only in the United States for now. Depending on the state where you live, such as California, Virginia, Colorado, Connecticut, Washington, Nevada, and others, you may have the right to know what personal information we hold and how we use it, to access and receive a portable copy, to correct it, to delete it, to limit the use of sensitive information, to withdraw consent, and to opt out of sale, sharing for advertising, and profiling. We offer these choices to everyone who uses Kelmi, whether or not the law of your state requires it. Because we do not sell or share personal information for advertising, there is nothing to opt out of; if that ever changes, we will honor Global Privacy Control signals. We will not discriminate against you for using your rights.
 
-To make a request, email [CONTACT EMAIL] from the address on your account. We will verify your request and respond within 45 days. Where the law allows, we may extend that once by up to 45 more days if we tell you why. You may use an authorized agent where the law allows. If we deny your request, you can appeal by replying to our decision, and we will respond to your appeal within 60 days, or sooner if the law requires. If you are not satisfied, you can contact your state attorney general.
+To make a request, email support@usekelmi.com from the address on your account. We will verify your request and respond within 45 days. Where the law allows, we may extend that once by up to 45 more days if we tell you why. You may use an authorized agent where the law allows. If we deny your request, you can appeal by replying to our decision, and we will respond to your appeal within 60 days, or sooner if the law requires. If you are not satisfied, you can contact your state attorney general.
 
 ## 9. The website and the waitlist
 
-- Waitlist. If you join the waitlist on usekavi.com, we collect your email address and the time you joined. We use it only to send you one email when Kelmi is available. We do not use it for anything else and do not sell or share it for advertising. The form has a link to this Policy.
-- Getting off the waitlist. Email [CONTACT EMAIL] and ask us to remove you, or use the unsubscribe link in any email we send you. We will delete your address.
+- Waitlist. If you join the waitlist on usekelmi.com, we collect your email address and the time you joined. We use it only to send you one email when Kelmi is available. We do not use it for anything else and do not sell or share it for advertising. The form has a link to this Policy.
+- Getting off the waitlist. Email support@usekelmi.com and ask us to remove you, or use the unsubscribe link in any email we send you. We will delete your address.
 - Hosting and logs. The website is served by a hosting provider, which, like most hosts, records technical information such as your IP address, browser type, the pages you request and the time, in server logs, to deliver and secure the site. We use this only for running and protecting the site.
 - Cookies and storage. The website sets no cookies. If you use the light/dark toggle, it saves your choice in your browser's local storage under the name "kavi-theme". This stays on your device and is not sent to us. The website has no analytics and no advertising or tracking scripts.
 
@@ -91,7 +91,7 @@ Kelmi is offered only in the United States, and your information is stored and p
 
 ## 12. Children
 
-Kelmi is not directed to, and is not knowingly used by, children under 13. We do not knowingly collect personal information from anyone under 13 (see the Children's Online Privacy Protection Act, COPPA). If we learn that we have collected information from a child under 13, we will delete it. If you believe a child under 13 has given us information, contact [CONTACT EMAIL] and we will delete it. People aged 13 to 17 may use Kelmi (the Terms ask those under 18 to use it only with a parent or guardian's permission, which Kelmi does not verify). We handle their information under this Policy like everyone else's: we do not sell it, we do not show ads, and we send food preferences to an AI provider only after the person allows it in the app. Some state laws give minors extra privacy protections, and we do not claim that this Policy meets all of them.
+Kelmi is not directed to, and is not knowingly used by, children under 13. We do not knowingly collect personal information from anyone under 13 (see the Children's Online Privacy Protection Act, COPPA). If we learn that we have collected information from a child under 13, we will delete it. If you believe a child under 13 has given us information, contact support@usekelmi.com and we will delete it. People aged 13 to 17 may use Kelmi (the Terms ask those under 18 to use it only with a parent or guardian's permission, which Kelmi does not verify). We handle their information under this Policy like everyone else's: we do not sell it, we do not show ads, and we send food preferences to an AI provider only after the person allows it in the app. Some state laws give minors extra privacy protections, and we do not claim that this Policy meets all of them.
 
 ## 13. Security
 
@@ -104,5 +104,4 @@ We will update this Policy when our practices change. If a change is material, w
 ## 15. Contact us
 
 LOGICBAKER COMPANY LIMITED  
-[MAILING ADDRESS]  
-[CONTACT EMAIL]
+support@usekelmi.com
