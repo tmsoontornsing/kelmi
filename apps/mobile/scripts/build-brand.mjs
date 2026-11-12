@@ -1,5 +1,5 @@
 // Draws Kelmi's brand art around Pip and writes it as PNG and SVG:
-//   assets/icon.png, ios-dark.png, ios-tinted.png       the iOS app icon in its three appearances
+//   assets/icon.png, ios-dark.png, ios-tinted.png       the iOS app icon in its three appearances (lime, deep green disc, big Pip)
 //   assets/adaptive-icon.png, android-icon-*.png         Android adaptive icon layers
 //   assets/splash-icon.png, favicon.png                 launch screen and web
 //   marketing/                                          logo lockups, store screenshots' backdrops, social and Play cards
@@ -108,35 +108,76 @@ const write = (rel, body, width) => {
 
 // ---- App icons
 
-// iOS masks the square itself, so the art fills edge to edge. Pip cheers with his lid popped off, big enough that his arms
-// and the flying lid nearly touch the edges: he bursts out of a sunburst instead of sitting in a box.
-const ICON_SCALE = 5.3;
-const iconArt = (bg, colors, ground, rayFill, rayOpacity) =>
+// iOS masks the square itself, so the art fills edge to edge. Pip cheers with his lid popped off, huge and cropped by the
+// bottom edge, on a deep green disc ringed in light lime, on lime: the brightest green in the app, so the icon stands out
+// on a home screen full of blue and white. The colors are the app's own (BADGE lime, DEEP, BRAND).
+const JAR_D = 'M74 52 H126 V64 Q126 70 134 76 Q146 84 146 98 V142 Q146 160 128 160 H72 Q54 160 54 142 V98 Q54 84 66 76 Q74 70 74 64 Z';
+// Pip's face and jar with his lid popped, in his 200-unit box (jar spans x 54 to 146, y 32 to 160). Closed, smiling eyes.
+const iconFace = (colors) =>
+  uniq(
+    paint(
+      `<defs><clipPath id="jar"><path d="${JAR_D}"/></clipPath></defs>` +
+        `<path d="${JAR_D}" fill="__GLASS__"/>` +
+        `<path d="M40 112 Q70 105 100 112 T160 112 V170 H40 Z" fill="__G__" clip-path="url(#jar)"/>` +
+        `<path d="M64 92 v14" stroke="__W__" stroke-width="4" stroke-linecap="round"/>` +
+        `<path d="${JAR_D}" fill="none" stroke="__INK__" stroke-width="3.5" stroke-linejoin="round"/>` +
+        `<g opacity="0.9"><ellipse cx="70" cy="104" rx="6.5" ry="3.8" fill="__BLUSH__"/><ellipse cx="130" cy="104" rx="6.5" ry="3.8" fill="__BLUSH__"/></g>` +
+        `<path d="M75 94 q7 -9 14 0" fill="none" stroke="__INK__" stroke-width="3.5" stroke-linecap="round"/>` +
+        `<path d="M111 94 q7 -9 14 0" fill="none" stroke="__INK__" stroke-width="3.5" stroke-linecap="round"/>` +
+        `<path d="M89 101 Q100 118 111 101 Z" fill="__INK__" stroke="__INK__" stroke-width="2.5" stroke-linejoin="round"/>` +
+        `<path d="M95 109 Q100 104 105 109 Q100 113 95 109 Z" fill="__BLUSH__"/>` +
+        `<g transform="translate(8 -16) rotate(14 100 46)"><rect x="68" y="40" width="64" height="16" rx="4" fill="__TINT__" stroke="__INK__" stroke-width="3.5"/>` +
+        `<path d="M78 45 v6 M88 45 v6 M98 45 v6 M108 45 v6 M118 45 v6" fill="none" stroke="__INK__" stroke-width="2" stroke-linecap="round"/>` +
+        `<rect x="72" y="32" width="56" height="10" rx="4" fill="__W__" stroke="__INK__" stroke-width="3.5"/></g>`,
+      colors,
+    ),
+  );
+
+const sparkle = (x, y, s, fill) => `<path transform="translate(${x} ${y}) scale(${s})" fill="${fill}" d="M0 -9 Q0 0 9 0 Q0 0 0 9 Q0 0 -9 0 Q0 0 0 -9Z"/>`;
+const LIME = '#A7D96B';
+const ICON_LOOK = {
+  light: { bg: LIME, ring: '#D4EFA6', disc: DEEP, spark: PAPER, colors: ON_PAPER },
+  // Pip keeps his usual colors on dark, as everywhere else in the app; only the background goes dark.
+  dark: { bg: '#0E1712', ring: '#2C4A3A', disc: DEEP, spark: '#5CC99A', colors: ON_PAPER },
+  tinted: { bg: '#000000', ring: '#3A3A3A', disc: '#1A1A1A', spark: '#FFFFFF', colors: GREY },
+};
+// The face is drawn 9.5 times its 200-unit size, shifted so the lid sits near the top and the jar runs off the bottom.
+const iconArt = ({ bg, ring, disc, spark, colors }) =>
   svg(
     1024,
     1024,
     rect(1024, 1024, bg) +
-      rays(512, 560, 16, rayFill, rayOpacity) +
-      shadow(512, 902, 470, ground, 0.35) +
-      place(pose('cheer', colors), 512, 500, ICON_SCALE, 100, 98),
+      `<circle cx="512" cy="768" r="512" fill="none" stroke="${ring}" stroke-width="41"/>` +
+      `<circle cx="512" cy="768" r="461" fill="${disc}"/>` +
+      sparkle(123, 143, 4.1, spark) +
+      sparkle(922, 102, 2.56, spark) +
+      `<g transform="translate(-434.3 -75.7) scale(9.463)">${iconFace(solidEyes(colors))}</g>`,
   );
 
-write('assets/icon.png', iconArt(BRAND, ON_GREEN, DEEP, '#FFFFFF', 0.13));
+write('assets/icon.png', iconArt(ICON_LOOK.light));
 // iOS 18 dark and tinted appearances. Tinted icons are greyscale on black; the system adds the tint.
-write('assets/ios-dark.png', iconArt('#0E1712', ON_DARK, '#000000', '#5CC99A', 0.1));
-write(
-  'assets/ios-tinted.png',
-  svg(1024, 1024, rect(1024, 1024, '#000000') + rays(512, 560, 16, '#FFFFFF', 0.1) + place(pose('cheer', GREY), 512, 500, ICON_SCALE, 100, 98)),
-);
-write('assets/favicon.png', svg(48, 48, rect(48, 48, BRAND) + place(bust(ON_GREEN), 24, 25, 0.32)), 48);
+write('assets/ios-dark.png', iconArt(ICON_LOOK.dark));
+write('assets/ios-tinted.png', iconArt(ICON_LOOK.tinted));
+write('assets/favicon.png', svg(48, 48, rect(48, 48, LIME) + `<circle cx="24" cy="32" r="22" fill="${DEEP}"/>` + place(iconFace(ON_PAPER), 24, 24, 0.2, 100, 88)), 48);
 
-// Android crops the foreground to a circle or squircle inside its middle 66%, so Pip is scaled to sit well inside that.
-// The rays live on the background layer, which Android moves a little against Pip.
-const fg = (size) => svg(size, size, place(pose('cheer', ON_GREEN), size / 2, size / 2, size / 330, 100, 98));
+// Android crops the foreground to a circle or squircle inside its middle 66%, so the whole jar is drawn small enough to sit
+// well inside that. The disc, ring and sparkles live on the background layer, which Android moves a little against Pip.
+const fg = (size) => svg(size, size, place(iconFace(ON_PAPER), size / 2, size / 2, size / 258, 100, 88));
 write('assets/adaptive-icon.png', fg(1024));
 write('assets/android-icon-foreground.png', fg(512));
-write('assets/android-icon-background.png', svg(512, 512, rect(512, 512, BRAND) + rays(256, 270, 16, '#FFFFFF', 0.13)));
-write('assets/android-icon-monochrome.png', svg(432, 432, place(pose('cheer', MONO), 216, 216, 432 / 330, 100, 98)));
+write(
+  'assets/android-icon-background.png',
+  svg(
+    512,
+    512,
+    rect(512, 512, LIME) +
+      `<circle cx="256" cy="300" r="240" fill="none" stroke="#D4EFA6" stroke-width="10"/>` +
+      `<circle cx="256" cy="300" r="222" fill="${DEEP}"/>` +
+      sparkle(70, 80, 2, PAPER) +
+      sparkle(448, 64, 1.3, PAPER),
+  ),
+);
+write('assets/android-icon-monochrome.png', svg(432, 432, place(iconFace(MONO), 216, 216, 432 / 258, 100, 88)));
 
 // ---- Launch screen. Expo shows this full-bleed with `contain` on the brand green.
 
