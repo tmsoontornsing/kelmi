@@ -61,9 +61,7 @@ export function HouseholdReceipt({ rows, budget, compact = false, summary }: { r
 
   return (
     <View style={styles.wrap}>
-      <DroppingPip />
-
-      <Reveal lift={22}>
+      <Reveal lift={22} style={styles.grow}>
         <View style={[styles.paper, { backgroundColor: c.card, borderColor: c.line }]}>
           <AppText variant="eyebrow" color={c.muted}>
             {t('Your household')}
@@ -102,11 +100,13 @@ const styles = StyleSheet.create({
   mini: { alignSelf: 'stretch', borderWidth: StyleSheet.hairlineWidth, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 12 },
   miniText: { flex: 1, gap: 2 },
   miniBudget: { fontFamily: fonts.display, fontSize: 32, lineHeight: 36, letterSpacing: -0.5 },
-  wrap: { alignSelf: 'stretch', paddingTop: 66 },
+  // No Pip here: the receipt takes all the room its parent gives it, with the rows spread evenly down the paper.
+  wrap: { alignSelf: 'stretch', flexGrow: 1 },
+  grow: { flex: 1 },
   pip: { position: 'absolute', right: 14, top: 0, zIndex: 2 },
-  paper: { borderWidth: StyleSheet.hairlineWidth, borderTopLeftRadius: 4, borderTopRightRadius: 4, paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8, gap: 0 },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, paddingVertical: 5 },
+  paper: { borderWidth: StyleSheet.hairlineWidth, borderTopLeftRadius: 4, borderTopRightRadius: 4, paddingHorizontal: 18, paddingTop: 20, paddingBottom: 16, flex: 1, justifyContent: 'space-between' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, paddingVertical: 8 },
   value: { flexShrink: 1, textAlign: 'right' },
   tear: { marginTop: 8, paddingTop: 10, paddingBottom: 2, borderTopWidth: 1.5, borderStyle: 'dashed', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  budget: { fontFamily: fonts.display, fontSize: 42, lineHeight: 46, letterSpacing: -1 },
+  budget: { fontFamily: fonts.display, fontSize: 54, lineHeight: 58, letterSpacing: -1 },
 });
