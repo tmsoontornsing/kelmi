@@ -13,6 +13,7 @@ import { BudgetPreview } from '../components/BudgetPreview';
 import { dietAllowsMeat, DIETS, GOALS, MEAT_LEVELS } from '../data/mock';
 import { comma, useT } from '../i18n';
 import { markConsentPending } from '../lib/consent';
+import { safeAuthFrom } from '../lib/safeRoute';
 import { PLUS_ENABLED } from '../lib/flags';
 import { animateLayout, haptic } from '../motion';
 import { modalEdges, resetTo } from '../navigation';
@@ -26,7 +27,7 @@ const SHORT_VIEWPORT = 800;
 export default function Auth() {
   const c = useTheme();
   const app = useApp();
-  const { from } = useLocalSearchParams<{ from?: string }>();
+  const from = safeAuthFrom(useLocalSearchParams<{ from?: string }>().from);
   const { t, tn, tx } = useT();
   // Came from "I Already Have an Account": a plain log-in page, with no plan to save and no household to show.
   const loginOnly = from === 'welcome';

@@ -676,5 +676,11 @@
   "Waiting for you": "Te está esperando",
   "Your weekly meal plan": "Tu plan semanal de comidas",
   "Your grocery list and cart": "Tu lista de compras y carrito",
-  "Your household and food preferences": "Tu hogar y tus preferencias de comida"
+  "Your household and food preferences": "Tu hogar y tus preferencias de comida",
+  "Signing you in…": "Iniciando sesión…",
+  "That link didn’t work": "Ese enlace no funcionó",
+  "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "Puede que haya caducado, que ya se haya usado o que se abriera en otro teléfono. Inicia sesión para continuar.",
+  "Back to Sign In": "Volver a iniciar sesión",
+  "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "Elige tus alergias de la lista en Hogar para que Kelmi pueda mantenerlas fuera de tus comidas.",
+  "For your safety, sign out and sign back in, then delete your account.": "Por tu seguridad, cierra sesión y vuelve a iniciarla, y después elimina tu cuenta."
 }

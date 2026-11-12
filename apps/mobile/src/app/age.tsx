@@ -10,6 +10,7 @@ import { Mascot } from '../components/Mascot';
 import { useLanguage, useT } from '../i18n';
 import * as api from '../lib/api';
 import { getAgeStatus, meetsMinimumAge, setAgeStatus, type AgeStatus } from '../lib/consent';
+import { safeAgeNext } from '../lib/safeRoute';
 import { haptic } from '../motion';
 import { useApp } from '../state/AppState';
 import { fonts, radius, space, useTheme } from '../theme';
@@ -22,7 +23,8 @@ export default function Age() {
   const { t } = useT();
   const { lang } = useLanguage();
   const app = useApp();
-  const { next = '/onboarding/diet' } = useLocalSearchParams<{ next?: string }>();
+  // Only the places the app itself sends people next; a deep link can't pick somewhere else.
+  const next = safeAgeNext(useLocalSearchParams<{ next?: string }>().next);
 
   const [status, setStatus] = useState<AgeStatus | 'loading'>('loading');
   const [month, setMonth] = useState<number | null>(null);

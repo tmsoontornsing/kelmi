@@ -161,8 +161,8 @@ await check('d-failed-tokens-counted', '3 FAILED rows with tokens > 0 count -> p
   const u = await mkUser(3); await rows(u, 3, { status: 'failed', tokens: 500, at: `now() - interval '11 minutes'` });
   eq((await claimSvc(u)).reason, 'plan_limit');
 });
-await check('d-pending-counted', '3 PENDING rows count -> plan_limit', async () => {
-  const u = await mkUser(4); await rows(u, 3, { status: 'pending', at: `now() - interval '11 minutes'` });
+await check('d-pending-counted', '3 PENDING rows (in flight, under 10 min old) count -> plan_limit', async () => {
+  const u = await mkUser(4); await rows(u, 3, { status: 'pending', at: `now() - interval '9 minutes'` });
   eq((await claimSvc(u)).reason, 'plan_limit');
 });
 await check('d-failed-burst', 'failed 0-token rows still count for burst: 5 failed in last minutes -> rate_limited', async () => {
@@ -203,7 +203,7 @@ await check('d-record-once', 'record_generation_result finishes a pending row on
   eq((await q(`select status, input_tokens from public.plan_generations where id=$1`, [c.generation_id]))[0], { status: 'failed', input_tokens: 0 });
   await fails(run(asSvc, `select public.record_generation_result($1,'pending','x','y',1,1)`, [c.generation_id]), { code: '22023' });
 });
-await check('d-daily-ceiling', "daily ceiling: 1999 AI rows today -> next claim allowed (2000th), next user -> 'busy'; 'basic' 0-token rows do not count; own cap is reported before busy", async () => {
+await check('d-daily-ceiling', "daily ceiling: 1999 AI rows today -> next claims allowed with the built-in planner only ('basic_only', no longer 'busy'); 'basic' 0-token rows do not count; own cap is reported before busy", async () => {
   await db.query(`delete from public.plan_generations where created_at >= date_trunc('day', now() at time zone 'utc') at time zone 'utc'`);
   const dummy = await mkUser(100);
   await db.query(`insert into public.plan_generations (user_id, status, provider, created_at) select $1,'succeeded','claude', ${monthStart} from generate_series(1,1999)`, [dummy]);
@@ -213,7 +213,7 @@ await check('d-daily-ceiling', "daily ceiling: 1999 AI rows today -> next claim 
   await db.query(`insert into public.plan_generations (user_id, status, provider, created_at) select $1,'succeeded','basic', now() - interval '20 minutes' from generate_series(1,50)`, [dummy]);
   const u1 = await mkUser(101), u2 = await mkUser(102), u3 = await mkUser(103);
   eq((await claimSvc(u1)).allowed, true, 'the 2000th AI call');
-  const c = await claimSvc(u2); eq(c.allowed, false); eq(c.reason, 'busy');
+  const c = await claimSvc(u2); eq(c.allowed, true); eq(c.reason, 'basic_only');
   await rows(u3, 3, { at: `now() - interval '11 minutes'` });
   eq((await claimSvc(u3)).reason, 'plan_limit', 'own cap reported before busy');
   // basic rows with tokens > 0 DO count (token spend): covered by the filter; clean up
@@ -256,8 +256,9 @@ await check('e-validation', 'rejects: empty, 22 meals, duplicate slot, bad meal_
 // ================= (f) grocery =================
 let planA, listA;
 await check('f-setup', 'A builds a plan (R1 day1 dinner, R2 day2 dinner)', async () => {
-  planA = (await run(asA, `insert into public.meal_plans (user_id, week_start) values ($1,'2026-11-02') returning id`, [A])).rows[0].id;
-  await run(asA, `insert into public.meal_plan_items (plan_id, recipe_id, day_of_week, meal_type) values ($1,$2,1,'dinner'),($1,$3,2,'dinner')`, [planA, R('01'), R('02')]);
+  // Plans are created by replace_meal_plan (service role) only; set up the fixture directly.
+  planA = (await q(`insert into public.meal_plans (user_id, week_start) values ($1,'2026-11-02') returning id`, [A]))[0].id;
+  await db.query(`insert into public.meal_plan_items (plan_id, recipe_id, day_of_week, meal_type, conflict) values ($1,$2,1,'dinner',false),($1,$3,2,'dinner',false)`, [planA, R('01'), R('02')]);
 });
 const items4 = async (list) => (await q(`select i.name, gi.quantity::float q, gi.checked from public.grocery_items gi join public.ingredients i on i.id=gi.ingredient_id where gi.list_id=$1 order by i.name`, [list]));
 await check('f-rebuild-values', 'rebuild_grocery_list quantities: Chicken 2, Rice 0.5, Salsa 1, Avocado 1', async () => {
@@ -283,26 +284,28 @@ await check('f-apply-choices', 'apply_grocery_choices: skip R2 -> Chicken 1, no 
   const ids = await q(`select id, recipe_id from public.meal_plan_items where plan_id=$1`, [planA]);
   const r2 = ids.find((x) => x.recipe_id === R('02')).id;
   const patch = JSON.stringify([{ id: r2, status: 'skip', conflict: false }]);
-  const l1 = (await run(asA, `select public.apply_grocery_choices($1,$2::jsonb) id`, [planA, patch])).rows[0].id;
-  const l2 = (await run(asA, `select public.apply_grocery_choices($1,$2::jsonb) id`, [planA, patch])).rows[0].id;
+  const l1 = (await run(asSvc, `select public.apply_grocery_choices($1,$2,$3::jsonb) id`, [A, planA, patch])).rows[0].id;
+  const l2 = (await run(asSvc, `select public.apply_grocery_choices($1,$2,$3::jsonb) id`, [A, planA, patch])).rows[0].id;
   eq(l1, l2); const r = await items4(l1); eq(r.map((x) => [x.name, x.q]), [['Chicken', 1], ['Salsa', 1]]);
-  eq((await run(asA, `select public.apply_grocery_choices($1,$2::jsonb,false) id`, [planA, patch])).rows[0].id, null);
-  await run(asA, `select public.apply_grocery_choices($1,$2::jsonb)`, [planA, JSON.stringify([{ id: r2, status: 'cook', conflict: false }])]);
+  eq((await run(asSvc, `select public.apply_grocery_choices($1,$2,$3::jsonb,false) id`, [A, planA, patch])).rows[0].id, null);
+  await run(asSvc, `select public.apply_grocery_choices($1,$2,$3::jsonb)`, [A, planA, JSON.stringify([{ id: r2, status: 'cook', conflict: false }])]);
 });
 await check('f-apply-bad-status', 'apply_grocery_choices with status "bogus" -> CHECK 23514; >21 patches -> 22023', async () => {
   const r2 = (await q(`select id from public.meal_plan_items where plan_id=$1 limit 1`, [planA]))[0].id;
-  await fails(run(asA, `select public.apply_grocery_choices($1,$2::jsonb)`, [planA, JSON.stringify([{ id: r2, status: 'bogus', conflict: false }])]), { code: '23514' });
-  await fails(run(asA, `select public.apply_grocery_choices($1,$2::jsonb)`, [planA, JSON.stringify(Array.from({ length: 22 }, () => ({ id: r2, status: 'cook', conflict: false })))]), { code: '22023' });
+  await fails(run(asSvc, `select public.apply_grocery_choices($1,$2,$3::jsonb)`, [A, planA, JSON.stringify([{ id: r2, status: 'bogus', conflict: false }])]), { code: '23514' });
+  await fails(run(asSvc, `select public.apply_grocery_choices($1,$2,$3::jsonb)`, [A, planA, JSON.stringify(Array.from({ length: 22 }, () => ({ id: r2, status: 'cook', conflict: false })))]), { code: '22023' });
 });
 await check('f-cross-user-rebuild', "user B cannot rebuild A's plan (plan not found, nothing changed)", async () => {
   const before = await items4(listA);
   await fails(run(asB, `select public.rebuild_grocery_list($1)`, [planA]), { re: /not found/ });
-  await fails(run(asB, `select public.apply_grocery_choices($1,'[]'::jsonb)`, [planA]), { re: /not found/ });
+  await fails(run(asB, `select public.apply_grocery_choices($1,$2,'[]'::jsonb)`, [B, planA]), { code: '42501' });   // service role only
+  await fails(run(asSvc, `select public.apply_grocery_choices($1,$2,'[]'::jsonb)`, [B, planA]), { re: /not found/ }); // plan not B's
   eq(await items4(listA), before);
 });
-await check('f-anon-rebuild', 'anon cannot execute rebuild_grocery_list / apply_grocery_choices', async () => {
+await check('f-anon-rebuild', 'anon cannot execute rebuild_grocery_list; only the service role can apply_grocery_choices', async () => {
   await fails(run(asAnon, `select public.rebuild_grocery_list($1)`, [planA]), { code: '42501' });
-  await fails(run(asAnon, `select public.apply_grocery_choices($1,'[]'::jsonb)`, [planA]), { code: '42501' });
+  await fails(run(asAnon, `select public.apply_grocery_choices($1,$2,'[]'::jsonb)`, [A, planA]), { code: '42501' });
+  await fails(run(asA, `select public.apply_grocery_choices($1,$2,'[]'::jsonb)`, [A, planA]), { code: '42501' });
 });
 await check('f-factors-check', 'recipe_edits.factors CHECK: value 500, string value, array, non-object, >4000 chars all rejected', async () => {
   const ins = (f) => db.query(`insert into public.recipe_edits (user_id, recipe_id, factors) values ($1,$2,$3::jsonb) on conflict (user_id, recipe_id) do update set factors = excluded.factors`, [P, R('01'), f]);
@@ -310,8 +313,8 @@ await check('f-factors-check', 'recipe_edits.factors CHECK: value 500, string va
   await ins('{"Salsa":0.5,"Chicken":100,"Avocado":0}');
 });
 await check('f-factors-effect', 'edit factors applied by rebuild (Plus user P): Salsa 0.5->1 jar (ceil), Avocado 0 removed, Chicken x100 capped', async () => {
-  const planP = (await run(asP, `insert into public.meal_plans (user_id, week_start) values ($1,'2026-11-02') returning id`, [P])).rows[0].id;
-  await run(asP, `insert into public.meal_plan_items (plan_id, recipe_id, day_of_week, meal_type) values ($1,$2,1,'dinner')`, [planP, R('01')]);
+  const planP = (await q(`insert into public.meal_plans (user_id, week_start) values ($1,'2026-11-02') returning id`, [P]))[0].id;
+  await db.query(`insert into public.meal_plan_items (plan_id, recipe_id, day_of_week, meal_type, conflict) values ($1,$2,1,'dinner',false)`, [planP, R('01')]);
   await run(asP, `update public.recipe_edits set factors='{"Salsa":0}' where user_id=$1 and recipe_id=$2`, [P, R('01')]);
   const l = (await run(asP, `select public.rebuild_grocery_list($1) id`, [planP])).rows[0].id;
   eq((await items4(l)).map((r) => r.name), ['Chicken', 'Rice'], 'Salsa removed by factor 0');
@@ -398,7 +401,7 @@ await check('h-profiles', "A cannot read or write B's profile", async () => {
   eq((await run(asA, `select id from public.profiles`)).rows.map((r) => r.id), [A], 'only own');
   eq((await run(asA, `update public.profiles set household_size = 9 where id=$1`, [B])).affectedRows, 0);
   await fails(run(asA, `insert into public.profiles (id) values ($1)`, [B]), { code: '42501' });
-  eq((await run(asA, `delete from public.profiles where id=$1`, [B])).affectedRows, 0);
+  await fails(run(asA, `delete from public.profiles where id=$1`, [B]), { code: '42501' });   // no profile deletes at all (consent record)
 });
 await check('h-pantry', "A cannot read/write B's pantry_items (B has 'n..n')", async () => {
   eq((await run(asA, `select * from public.pantry_items where user_id=$1`, [B])).rows.length, 0);
@@ -409,7 +412,7 @@ await check('h-pantry', "A cannot read/write B's pantry_items (B has 'n..n')", a
 await check('h-meal-plans', "A cannot read/write B's meal_plans or meal_plan_items", async () => {
   eq((await run(asA, `select * from public.meal_plans where user_id=$1`, [B])).rows.length, 0);
   eq((await run(asA, `select * from public.meal_plan_items where plan_id=$1`, [planE])).rows.length, 0);
-  eq((await run(asA, `delete from public.meal_plans where id=$1`, [planE])).affectedRows, 0);
+  await fails(run(asA, `delete from public.meal_plans where id=$1`, [planE]), { code: '42501' });   // plans are service-managed
   await fails(run(asA, `insert into public.meal_plans (user_id, week_start) values ($1,'2026-12-07')`, [B]), { code: '42501' });
   await fails(run(asA, `insert into public.meal_plan_items (plan_id, recipe_id, day_of_week, meal_type) values ($1,$2,5,'lunch')`, [planE, R('01')]), { code: '42501' });
 });
@@ -455,10 +458,19 @@ await check('h-household-members', 'household_members: read-only for a member (n
 });
 
 // ================= (i) waitlist =================
-const wl = (email, extra = '') => run(asAnon, `insert into public.waitlist (email, consent_version${extra}) values ($1,'waitlist-2026-11-05'${extra ? ', now()' : ''})`, [email]);
-await check('i-anon-insert', 'anon can insert (email, consent_version); email only also works', async () => {
-  await wl('one@x.test'); await run(asAnon, `insert into public.waitlist (email) values ('two@x.test')`);
-  eq((await q(`select consent_version from public.waitlist where email='one@x.test'`))[0].consent_version, 'waitlist-2026-11-05');
+// Changed by 20261116000200_waitlist_hardening.sql: anon can no longer insert; sign-ups go through join_waitlist()
+// (service role only), which gives the same answer for a duplicate; consent_version is required; throttle 120/min, 2000/h.
+const CV = 'waitlist-2026-11-05';
+const wl = (email, who = asSvc) => run(who, `select public.join_waitlist($1, $2)`, [email, CV]);
+await check('i-join', 'service role join_waitlist stores the lower-cased email and consent_version', async () => {
+  await wl('one@x.test'); await wl('  Two@X.test ');
+  eq((await q(`select email, consent_version from public.waitlist order by email`)).map((r) => [r.email, r.consent_version]), [['one@x.test', CV], ['two@x.test', CV]]);
+});
+await check('i-anon-no-insert', 'anon and authenticated cannot insert into the waitlist or call join_waitlist (42501)', async () => {
+  await fails(run(asAnon, `insert into public.waitlist (email, consent_version) values ('a1@x.test', $1)`, [CV]), { code: '42501' });
+  await fails(run(asA, `insert into public.waitlist (email) values ('auth@x.test')`), { code: '42501' });
+  await fails(wl('a2@x.test', asAnon), { code: '42501' });
+  await fails(wl('a3@x.test', asA), { code: '42501' });
 });
 await check('i-anon-no-read', 'anon cannot SELECT the waitlist (42501), nor update/delete', async () => {
   await fails(run(asAnon, `select * from public.waitlist`), { code: '42501' });
@@ -466,27 +478,32 @@ await check('i-anon-no-read', 'anon cannot SELECT the waitlist (42501), nor upda
   await fails(run(asAnon, `update public.waitlist set email='z@x.test'`), { code: '42501' });
   await fails(run(asAnon, `delete from public.waitlist`), { code: '42501' });
 });
-await check('i-anon-no-created-at', 'anon cannot set created_at on insert (42501)', () => fails(wl('three@x.test', ', created_at'), { code: '42501' }));
-await check('i-authenticated-denied', 'authenticated cannot insert into / read the waitlist', async () => {
-  await fails(run(asA, `insert into public.waitlist (email) values ('auth@x.test')`), { code: '42501' });
+await check('i-authenticated-denied', 'authenticated cannot read the waitlist', async () => {
   await fails(run(asA, `select * from public.waitlist`), { code: '42501' });
 });
-await check('i-email-checks', 'bad / uppercase / over-254 emails and 41-char consent_version rejected (23514)', async () => {
-  for (const e of ['nope', 'UP@X.TEST', 'a b@x.test', `${'a'.repeat(250)}@x.test`]) await fails(wl(e), { code: '23514' });
-  await fails(run(asAnon, `insert into public.waitlist (email, consent_version) values ('cv@x.test', repeat('v',41))`), { code: '23514' });
+await check('i-email-checks', 'join_waitlist rejects bad emails / consent versions (22023); table checks still reject uppercase, over-254, 41-char or missing consent_version (23514)', async () => {
+  for (const e of ['nope', 'a b@x.test', `${'a'.repeat(250)}@x.test`, '']) await fails(wl(e), { code: '22023' });
+  for (const v of [null, '', 'v1', 'waitlist-2026-11-05x']) await fails(run(asSvc, `select public.join_waitlist('cv@x.test', $1)`, [v]), { code: '22023' });
+  await fails(db.query(`insert into public.waitlist (email, consent_version) values ('UP@X.TEST', $1)`, [CV]), { code: '23514' });
+  await fails(db.query(`insert into public.waitlist (email, consent_version) values ('cv@x.test', repeat('v',41))`), { code: '23514' });
+  await fails(db.query(`insert into public.waitlist (email) values ('noconsent@x.test')`), { code: '23514' });
 });
-await check('i-duplicate', 'duplicate email -> 23505', () => fails(wl('one@x.test'), { code: '23505' }));
-await check('i-throttle-minute', 'throttle: after 30 sign-ups inside a minute the next anon insert fails P0001 waitlist_throttled; service_role/superuser inserts are throttled too', async () => {
+await check('i-duplicate', 'duplicate email: same (empty) answer as a new one, nothing changed', async () => {
+  const before = (await q(`select count(*)::int n from public.waitlist`))[0].n;
+  await wl('one@x.test'); await wl('ONE@x.test');
+  eq((await q(`select count(*)::int n from public.waitlist`))[0].n, before);
+});
+await check('i-throttle-minute', 'throttle: after 120 sign-ups inside a minute the next join fails P0001 waitlist_throttled (service role included)', async () => {
   const existing = (await q(`select count(*)::int n from public.waitlist where created_at > now() - interval '1 minute'`))[0].n;
   let n = existing;
-  for (; n < 30; n++) await wl(`bulk${n}@x.test`);
+  for (; n < 120; n++) await wl(`bulk${n}@x.test`);
   await fails(wl('over@x.test'), { code: 'P0001', hint: 'waitlist_throttled' });
-  eq((await q(`select count(*)::int n from public.waitlist`))[0].n, 30);
+  eq((await q(`select count(*)::int n from public.waitlist`))[0].n, 120);
 });
-await check('i-throttle-hour', 'throttle: 500/hour (rows spread >1 min old, so only the hour limit trips)', async () => {
+await check('i-throttle-hour', 'throttle: 2000/hour (rows spread >1 min old, so only the hour limit trips)', async () => {
   await db.query(`update public.waitlist set created_at = now() - interval '30 minutes'`);
-  let have = 30;
-  for (; have < 500; have++) await db.query(`insert into public.waitlist (email, created_at) values ($1, now() - interval '30 minutes')`, [`h${have}@x.test`]);
+  let have = 120;
+  for (; have < 2000; have++) await db.query(`insert into public.waitlist (email, consent_version, created_at) values ($1, $2, now() - interval '30 minutes')`, [`h${have}@x.test`, CV]);
   await fails(wl('hour-over@x.test'), { code: 'P0001', hint: 'waitlist_throttled' });
   await db.query(`update public.waitlist set created_at = now() - interval '2 hours' where email like 'h%'`);
   await wl('after-window@x.test');

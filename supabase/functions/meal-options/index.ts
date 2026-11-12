@@ -1,5 +1,5 @@
 import { loadProfile, loadRecipes } from "../_shared/data.ts";
-import { asCaller, fail, json } from "../_shared/http.ts";
+import { asCaller, fail, json, readJson } from "../_shared/http.ts";
 import { selectCandidates } from "../_shared/plan-logic.ts";
 import { MEAL_TYPES, type MealType } from "../_shared/provider.ts";
 
@@ -19,13 +19,15 @@ Deno.serve(async (req) => {
   if (caller instanceof Response) return caller;
   const { db, userId } = caller;
 
-  const body = await req.json().catch(() => ({}));
+  const body = await readJson(req);
+  if (body instanceof Response) return body;
   const mealType = body?.meal_type as MealType;
   if (!MEAL_TYPES.includes(mealType)) {
     return json({ error: "invalid_meal_type", message: "meal_type must be breakfast, lunch or dinner" }, 400);
   }
   const exclude = new Set<string>(
-    Array.isArray(body?.exclude) ? body.exclude.filter((x: unknown): x is string => typeof x === "string" && x.length <= 64).slice(0, MAX_EXCLUDE) : [],
+    // Cut to MAX_EXCLUDE first, so a huge list is never walked.
+    Array.isArray(body?.exclude) ? body.exclude.slice(0, MAX_EXCLUDE).filter((x: unknown): x is string => typeof x === "string" && x.length <= 64) : [],
   );
 
   try {

@@ -125,28 +125,106 @@ const withoutSafePhrases = (text: string, group: string): string => {
 
 const haystack = (r: RecipeRecord) => [r.title, ...r.ingredientNames].join(" | ");
 
-// The word-list groups an allergy label stands for: its own, the groups an alias names, or none for a label we have
-// no list for (which is then matched on its own name).
-export function allergenGroups(label: string): string[] {
-  const s = slug(label);
-  if (ALLERGEN_WORDS[s]) return [s];
-  return (ALLERGEN_ALIASES[s] ?? []).filter((g) => ALLERGEN_WORDS[g]);
+// More ways people (or the app's translated chips) write one of the allergen groups, looked up after the label is
+// normalized (see allergyKeys). Server-only on purpose: ALLERGEN_ALIASES above is mirrored by the app and checked for
+// drift, this list is not. Only add a label whose meaning is certain; a label that is not here and not above is refused
+// (fail closed), never guessed at. The translations are the app's own chip names (apps/mobile/src/i18n/locales/content).
+export const ALLERGY_LABEL_ALIASES: Record<string, string[]> = {
+  // Spanish "frutos secos" is nuts in general, so it is both groups, like "nuts" in ALLERGEN_ALIASES.
+  "peanuts": ["frutos secos", "groundnut", "groundnuts", "ground nut", "arachide", "arachides", "cacahuete", "cacahuetes", "cacahuate", "cacahuates", "mani", "amendoim", "amendoins", "erdnuss", "erdnusse", "花生", "ถั่วลิสง", "मूँगफली", "मूंगफली", "арахис"],
+  "tree-nuts": ["frutos secos", "nueces de arbol", "fruits a coque", "castanhas", "坚果", "ถั่วเปลือกแข็ง", "मेवे"],
+  "shellfish": ["mariscos", "crustaces", "crustacean", "frutos do mar", "fruits de mer", "贝类海鲜", "贝类", "สัตว์น้ำมีเปลือก", "शेलफ़िश"],
+  "fish": ["pescado", "poisson", "peixe", "鱼", "ปลา", "मछली"],
+  "dairy": ["lacteos", "produits laitiers", "laticinios", "乳制品", "นมและผลิตภัณฑ์นม", "डेयरी"],
+  "gluten": ["麸质", "กลูเตน", "ग्लूटेन"],
+  "eggs": ["huevo", "huevos", "oeufs", "oeuf", "ovos", "ovo", "鸡蛋", "ไข่ไก่", "ไข่", "अंडे", "अंडा"],
+  "soy": ["soja", "大豆", "ถั่วเหลือง", "सोया"],
+  "sesame": ["sesamo", "gergelim", "芝麻", "งา", "तिल"],
+};
+
+// Latin look-alikes from Cyrillic and Greek. Only folded in a label that also has Latin letters (a mixed-script label
+// such as "рeanut" with a Cyrillic "р"), so a real Cyrillic or Greek word is left as it is.
+const CONFUSABLES: Record<string, string> = {
+  "а": "a", "в": "b", "е": "e", "ё": "e", "к": "k", "м": "m", "н": "h", "о": "o", "р": "p", "с": "c", "т": "t", "у": "y", "х": "x",
+  "і": "i", "ї": "i", "ј": "j", "ѕ": "s", "һ": "h", "ԁ": "d", "ԛ": "q", "ԝ": "w", "ү": "y",
+  "α": "a", "β": "b", "ε": "e", "η": "n", "ι": "i", "κ": "k", "ν": "v", "ο": "o", "ρ": "p", "τ": "t", "υ": "u", "χ": "x", "ω": "w",
+};
+// Words around an allergen that do not change which allergen it is: "Peanut allergy", "Gluten free", "Severe dairy".
+const LABEL_FILLER = new Set([
+  "allergy", "allergies", "allergic", "allergen", "allergens", "allergie", "alergia", "alergias", "alergico",
+  "intolerance", "intolerances", "intolerant", "sensitivity", "sensitive", "severe", "mild", "anaphylaxis", "anaphylactic",
+  "free", "no", "avoid", "to", "a", "an", "contains",
+]);
+
+// Normalized forms of an allergy label to look up: Unicode-normalized (NFKC), invisible characters removed, lower case,
+// accents dropped, Latin look-alikes folded, anything in brackets and filler words removed. Returns the dashed key
+// ("tree-nuts"), the key without separators ("treenuts", so "pea nut" and "ground-nuts" still match), and that without a
+// plural "s". Empty when nothing is left.
+export function allergyKeys(label: unknown): string[] {
+  let s = String(label ?? "").normalize("NFKC").replace(/\p{Cf}/gu, "").replace(/[\p{Cc}\p{Z}]/gu, " ").toLowerCase();
+  s = s.normalize("NFD").replace(/[̀-ͯ]/g, "").normalize("NFC").replace(/œ/g, "oe").replace(/æ/g, "ae").replace(/ß/g, "ss");
+  if (/[a-z]/.test(s)) s = [...s].map((c) => CONFUSABLES[c] ?? c).join("");
+  // Brackets are only separators: "Peanuts (severe)" is "peanuts" because "severe" is filler, but "Tree nuts (and
+  // peanuts)" stays one label that does not resolve, so it is refused rather than half of it being dropped.
+  const words = s.split(/[^\p{L}\p{N}\p{M}]+/u).filter((w) => w && !LABEL_FILLER.has(w));
+  if (words.length === 0) return [];
+  const dashed = words.join("-");
+  const compact = words.join("");
+  return [...new Set([dashed, compact, compact.replace(/s$/, "")].filter(Boolean))];
 }
 
-// True when `text` (a title or an ingredient name) points to the allergy `label`.
+// Every label we know, by its normalized keys. Built once from the word lists, ALLERGEN_ALIASES and ALLERGY_LABEL_ALIASES.
+const LABEL_LOOKUP: Map<string, string[]> = (() => {
+  const m = new Map<string, string[]>();
+  const add = (label: string, groups: string[]) => {
+    for (const k of allergyKeys(label)) m.set(k, [...new Set([...(m.get(k) ?? []), ...groups])]);
+  };
+  for (const [label, groups] of Object.entries(ALLERGY_LABEL_ALIASES)) for (const g of groups) add(g, [label]);
+  for (const [label, groups] of Object.entries(ALLERGEN_ALIASES)) add(label, groups);
+  // The group names last, so a group's own name always means exactly that group.
+  for (const g of Object.keys(ALLERGEN_WORDS)) for (const k of allergyKeys(g)) m.set(k, [g]);
+  return m;
+})();
+
+// A label that is only spacing, invisible characters or nothing at all. Ignored rather than refused.
+const isBlankLabel = (label: unknown) => !String(label ?? "").normalize("NFKC").replace(/[\p{Cf}\p{Cc}\p{Z}]/gu, "");
+
+// The word-list groups an allergy label stands for: its own, or the groups an alias names. Empty for a label we cannot
+// match, which must never be ignored: see unresolvedAllergies and allergensIn.
+export function allergenGroups(label: string): string[] {
+  for (const k of allergyKeys(label)) {
+    const groups = LABEL_LOOKUP.get(k);
+    if (groups) return groups.filter((g) => ALLERGEN_WORDS[g]);
+  }
+  return [];
+}
+
+// The household's allergy labels the server cannot match to an allergen group (a typo, free text, another language we
+// have no name for, a look-alike character). generate-plan refuses to plan while there are any, so the person picks
+// from the list instead of getting a plan that silently ignores the allergy.
+export function unresolvedAllergies(allergies: unknown): string[] {
+  if (!Array.isArray(allergies)) return [];
+  return allergies.filter((label) => !isBlankLabel(label) && allergenGroups(String(label)).length === 0).map(String);
+}
+
+// True when `text` (a title or an ingredient name) points to the allergy `label`. An allergy we cannot match fails
+// closed: every text counts as having it.
 export function textHasAllergen(text: string, label: string): boolean {
   const groups = allergenGroups(label);
-  if (groups.length === 0) return cachedRegex(`own:${label.trim().toLowerCase()}`, [label.trim()]).test(text);
+  if (groups.length === 0) return !isBlankLabel(label);
   return groups.some((g) => cachedRegex(`group:${g}`, ALLERGEN_WORDS[g]).test(withoutSafePhrases(text, g)));
 }
 
-// The household's allergy labels (for example "Tree nuts") that this recipe breaks, in the household's order.
+// The household's allergy labels (for example "Tree nuts") that this recipe breaks, in the household's order. A label
+// that cannot be matched to an allergen group is reported for every recipe (fail closed), so it is never silently
+// ignored: no candidate is offered, a planned meal is flagged, and the grocery list leaves it off.
 export function allergensIn(r: RecipeRecord, allergies: string[]): string[] {
   return allergies.filter((label) => {
+    if (isBlankLabel(label)) return false;
+    const groups = allergenGroups(label);
+    if (groups.length === 0) return true;
     const s = slug(label);
-    if (!s) return false;
-    if (r.tags.includes(`contains-${s}`) || allergenGroups(label).some((g) => r.tags.includes(`contains-${g}`))) return true;
-    // An allergy we have no word list for is matched on its own name, so it still filters.
+    if ((s && r.tags.includes(`contains-${s}`)) || groups.some((g) => r.tags.includes(`contains-${g}`))) return true;
     return textHasAllergen(haystack(r), label);
   });
 }

@@ -43,37 +43,106 @@ export function routeFor(pathname: string, method: string): Route {
 
   const service = SERVICES.find((s) => rest === s || rest.startsWith(`${s}/`));
   if (!service) return { error: "not_found" };
+  if (service === "rest/v1" && blockedRestPath(rest.slice("rest/v1/".length))) return { error: "not_found" };
   return { upstreamPath: `/${rest}` };
+}
+
+// Database paths the app never uses and that must only be reached through the website's server route: the waitlist
+// table and its sign-up function. Compared percent-decoded and case-insensitively and on the first segments only, so `waitlist/`, `Waitlist`
+// or `rpc/join_waitlist/x` are refused too. The database grants are the real control (anon has no insert on waitlist and
+// no execute on join_waitlist, 20261116000200_waitlist_hardening.sql); this keeps the gateway from being an open relay to them.
+const BLOCKED_REST = [["waitlist"], ["rpc", "join_waitlist"], ["rpc", "waitlist_throttle"]];
+function blockedRestPath(afterRest: string): boolean {
+  // Decoded first, so `%57aitlist` or `join_%77aitlist` (which PostgREST would decode) are caught; undecodable is refused.
+  let segs: string[];
+  try {
+    segs = afterRest.split("/").map((seg) => decodeURIComponent(seg).toLowerCase());
+  } catch {
+    return true;
+  }
+  return BLOCKED_REST.some((b) => b.every((part, i) => segs[i] === part));
+}
+
+// Content-Length must be a plain decimal number if it is sent at all. Returns the number, null when absent, or "invalid".
+export function declaredLength(headers: Headers): number | null | "invalid" {
+  const raw = headers.get("content-length");
+  if (raw === null) return null;
+  const v = raw.trim();
+  if (!/^\d{1,15}$/.test(v)) return "invalid";
+  return Number(v);
+}
+
+// Reads a body stream while counting bytes and stops (cancelling the stream) as soon as it passes `max`, so a chunked or
+// mislabelled body is never buffered past the cap. Returns null when it is too large.
+export async function readCapped(stream: ReadableStream<Uint8Array> | null, max: number): Promise<Uint8Array<ArrayBuffer> | null> {
+  if (!stream) return new Uint8Array();
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > max) {
+      await reader.cancel().catch(() => {});
+      return null;
+    }
+    chunks.push(value);
+  }
+  const out = new Uint8Array(total);
+  let at = 0;
+  for (const c of chunks) {
+    out.set(c, at);
+    at += c.byteLength;
+  }
+  return out;
+}
+
+// Per-address request limit, kept in this instance's memory. Best effort: each instance counts on its own and the counts
+// reset on a cold start, so it slows a single noisy client rather than being a hard boundary (the project's own limits
+// still apply behind it).
+export const RATE_LIMIT_PER_MINUTE = 120;
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX_KEYS = 10_000;
+export function makeRateLimiter(limit = RATE_LIMIT_PER_MINUTE, windowMs = RATE_WINDOW_MS) {
+  const hits = new Map<string, { n: number; reset: number }>();
+  return (key: string, now = Date.now()): boolean => {
+    if (hits.size >= RATE_MAX_KEYS) {
+      for (const [k, v] of hits) if (v.reset <= now) hits.delete(k);
+      if (hits.size >= RATE_MAX_KEYS) hits.clear();
+    }
+    const h = hits.get(key);
+    if (!h || h.reset <= now) {
+      hits.set(key, { n: 1, reset: now + windowMs });
+      return false;
+    }
+    h.n += 1;
+    return h.n > limit;
+  };
 }
 
 // A signed-in session token is a JWT: three base64url parts. The app sends a placeholder instead when nobody is signed in.
 export const looksLikeJwt = (token: string) => /^[\w-]+\.[\w-]+\.[\w-]*$/.test(token);
 
-// Request headers that are never passed on: the connection's own, the caller's key and address headers (set again below),
-// and anything that would make the body look different from what is actually sent.
-const DROP_REQUEST = new Set([
-  "host",
-  "connection",
-  "keep-alive",
-  "transfer-encoding",
-  "upgrade",
-  "content-length",
-  "accept-encoding",
-  "apikey",
-  "authorization",
-  "x-forwarded-for",
-  "x-forwarded-host",
-  "x-forwarded-proto",
-  "x-real-ip",
-  "forwarded",
+// Request headers that are passed on. Everything else (cookies, proxy and routing hints such as x-original-url,
+// x-http-method-override or x-envoy-*, address headers such as x-client-ip or true-client-ip, the caller's own apikey)
+// is dropped: an allow-list, so a header nobody thought of cannot reach the project. apikey, authorization,
+// x-forwarded-for and accept-encoding are set below by the gateway itself.
+const ALLOW_REQUEST = new Set([
+  "content-type",
+  "accept",
+  "accept-profile",
+  "content-profile",
+  "prefer",
+  "range",
+  "x-client-info",
+  "x-supabase-api-version",
 ]);
 
 export function upstreamHeaders(incoming: Headers, anonKey: string, clientIp: string | null): Headers {
   const out = new Headers();
   incoming.forEach((value, name) => {
-    const lower = name.toLowerCase();
-    if (DROP_REQUEST.has(lower) || lower.startsWith("cf-") || lower.startsWith("x-vercel-") || lower.startsWith("sb-")) return;
-    out.set(name, value);
+    if (ALLOW_REQUEST.has(name.toLowerCase())) out.set(name, value);
   });
   out.set("apikey", anonKey);
 
@@ -98,8 +167,12 @@ export function downstreamHeaders(upstream: Headers): Headers {
   return out;
 }
 
-// The person's address as the platform reports it, for forwarding.
+// The person's address as the platform reports it, for forwarding and the rate limit. The platform's own single-value
+// headers come first. X-Forwarded-For is a list the caller can start with anything they like (proxies append to it), so
+// only its last entry, the one added by the hop in front of this function, is used.
 export function clientIpOf(headers: Headers): string | null {
-  const forwarded = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return forwarded || headers.get("cf-connecting-ip") || headers.get("x-real-ip") || null;
+  const platform = headers.get("cf-connecting-ip")?.trim() || headers.get("x-real-ip")?.trim();
+  if (platform) return platform;
+  const entries = (headers.get("x-forwarded-for") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  return entries.at(-1) ?? null;
 }

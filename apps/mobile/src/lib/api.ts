@@ -375,6 +375,9 @@ export async function swapMeal(planId: string, slot: number, recipeId: string) {
         .eq('plan_id', planId)
         .eq('day_of_week', day)
         .eq('meal_type', MEAL_TYPES[slot % 3]);
+      // Changing a meal marks it for an allergy re-check (server rule), so re-run the check for the restored meal; if
+      // that fails too, the meal stays off the list until the next successful check, which is the safe side.
+      await buildGroceryList(planId, undefined, await hasGroceryList(planId)).catch(() => {});
     }
     throw e;
   }
@@ -712,6 +715,11 @@ const serverError = (code: unknown, message: unknown): string => {
       return t('Not enough recipes match your allergies, diet and kitchen to fill a week.');
     case 'plan_generation_failed':
       return t('Could not build a plan. Try again.');
+    case 'unknown_allergy':
+      // The server refuses to plan around an allergy it can't recognise rather than ignore it.
+      return t('Choose your allergies from the list in Household so Kelmi can keep them out of your meals.');
+    case 'reauth_required':
+      return t('For your safety, sign out and sign back in, then delete your account.');
     default:
       return typeof message === 'string' && message ? message : t('Something went wrong. Try again.');
   }
@@ -784,6 +792,8 @@ export async function mealOptions(type: MealType, exclude: string[]): Promise<Me
 
 // Deletes the account on the server, then takes back Kelmi's access to the person's Google account (best effort).
 export async function deleteAccount() {
-  await invoke('delete-account', {});
+  // The server deletes only with this confirmation and a sign-in in the last 10 minutes. Otherwise it answers
+  // reauth_required, whose message (asking the person to sign in again) the settings screen shows as the error.
+  await invoke('delete-account', { confirm: 'DELETE' });
   await revokeNativeAccess();
 }

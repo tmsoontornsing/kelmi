@@ -676,5 +676,11 @@
   "Waiting for you": "已为你备好",
   "Your weekly meal plan": "你的每周餐食计划",
   "Your grocery list and cart": "你的购物清单和购物车",
-  "Your household and food preferences": "你的家庭和饮食偏好"
+  "Your household and food preferences": "你的家庭和饮食偏好",
+  "Signing you in…": "正在登录…",
+  "That link didn’t work": "该链接无效",
+  "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "链接可能已过期、已被使用，或是在另一部手机上打开的。请登录以继续。",
+  "Back to Sign In": "返回登录",
+  "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "请在“家庭”中从列表选择你的过敏原，以便 Kelmi 将它们排除在你的餐食之外。",
+  "For your safety, sign out and sign back in, then delete your account.": "为了你的安全，请先退出并重新登录，然后再删除账户。"
 }

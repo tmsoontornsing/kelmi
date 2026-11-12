@@ -9,6 +9,49 @@ export function fail(fn: string, code: string, detail: string) {
   return json({ error: code, message: "Something went wrong. Try again." }, 500);
 }
 
+// The functions are reachable directly at /functions/v1/<name>, not only through the gateway, so each one caps its own
+// request body. 64 KB is far more than any real request (the largest, generate-plan with 21 locked meals, is ~2 KB).
+export const MAX_JSON_BYTES = 64 * 1024;
+
+// Reads a JSON body with a running byte count, stopping as soon as it passes `maxBytes` (Content-Length may be missing
+// or wrong, so it is only used to refuse early). Returns a 413 Response when the body is too large; otherwise the parsed
+// value, or null when the body is empty or not JSON (callers already treat that as a bad request).
+// deno-lint-ignore no-explicit-any
+export async function readJson(req: Request, maxBytes = MAX_JSON_BYTES): Promise<any> {
+  const tooLarge = () => json({ error: "payload_too_large" }, 413);
+  const declared = req.headers.get("content-length");
+  if (declared !== null && (!/^\d{1,15}$/.test(declared.trim()) || Number(declared) > maxBytes)) return tooLarge();
+  if (!req.body) return null;
+  const reader = req.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => {});
+        return tooLarge();
+      }
+      chunks.push(value);
+    }
+  } catch {
+    return null;
+  }
+  const all = new Uint8Array(total);
+  let at = 0;
+  for (const c of chunks) {
+    all.set(c, at);
+    at += c.byteLength;
+  }
+  try {
+    return JSON.parse(new TextDecoder().decode(all));
+  } catch {
+    return null;
+  }
+}
+
 // A database client that acts as the caller, so row-level security applies to every read and write,
 // plus the caller's user id. Returns a 401 response when the request is not from a signed-in user.
 export async function asCaller(req: Request): Promise<{ db: SupabaseClient; userId: string } | Response> {

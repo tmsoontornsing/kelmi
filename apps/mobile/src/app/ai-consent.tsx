@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
@@ -5,6 +6,7 @@ import { AppText } from '../components/AppText';
 import { NoticeScreen } from '../components/NoticeScreen';
 import { PrimaryButton, TextButton } from '../components/Buttons';
 import { useT } from '../i18n';
+import { planAfterNotice } from '../lib/safeRoute';
 import { useApp } from '../state/AppState';
 import { useTheme } from '../theme';
 
@@ -16,13 +18,18 @@ export default function AiConsent() {
   const { t } = useT();
   const { then } = useLocalSearchParams<{ then?: string }>();
   const on = !!app.consent.ai;
+  // Decided once, when the sheet opens: carry on to a plan only when the app's own "plan my week" step opened this (the
+  // AI choice still unanswered, the allergy notice already done) and not a deep link. Even then nothing runs until a tap.
+  const [planAfter] = useState(() =>
+    planAfterNotice(then, Linking.getLinkingURL(), 'ai-consent', app.consent.available && !!app.consent.allergy && !app.consent.ai),
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const finish = () => {
     router.back();
     // The plan the person asked for carries on once the sheet has closed.
-    if (then === 'plan') setTimeout(() => app.generatePlan(), 350);
+    if (planAfter) setTimeout(() => app.generatePlan(), 350);
   };
 
   const run = async (work: () => Promise<void>) => {

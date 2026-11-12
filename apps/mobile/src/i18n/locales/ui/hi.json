@@ -676,5 +676,11 @@
   "Waiting for you": "आपका इंतज़ार कर रहा है",
   "Your weekly meal plan": "आपकी साप्ताहिक भोजन योजना",
   "Your grocery list and cart": "आपकी ग्रॉसरी सूची और कार्ट",
-  "Your household and food preferences": "आपका परिवार और खाने की पसंद"
+  "Your household and food preferences": "आपका परिवार और खाने की पसंद",
+  "Signing you in…": "साइन इन हो रहा है…",
+  "That link didn’t work": "वह लिंक काम नहीं किया",
+  "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "हो सकता है उसकी समय-सीमा खत्म हो गई हो, वह पहले ही इस्तेमाल हो चुका हो, या किसी दूसरे फ़ोन पर खोला गया हो। जारी रखने के लिए साइन इन करें।",
+  "Back to Sign In": "साइन इन पर वापस जाएँ",
+  "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "घर में दी गई सूची से अपनी एलर्जी चुनें ताकि Kelmi उन्हें आपके खाने से दूर रख सके।",
+  "For your safety, sign out and sign back in, then delete your account.": "आपकी सुरक्षा के लिए, साइन आउट करके फिर से साइन इन करें, फिर अपना खाता हटाएँ।"
 }

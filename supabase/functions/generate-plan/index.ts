@@ -1,8 +1,8 @@
 import { breakerFor } from "../_shared/breaker.ts";
-import { basicProvider, providerFromEnv } from "../_shared/adapters.ts";
+import { basicProvider, countingProvider, providerFromEnv } from "../_shared/adapters.ts";
 import { loadProfile, loadRecipes } from "../_shared/data.ts";
 import { generateWeek } from "../_shared/generate.ts";
-import { adminClient, asCaller, fail, json } from "../_shared/http.ts";
+import { adminClient, asCaller, fail, json, readJson } from "../_shared/http.ts";
 import {
   checkLocks,
   defaultWeekStart,
@@ -13,6 +13,7 @@ import {
   PLAN_DENIALS,
   planTotal,
   selectCandidates,
+  unresolvedAllergies,
 } from "../_shared/plan-logic.ts";
 import { cleanList, cleanNotes, MEAL_TYPES, type PlanInput, type PlanProvider, type Usage } from "../_shared/provider.ts";
 
@@ -40,10 +41,16 @@ Deno.serve(async (req) => {
   const { db, userId } = caller;
 
   let weekStart = defaultWeekStart();
-  const body = await req.json().catch(() => ({}));
+  const body = await readJson(req);
+  if (body instanceof Response) return body;
   if (body?.week_start !== undefined) {
     if (typeof body.week_start !== "string" || !isMonday(body.week_start)) {
       return json({ error: "invalid_week_start", message: "week_start must be a Monday, as YYYY-MM-DD" }, 400);
+    }
+    // This week (its Monday can be up to 6 days ago) through about a year ahead; nothing in year 0001 or 9999.
+    const daysAway = (Date.parse(`${body.week_start}T00:00:00Z`) - Date.now()) / 86_400_000;
+    if (!(daysAway >= -7 && daysAway <= 400)) {
+      return json({ error: "invalid_week_start", message: "week_start must be this week or a week within the next year" }, 400);
     }
     weekStart = body.week_start;
   }
@@ -66,6 +73,15 @@ Deno.serve(async (req) => {
   if (!profile.age_confirmed_at) return json({ error: "age_required", message: "Confirm your age to plan meals." }, 403);
   if (!isKnownDiet(profile.diet)) {
     return json({ error: "diet_unknown", message: "Choose your diet again in Settings so meals can be matched to it." }, 422);
+  }
+  // An allergy the server cannot match to an allergen group would otherwise be impossible to filter for, so planning is
+  // refused (fail closed) until the person picks it from the list. Checked before anything is counted or planned.
+  const unknownAllergies = unresolvedAllergies(profile.allergies);
+  if (unknownAllergies.length > 0) {
+    return json(
+      { error: "unknown_allergy", message: "Choose allergies from the list so we can keep you safe.", labels: cleanList(unknownAllergies, 20) },
+      422,
+    );
   }
 
   // Everything that can be checked without a model is checked before the request is counted or a model is paid.
@@ -98,6 +114,9 @@ Deno.serve(async (req) => {
     return json({ error: denied.error, message: denied.message }, denied.status);
   }
   const generationId = claim.generation_id as string;
+  // 'basic_only': today's shared AI budget is used up (free accounts stop at 80% of it), so this week is planned by the
+  // free built-in planner rather than refused.
+  const aiAllowed = claim.reason !== "basic_only";
 
   // What the model sees is cleaned again in buildPrompt; the household's lists are also cut to the same sizes here.
   const input: PlanInput = {
@@ -114,10 +133,17 @@ Deno.serve(async (req) => {
 
   // An AI planner only with the household's consent. Without it the built-in planner answers and nothing is sent out.
   let external: PlanProvider | null = null;
-  if (profile.ai_consent_at) {
+  if (profile.ai_consent_at && aiAllowed) {
     try {
       const preferred = providerFromEnv((k) => Deno.env.get(k));
-      if (preferred.name !== "basic") external = preferred;
+      // Every paid request is recorded on the claimed row before it is sent, so one that times out (and reports no
+      // tokens) still counts toward the monthly cap and the daily AI ceiling.
+      if (preferred.name !== "basic") {
+        external = countingProvider(preferred, async () => {
+          const { error } = await admin.rpc("record_ai_attempt", { p_id: generationId });
+          if (error) throw new Error(error.message);
+        });
+      }
     } catch (e) {
       console.error(`generate-plan: provider setup failed: ${(e as Error).message}`);
     }
@@ -142,7 +168,7 @@ Deno.serve(async (req) => {
   });
 
   // Record the cost and how the request ended. A failed plan counts toward the burst limit, and toward the monthly cap
-  // when it used paid tokens (only the tokens actually used are recorded, retries included). Logged as well as saved, so it shows in the function logs if the row could not be updated.
+  // when it sent a paid request (recorded per attempt above) or used paid tokens (retries included). Logged as well as saved, so it shows in the function logs if the row could not be updated.
   const finish = async (ok: boolean) => {
     console.log(`generate-plan: ${ok ? "ok" : "failed"} planner=${result.planner} degraded=${result.degraded} usage=${JSON.stringify(used)}`);
     const { error } = await admin.rpc("record_generation_result", {

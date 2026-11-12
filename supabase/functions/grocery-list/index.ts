@@ -1,7 +1,7 @@
 import { z } from "npm:zod@3.23.8";
 
 import { loadProfile, loadRecipesByIds } from "../_shared/data.ts";
-import { asCaller, fail, json } from "../_shared/http.ts";
+import { adminClient, asCaller, fail, json, readJson } from "../_shared/http.ts";
 import { slotConflicts } from "../_shared/plan-logic.ts";
 import { MEAL_TYPES } from "../_shared/provider.ts";
 
@@ -28,7 +28,9 @@ Deno.serve(async (req) => {
   if (caller instanceof Response) return caller;
   const { db, userId } = caller;
 
-  const parsed = Body.safeParse(await req.json().catch(() => null));
+  const raw = await readJson(req);
+  if (raw instanceof Response) return raw;
+  const parsed = Body.safeParse(raw);
   if (!parsed.success) return json({ error: "bad_request", message: "Choose a plan and the meals to shop for." }, 400);
   const { plan_id, shop, build_list } = parsed.data;
 
@@ -58,7 +60,11 @@ Deno.serve(async (req) => {
       const status = wants === false ? "skip" : i.status === "skip" && wants === true ? "cook" : i.status;
       return { id: i.id, status, conflict: conflicted.has(key) };
     });
-    const { error: applyError } = await db.rpc("apply_grocery_choices", {
+    // The conflict flags come from the check above, so they are written with the service role: people cannot call
+    // apply_grocery_choices themselves (it would let them clear an allergen flag). The plan was read through the
+    // caller's row-level security above, and the function re-checks that it belongs to userId.
+    const { error: applyError } = await adminClient().rpc("apply_grocery_choices", {
+      p_user: userId,
       p_plan_id: plan_id,
       p_patches: patches,
       p_build_list: build_list !== false,

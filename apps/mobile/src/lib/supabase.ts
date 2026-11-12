@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import { AppState } from 'react-native';
 
+import { secureStorage } from './secureStorage';
 import './webcrypto';
 
 // The app holds no Supabase key. It talks to the project's gateway function (supabase/functions/gateway), which adds the
@@ -25,7 +25,8 @@ export const supabase = isSupabaseConfigured
   ? createClient(gatewayUrl!, GATEWAY_PLACEHOLDER, {
       global: { fetch: viaGateway },
       auth: {
-        storage: AsyncStorage,
+        // Encrypted: the key in the Keychain/Keystore, the ciphertext in AsyncStorage. See secureStorage.ts.
+        storage: secureStorage,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,

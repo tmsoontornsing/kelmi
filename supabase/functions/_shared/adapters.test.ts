@@ -1,7 +1,7 @@
 // Run with: deno test supabase/functions/_shared/
-import { assertEquals, assertRejects } from "jsr:@std/assert@1";
+import { assertEquals, assertRejects, assertThrows } from "jsr:@std/assert@1";
 
-import { claudeProvider, idunifyProvider, ollamaProvider, providerFromEnv } from "./adapters.ts";
+import { claudeProvider, idunifyBaseUrl, idunifyProvider, ollamaProvider, providerFromEnv } from "./adapters.ts";
 import { isRetryable, type PlanInput } from "./provider.ts";
 
 const uuid = "11111111-1111-4111-8111-111111111111";
@@ -105,9 +105,52 @@ Deno.test("ollama calls its host and parses the answer", async () => {
 Deno.test("providerFromEnv: an IDUnify base URL that is not https falls back to the built-in planner", () => {
   const env = (m: Record<string, string>) => (k: string) => m[k];
   const base = { IDUNIFY_API_KEY: "k" };
-  assertEquals(providerFromEnv(env({ ...base, IDUNIFY_BASE_URL: "https://ai.example.com/v1" })).name, "idunify");
+  assertEquals(providerFromEnv(env({ ...base, IDUNIFY_BASE_URL: "https://ai.idunify.com/v1" })).name, "idunify");
+  assertEquals(providerFromEnv(env({ ...base, IDUNIFY_BASE_URL: "https://AI.idunify.com:443/v1/" })).name, "idunify");
   assertEquals(providerFromEnv(env({ ...base })).name, "idunify");
-  for (const bad of ["http://ai.example.com/v1", "ai.example.com/v1", "ftp://x", "", "not a url"]) {
+  for (const bad of [
+    "http://ai.example.com/v1", "ai.example.com/v1", "ftp://x", "", "not a url",
+    // https, but not an allowed host: another domain, a look-alike, a user-info trick, an IP literal, a non-443 port.
+    "https://ai.example.com/v1", "https://evil.example/v1", "https://ai.idunify.com.evil.example/v1", "https://ai.idunify.com.",
+    "https://ai.idunify.com@evil.example/v1", "https://user:pw@ai.idunify.com/v1", "https://169.254.169.254/latest",
+    "https://[::1]/v1", "https://0x7f000001/v1", "https://ai.idunify.com:8443/v1", "http://ai.idunify.com/v1",
+  ]) {
     assertEquals(providerFromEnv(env({ ...base, IDUNIFY_BASE_URL: bad })).name, "basic", bad);
   }
+  assertEquals(idunifyBaseUrl("https://ai.idunify.com/v1/?x=1#y"), "https://ai.idunify.com/v1");
+  assertThrows(() => idunifyProvider("k", "https://evil.example/v1"));
+});
+
+Deno.test("providerFromEnv: Ollama only on this machine", () => {
+  const env = (m: Record<string, string>) => (k: string) => m[k];
+  const base = { KAVI_PLAN_PROVIDER: "ollama", KAVI_ALLOW_OLLAMA: "1" };
+  for (const ok of ["http://localhost:11434", "http://127.0.0.1:11434", "http://[::1]:11434"]) {
+    assertEquals(providerFromEnv(env({ ...base, OLLAMA_HOST: ok })).name, "ollama", ok);
+  }
+  for (const bad of ["http://evil.example", "http://evil.example:80", "http://localhost@evil.example", "http://10.0.0.5:11434", "http://localhost.evil.example", "file:///etc/passwd", "nope"]) {
+    assertEquals(providerFromEnv(env({ ...base, OLLAMA_HOST: bad })).name, "basic", bad);
+  }
+  assertThrows(() => ollamaProvider("http://evil.example"));
+});
+
+Deno.test("each adapter sends our instructions as the system prompt and the household's data as the user message", async () => {
+  const withAllergy = { ...input, allergies: ["Peanuts"] };
+  await withFetch(() => Response.json({ content: [{ type: "text", text: answer }], stop_reason: "end_turn" }), async (calls) => {
+    await claudeProvider("key").generate(withAllergy);
+    const { system, messages } = calls[0].body;
+    assertEquals(typeof system, "string");
+    assertEquals(messages.length, 1);
+    if (system.includes('"""Peanuts"""') || !messages[0].content.includes('"""Peanuts"""')) throw new Error("claude: data in the wrong part");
+  });
+  await withFetch(() => Response.json({ choices: [{ message: { content: answer }, finish_reason: "stop" }] }), async (calls) => {
+    await idunifyProvider("key").generate(withAllergy);
+    assertEquals(calls[0].url, "https://ai.idunify.com/v1/chat/completions");
+    assertEquals(calls[0].body.messages.map((m: { role: string }) => m.role), ["system", "user"]);
+    if (!calls[0].body.messages[1].content.includes('"""Peanuts"""')) throw new Error("idunify: data missing from the user message");
+  });
+  await withFetch(() => Response.json({ response: answer }), async (calls) => {
+    await ollamaProvider("http://localhost:1").generate(withAllergy);
+    assertEquals(typeof calls[0].body.system, "string");
+    if (calls[0].body.system.includes('"""Peanuts"""')) throw new Error("ollama: data in the system prompt");
+  });
 });

@@ -2,3 +2,12 @@
 
 # rendered launch videos and frames (large)
 brag-output*/
+
+# Secrets and native credentials, anywhere in the repo (apps/mobile, apps/web, supabase). Example files stay tracked.
+.env
+.env.*
+!.env.example
+google-services.json
+GoogleService-Info.plist
+*.keystore
+service-account*.json

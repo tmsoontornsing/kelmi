@@ -49,28 +49,46 @@ async function readBody(req: Request): Promise<string | null> {
   return new TextDecoder().decode(all);
 }
 
-// Inserts through Supabase's REST API with the anon key. The `waitlist` table allows insert of the email and consent_version
-// columns only (see migrations 20261109000000_waitlist.sql and 20261115000000_waitlist_throttle.sql), so the key cannot read, change or delete anyone's address.
-// A new address and one already on the list get the same answer, so the form cannot be used to find out who is on the list.
-export async function POST(req: Request) {
-  // Only our own pages may post here. Browsers send Origin on POSTs; if it is missing, accept only a same-origin fetch
-  // (Sec-Fetch-Site), which every current browser sends on the site's own form.
-  const origin = req.headers.get('origin');
-  const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host');
-  let sameSite = false;
-  if (origin) {
-    try { sameSite = new URL(origin).host === host; } catch {}
-  } else {
-    sameSite = req.headers.get('sec-fetch-site') === 'same-origin';
+// Pages allowed to post here. NEXT_PUBLIC_SITE_URL (one origin, or several separated by commas) names the live site;
+// Vercel's own VERCEL_URL covers the deployment being served (previews included); localhost only outside production.
+// The request's own Host / X-Forwarded-Host are not used, because a non-browser caller can set them to anything.
+function allowedOrigins(): Set<string> {
+  const list = new Set<string>(['https://usekavi.com', 'https://www.usekavi.com']);
+  for (const o of (process.env.NEXT_PUBLIC_SITE_URL ?? '').split(',')) {
+    try { if (o.trim()) list.add(new URL(o.trim()).origin); } catch {}
   }
-  if (!sameSite) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+  if (process.env.VERCEL_URL) list.add(`https://${process.env.VERCEL_URL}`);
+  if (process.env.NODE_ENV !== 'production') {
+    for (const port of ['3000', '3001']) { list.add(`http://localhost:${port}`); list.add(`http://127.0.0.1:${port}`); }
+  }
+  return list;
+}
+
+// The caller's address as the host reports it. Vercel sets x-real-ip (and overwrites x-forwarded-for) itself; failing
+// that, only the LAST x-forwarded-for entry was added by a proxy, the earlier ones are whatever the caller sent.
+function clientIp(req: Request): string {
+  const real = req.headers.get('x-real-ip')?.trim() || req.headers.get('x-vercel-forwarded-for')?.split(',')[0]?.trim();
+  if (real) return real;
+  const xff = (req.headers.get('x-forwarded-for') ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  return xff.at(-1) ?? 'unknown';
+}
+
+// Adds the address through public.join_waitlist (migration 20261116000200_waitlist_hardening.sql), which only the service
+// role may call: the public anon key can no longer write to the waitlist at all. SUPABASE_SERVICE_ROLE_KEY is read here,
+// on the server, and must never be given a NEXT_PUBLIC_ name. The function answers the same way for a new address and
+// one already on the list, so the form cannot be used to find out who is on it.
+export async function POST(req: Request) {
+  // Only our own pages may post here. Browsers always send Origin on a POST; a request without one is not from our form.
+  // (This stops cross-site posts from browsers. A script can send any Origin it likes, which is why the per-address limit
+  // and the database's own throttle sit behind it.)
+  const origin = req.headers.get('origin');
+  if (!origin || !allowedOrigins().has(origin)) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
 
   if (!(req.headers.get('content-type') ?? '').toLowerCase().startsWith('application/json')) {
     return NextResponse.json({ error: 'unsupported_media_type' }, { status: 415 });
   }
 
-  const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || req.headers.get('x-real-ip') || 'unknown';
-  if (limited(ip)) return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
+  if (limited(clientIp(req))) return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
 
   const text = await readBody(req).catch(() => null);
   if (text === null) return NextResponse.json({ error: 'too_large' }, { status: 413 });
@@ -82,17 +100,20 @@ export async function POST(req: Request) {
   if (email.length > 254 || !EMAIL.test(email)) return NextResponse.json({ error: 'invalid_email' }, { status: 400 });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) return NextResponse.json({ error: 'not_configured' }, { status: 503 });
 
-  const res = await fetch(`${url}/rest/v1/waitlist`, {
+  const res = await fetch(`${url}/rest/v1/rpc/join_waitlist`, {
     method: 'POST',
-    headers: { apikey: key, authorization: `Bearer ${key}`, 'content-type': 'application/json', prefer: 'return=minimal' },
-    body: JSON.stringify({ email, consent_version: CONSENT_VERSION }),
+    headers: { apikey: key, authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ p_email: email, p_consent_version: CONSENT_VERSION }),
     signal: AbortSignal.timeout(8000),
+    cache: 'no-store',
   }).catch(() => null);
-  // A duplicate comes back from Supabase as 409 (unique violation). Treat it as success so the answer is the same either way.
-  if (res?.status === 409) return NextResponse.json({ ok: true });
+  if (res && !res.ok) {
+    const err = await res.json().catch(() => null);
+    if (err?.hint === 'waitlist_throttled') return NextResponse.json({ error: 'busy' }, { status: 429 });
+  }
   if (!res || !res.ok) return NextResponse.json({ error: 'failed' }, { status: 502 });
   return NextResponse.json({ ok: true });
 }

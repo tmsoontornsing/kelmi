@@ -33,6 +33,7 @@ import {
   parseLocks,
   validateWeek,
   violatesAllergy,
+  unresolvedAllergies,
   type PlanProfile,
   type RecipeRecord,
 } from "./plan-logic.ts";
@@ -591,4 +592,64 @@ Deno.test("the daily ceiling is refused with a 503 busy, the other denials keep 
   assertEquals(PLAN_DENIALS.plan_limit.status, 402);
   assertEquals(PLAN_DENIALS.plus_required.status, 402);
   assert(DAILY_AI_CALL_CEILING > 0);
+});
+
+// ---------- Allergy labels the server cannot match fail closed ----------
+
+// The app's fixed allergy chips (apps/mobile/src/data/mock.ts ALLERGIES). Every one must resolve, or nobody could plan.
+const APP_ALLERGY_CHIPS = ["Peanuts", "Tree nuts", "Shellfish", "Fish", "Dairy", "Gluten", "Eggs", "Soy", "Sesame"];
+
+Deno.test("allergy labels: every app chip resolves to its own group", () => {
+  for (const chip of APP_ALLERGY_CHIPS) assertEquals(allergenGroups(chip), [chip.toLowerCase().replace(" ", "-")], chip);
+  assertEquals(unresolvedAllergies(APP_ALLERGY_CHIPS), []);
+});
+
+Deno.test("allergy labels: spelling, suffixes, accents, scripts and look-alike letters still map to peanuts", () => {
+  const peanutLabels = [
+    "peanuts", "Peanut", "PEANUTS", " peanuts ", "Peanut allergy", "Peanuts (severe)", "peanut-free", "Severe peanut allergy",
+    "ground-nuts", "Groundnuts", "pea nut", "pea-nuts", "cacahuète", "cacahuetes", "Cacahuates", "Arachides", "Amendoim",
+    "花生", "ถั่วลิสง", "मूँगफली", "рeanut" /* Cyrillic р */, "pe​anut" /* zero-width space */, "Ｐｅａｎｕｔ" /* full-width */,
+  ];
+  for (const label of peanutLabels) assertEquals(allergenGroups(label), ["peanuts"], label);
+  assertEquals(unresolvedAllergies(peanutLabels), []);
+});
+
+Deno.test("allergy labels: the app's translated chip names resolve to the same groups", () => {
+  const cases: [string, string][] = [
+    ["Nueces de árbol", "tree-nuts"], ["Fruits à coque", "tree-nuts"], ["坚果", "tree-nuts"], ["ถั่วเปลือกแข็ง", "tree-nuts"],
+    ["Mariscos", "shellfish"], ["Crustacés", "shellfish"], ["Frutos do mar", "shellfish"], ["贝类海鲜", "shellfish"],
+    ["Pescado", "fish"], ["Poisson", "fish"], ["鱼", "fish"], ["ปลา", "fish"],
+    ["Lácteos", "dairy"], ["Produits laitiers", "dairy"], ["乳制品", "dairy"], ["นมและผลิตภัณฑ์นม", "dairy"],
+    ["Glúten", "gluten"], ["麸质", "gluten"], ["Huevos", "eggs"], ["Œufs", "eggs"], ["鸡蛋", "eggs"], ["ไข่ไก่", "eggs"],
+    ["Soja", "soy"], ["大豆", "soy"], ["ถั่วเหลือง", "soy"], ["Sésamo", "sesame"], ["Gergelim", "sesame"], ["芝麻", "sesame"],
+  ];
+  for (const [label, group] of cases) assertEquals(allergenGroups(label), [group], label);
+});
+
+Deno.test("allergy labels: a label we cannot match is reported, never ignored", () => {
+  assertEquals(unresolvedAllergies(["Peanuts", "Mustard", "peanut butter", "!!!", "", "  ", "​"]), ["Mustard", "peanut butter", "!!!"]);
+  // Bracketed text is never dropped: a second allergen in brackets makes the label unresolved, not half-matched.
+  assertEquals(unresolvedAllergies(["Tree nuts (and peanuts)", "Peanuts (sesame"]), ["Tree nuts (and peanuts)", "Peanuts (sesame"]);
+  assertEquals(allergenGroups("Frutos secos"), ["peanuts", "tree-nuts"]);
+  assertEquals(unresolvedAllergies("not a list"), []);
+});
+
+Deno.test("allergy labels: an unmatched label fails closed in the filter, slotConflicts and candidates", () => {
+  const rice = recipe({ id: "rice", title: "Rice bowl", ingredientNames: ["Rice"] });
+  const peanut = recipe({ id: "pb", title: "Peanut satay", ingredientNames: ["Peanut butter"] });
+  // Unknown: every recipe counts as unsafe, so nothing is offered and every planned meal is flagged.
+  for (const label of ["Mustard", "peanut butter", "!!!", "реанут"]) {
+    assert(violatesAllergy(rice, [label]), label);
+    assertEquals(selectCandidates([rice, peanut], profile({ allergies: [label] }), { rng: () => 0 }).dinner, [], label);
+    const out = slotConflicts([rice], [{ recipe_id: "rice", day_of_week: 1, meal_type: "dinner" }], { allergies: [label], diet: "any" });
+    assertEquals(out.length, 1, label);
+    assertEquals(out[0].allergens, [label]);
+  }
+  // Known labels in any spelling filter peanut and leave rice alone.
+  for (const label of ["ถั่วลิสง", "Peanut allergy", "рeanut", "ground-nuts"]) {
+    assert(violatesAllergy(peanut, [label]), label);
+    assertEquals(violatesAllergy(rice, [label]), false, label);
+  }
+  // Blank labels are ignored rather than blocking everything.
+  assertEquals(violatesAllergy(rice, ["", "  "]), false);
 });

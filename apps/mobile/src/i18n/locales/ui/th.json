@@ -676,5 +676,11 @@
   "Waiting for you": "รอคุณอยู่",
   "Your weekly meal plan": "แผนมื้ออาหารประจำสัปดาห์ของคุณ",
   "Your grocery list and cart": "รายการซื้อของและตะกร้าของคุณ",
-  "Your household and food preferences": "ครัวเรือนและความชอบด้านอาหารของคุณ"
+  "Your household and food preferences": "ครัวเรือนและความชอบด้านอาหารของคุณ",
+  "Signing you in…": "กำลังลงชื่อเข้าใช้…",
+  "That link didn’t work": "ลิงก์นั้นใช้ไม่ได้",
+  "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "ลิงก์อาจหมดอายุ ถูกใช้ไปแล้ว หรือเปิดบนโทรศัพท์เครื่องอื่น ลงชื่อเข้าใช้เพื่อดำเนินการต่อ",
+  "Back to Sign In": "กลับไปที่การลงชื่อเข้าใช้",
+  "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "เลือกอาการแพ้จากรายการในครัวเรือน เพื่อให้ Kelmi กันอาหารเหล่านั้นออกจากมื้ออาหารของคุณ",
+  "For your safety, sign out and sign back in, then delete your account.": "เพื่อความปลอดภัย โปรดออกจากระบบแล้วลงชื่อเข้าใช้อีกครั้ง จากนั้นจึงลบบัญชี"
 }

@@ -1,5 +1,15 @@
 import { assertEquals, assertNotEquals } from "jsr:@std/assert@1";
-import { ALLOWED_FUNCTIONS, clientIpOf, downstreamHeaders, looksLikeJwt, routeFor, upstreamHeaders } from "./gateway.ts";
+import {
+  ALLOWED_FUNCTIONS,
+  clientIpOf,
+  declaredLength,
+  downstreamHeaders,
+  looksLikeJwt,
+  makeRateLimiter,
+  readCapped,
+  routeFor,
+  upstreamHeaders,
+} from "./gateway.ts";
 
 const ANON = "anon.key.value";
 const SESSION = "aaa.bbb.ccc";
@@ -89,10 +99,85 @@ Deno.test("hop-by-hop and spoofable headers are not passed on, and the person's 
   assertEquals(out.get("prefer"), "return=representation");
 });
 
-Deno.test("the caller's address comes from the first forwarded entry", () => {
-  assertEquals(clientIpOf(new Headers({ "x-forwarded-for": "1.1.1.1, 2.2.2.2" })), "1.1.1.1");
-  assertEquals(clientIpOf(new Headers({ "cf-connecting-ip": "3.3.3.3" })), "3.3.3.3");
+Deno.test("the caller's address comes from the platform, else the last forwarded entry", () => {
+  // The leftmost X-Forwarded-For entry is whatever the caller wrote; only the last one was added by the hop in front.
+  assertEquals(clientIpOf(new Headers({ "x-forwarded-for": "6.6.6.6, 2.2.2.2" })), "2.2.2.2");
+  assertEquals(clientIpOf(new Headers({ "x-forwarded-for": "6.6.6.6, 2.2.2.2", "cf-connecting-ip": "3.3.3.3" })), "3.3.3.3");
+  assertEquals(clientIpOf(new Headers({ "x-forwarded-for": "6.6.6.6", "x-real-ip": "4.4.4.4" })), "4.4.4.4");
+  assertEquals(clientIpOf(new Headers({ "x-forwarded-for": " , " })), null);
   assertEquals(clientIpOf(new Headers()), null);
+});
+
+Deno.test("the waitlist and its sign-up function are not reachable through the gateway", () => {
+  for (const p of [
+    "/gateway/rest/v1/waitlist",
+    "/gateway/rest/v1/waitlist/",
+    "/gateway/rest/v1/Waitlist",
+    "/gateway/rest/v1/rpc/join_waitlist",
+    "/gateway/rest/v1/rpc/JOIN_WAITLIST",
+    "/gateway/rest/v1/rpc/waitlist_throttle",
+    "/gateway/rest/v1/%57aitlist",
+    "/gateway/rest/v1/rpc/join_%77aitlist",
+    "/gateway/rest/v1/%E0%A4%A",
+  ]) {
+    assertEquals(routeFor(p, "POST"), { error: "not_found" }, p);
+  }
+  // Similar names that are not the waitlist still go through.
+  assertEquals(routeFor("/gateway/rest/v1/waitlists_other", "GET"), { upstreamPath: "/rest/v1/waitlists_other" });
+  assertEquals(routeFor("/gateway/rest/v1/rpc/record_consent", "POST"), { upstreamPath: "/rest/v1/rpc/record_consent" });
+});
+
+Deno.test("only allow-listed request headers are passed on", () => {
+  const out = upstreamHeaders(
+    new Headers({
+      cookie: "sb=1",
+      "x-client-ip": "6.6.6.6",
+      "true-client-ip": "6.6.6.6",
+      "x-original-url": "/storage/v1",
+      "x-http-method-override": "DELETE",
+      "x-envoy-internal": "true",
+      "accept-profile": "public",
+      range: "0-9",
+      "x-supabase-api-version": "2024-01-01",
+    }),
+    ANON,
+    null,
+  );
+  for (const h of ["cookie", "x-client-ip", "true-client-ip", "x-original-url", "x-http-method-override", "x-envoy-internal"]) {
+    assertEquals(out.get(h), null, h);
+  }
+  assertEquals(out.get("accept-profile"), "public");
+  assertEquals(out.get("range"), "0-9");
+  assertEquals(out.get("x-supabase-api-version"), "2024-01-01");
+});
+
+Deno.test("Content-Length must be a plain number", () => {
+  assertEquals(declaredLength(new Headers()), null);
+  assertEquals(declaredLength(new Headers({ "content-length": "42" })), 42);
+  for (const bad of ["abc", "-5", "1e9", "0x10", "1.5"]) {
+    assertEquals(declaredLength(new Headers({ "content-length": bad })), "invalid", bad);
+  }
+});
+
+Deno.test("a body is cut off as soon as it passes the cap", async () => {
+  let pulled = 0;
+  const stream = new ReadableStream<Uint8Array>({
+    pull(c) {
+      pulled += 1024;
+      c.enqueue(new Uint8Array(1024));
+    },
+  });
+  assertEquals(await readCapped(stream, 4096), null);
+  assertEquals(pulled <= 6 * 1024, true);
+  const small = await readCapped(new Response("hello").body, 4096);
+  assertEquals(new TextDecoder().decode(small!), "hello");
+});
+
+Deno.test("the per-address limit allows the limit and refuses the next, per address and per window", () => {
+  const limited = makeRateLimiter(3, 1000);
+  assertEquals([0, 1, 2, 3].map(() => limited("a", 0)), [false, false, false, true]);
+  assertEquals(limited("b", 0), false);
+  assertEquals(limited("a", 1000), false);
 });
 
 Deno.test("what looks like a JWT is told from a placeholder", () => {

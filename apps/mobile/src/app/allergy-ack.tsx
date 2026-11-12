@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
@@ -5,6 +6,7 @@ import { AppText } from '../components/AppText';
 import { NoticeScreen } from '../components/NoticeScreen';
 import { PrimaryButton } from '../components/Buttons';
 import { useT } from '../i18n';
+import { planAfterNotice } from '../lib/safeRoute';
 import { useApp } from '../state/AppState';
 import { useTheme } from '../theme';
 
@@ -16,6 +18,9 @@ export default function AllergyAck() {
   const { t } = useT();
   const { then } = useLocalSearchParams<{ then?: string }>();
   const done = !!app.consent.allergy;
+  // Decided once, when the sheet opens: carry on to a plan only when the app's own "plan my week" step opened this (the
+  // notice not yet acknowledged) and not a deep link. Even then nothing runs until "I understand" is tapped.
+  const [planAfter] = useState(() => planAfterNotice(then, Linking.getLinkingURL(), 'allergy-ack', app.consent.available && !done));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +32,7 @@ export default function AllergyAck() {
     try {
       await app.recordConsent('allergy');
       router.back();
-      if (then === 'plan') setTimeout(() => app.generatePlan(), 350);
+      if (planAfter) setTimeout(() => app.generatePlan(), 350);
     } catch (e) {
       setError((e as Error).message);
       setBusy(false);

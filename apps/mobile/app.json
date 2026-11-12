@@ -229,7 +229,8 @@
             }
           ]
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "extra": {
       "router": {
