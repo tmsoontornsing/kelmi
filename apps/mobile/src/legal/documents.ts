@@ -8,7 +8,7 @@
 import { LEGAL } from './config';
 
 export type Block = { h: string } | { p: string } | { list: string[] };
-export type LegalDoc = { id: 'terms' | 'privacy' | 'consumer-health-data'; title: string; summary: string; blocks: Block[] };
+export type LegalDoc = { id: 'terms' | 'privacy' | 'consumer-health-data'; title: string; blocks: Block[] };
 
 const L = LEGAL;
 
@@ -19,8 +19,6 @@ const AI_SCREEN =
 export const TERMS: LegalDoc = {
   id: 'terms',
   title: 'Terms of Service',
-  summary:
-    'Kelmi suggests meals, prices and nutrition as estimates. Its allergy filter is a helper, not a guarantee: tags can be wrong, so always read labels, and talk to a doctor about medical needs. Kelmi is free, for ages 13 and up in the United States. Most disputes go to individual arbitration, to the extent the law allows, and you can opt out within 30 days.',
   blocks: [
     { p: `Effective ${L.effective}` },
     {
@@ -150,8 +148,6 @@ export const TERMS: LegalDoc = {
 export const PRIVACY: LegalDoc = {
   id: 'privacy',
   title: 'Privacy Policy',
-  summary:
-    'Kelmi collects what it needs to plan your meals: your account, household size, budget, diet, allergies, food preferences, pantry, and lists. It sends food details to an AI provider only if you allow it in the app. We do not sell your information, show ads, or run analytics or tracking. Kelmi does not collect your location. Kelmi is for people 13 and older in the United States, and is not for children under 13. You can delete your account and everything in it from Settings.',
   blocks: [
     { p: `Effective ${L.effective}` },
     {
@@ -294,8 +290,6 @@ export const PRIVACY: LegalDoc = {
 export const CONSUMER_HEALTH: LegalDoc = {
   id: 'consumer-health-data',
   title: 'Consumer Health Data Privacy Policy',
-  summary:
-    'This explains how Kelmi handles the allergy, diet and food information you enter, which some US state laws call consumer health data. We use it only to plan your meals, we never sell it, and we send it to an AI provider only if you allow that. You can withdraw consent and delete it at any time.',
   blocks: [
     { p: `Effective ${L.effective}` },
     {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
-import { Animated, Easing, Pressable, useColorScheme, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Animated, Easing, Pressable, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { useT, type Translator } from '../i18n';
@@ -10,12 +10,9 @@ import type { MascotAnim, MascotLayer, MascotPoseSpec } from './mascotTypes';
 export type { MascotPose };
 export const MASCOT_NAME = 'Pip';
 
-// The generated drawings use these color tokens. Dark mode flips the ink to a light line and the paper fills to the surface color.
-const PALETTE = {
-  light: { INK: '#13241A', G: '#3DAA84', TINT: '#CFE8DA', GLASS: '#E8F3EC', BLUSH: '#F4AE9C', W: '#FFFFFF' },
-  dark: { INK: '#E8F1EB', G: '#5CC99A', TINT: '#2C4A3A', GLASS: '#1F3328', BLUSH: '#C97F70', W: '#17231C' },
-} as const;
-type Colors = (typeof PALETTE)['light' | 'dark'];
+// The generated drawings use these color tokens. Pip looks the same in light and dark mode.
+const PALETTE = { INK: '#13241A', G: '#3DAA84', TINT: '#CFE8DA', GLASS: '#E8F3EC', BLUSH: '#F4AE9C', W: '#FFFFFF' } as const;
+type Colors = typeof PALETTE;
 
 // What a screen reader hears when a screen passes no `label`: Pip's name and the pose, as one translated phrase.
 const poseLabels = (t: Translator['t']): Record<MascotPose, string> => ({
@@ -57,7 +54,7 @@ export function Mascot({
 }) {
   const spec: MascotPoseSpec = MASCOT_POSES[pose];
   const { t } = useT();
-  const colors = PALETTE[useColorScheme() === 'dark' ? 'dark' : 'light'];
+  const colors = PALETTE;
   const on = animate && !reduceMotion();
 
   // Springs in when it first appears and whenever the pose changes.

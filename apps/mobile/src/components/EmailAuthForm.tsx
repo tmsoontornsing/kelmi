@@ -30,14 +30,16 @@ function strength(pw: string) {
 export function EmailAuthForm({
   onSubmit,
   onBack,
+  initialMode = 'signup',
 }: {
   onSubmit: (mode: Mode, email: string, password: string) => Promise<EmailSignUpResult>;
   onBack: () => void;
+  initialMode?: Mode;
 }) {
   const c = useTheme();
   const { t } = useT();
   const strengthLabel = [t('Too short'), t('Weak'), t('Okay'), t('Good'), t('Strong')];
-  const [mode, setMode] = useState<Mode>('signup');
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);

@@ -3,12 +3,12 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '../../components/AppText';
-import { Card, IconButton, TextButton } from '../../components/Buttons';
+import { IconButton, TextButton } from '../../components/Buttons';
 import { useT } from '../../i18n';
 import { LEGAL } from '../../legal/config';
 import { LEGAL_DOCS, type Block } from '../../legal/documents';
 import { modalEdges, openUrl } from '../../navigation';
-import { radius, space, useTheme } from '../../theme';
+import { space, useTheme } from '../../theme';
 
 // The Terms of Service, Privacy Policy or Consumer Health Data Policy, readable without leaving the app or needing a connection.
 // Presented as a sheet so it opens the same way over the paywall, sign-up, or Settings.
@@ -36,10 +36,6 @@ export default function LegalScreen() {
         {lang !== 'en' ? (
           <AppText variant="footnote" color={c.muted}>{t('This document is available in English only.')}</AppText>
         ) : null}
-        <Card style={[styles.summary, { backgroundColor: c.tint }]}>
-          <AppText variant="eyebrow" color={c.primaryText}>{t('The short version')}</AppText>
-          <AppText color={c.text}>{content.summary}</AppText>
-        </Card>
         {content.blocks.map((b, i) => (
           <BlockView key={i} block={b} />
         ))}
@@ -94,7 +90,6 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   top: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: space.gutter, paddingTop: 12, paddingBottom: 8 },
   content: { paddingHorizontal: space.gutter, paddingBottom: 40, gap: 12 },
-  summary: { padding: 16, gap: 6, borderRadius: radius.card, marginBottom: 4 },
   heading: { marginTop: 12 },
   para: { fontSize: 16, lineHeight: 23 },
   list: { gap: 10 },

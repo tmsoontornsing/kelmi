@@ -40,10 +40,10 @@ export default function Save() {
   }, [app.live, app.authReady, app.signedIn]);
 
   const summary: [string, string][] = [
+    [t('People'), String(app.people)],
     [t('Diet'), dietName],
     [t('Goal'), tx(GOALS.find((g) => g.id === app.goal)?.name ?? 'Just eat well')],
     ...(dietAllowsMeat(app.diet) ? [[t('Meat'), tx(MEAT_LEVELS.find((m) => m.id === app.meatLevel)?.name ?? 'Some')] as [string, string]] : []),
-    [t('People'), String(app.people)],
     [t('Weekly budget'), `$${app.budget}`],
     [t('Avoiding'), avoiding],
     [t('Kitchen'), kitchen],

@@ -29,7 +29,7 @@ for (const doc of Object.values(LEGAL_DOCS)) {
   const body = doc.blocks
     .map((b) => ('h' in b ? `## ${b.h}` : 'p' in b ? b.p.replace(/\n/g, '  \n') : b.list.map((i) => `- ${i}`).join('\n')))
     .join('\n\n');
-  for (const d of outDirs) writeFileSync(join(d, `${doc.id}.md`), `# Kelmi ${doc.title}\n\n> ${doc.summary}\n\n${body}\n`);
+  for (const d of outDirs) writeFileSync(join(d, `${doc.id}.md`), `# Kelmi ${doc.title}\n\n${body}\n`);
 }
 
 console.log(`Wrote ${Object.values(LEGAL_DOCS).map((d) => d.id + '.md').join(', ')} to legal/ and apps/web/content/.`);

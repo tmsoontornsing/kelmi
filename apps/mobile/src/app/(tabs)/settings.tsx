@@ -12,6 +12,7 @@ import { TabScreen } from '../../components/TabScreen';
 import { applianceName, dietAllowsMeat, DIETS, GOALS, MEAT_LEVELS } from '../../data/mock';
 import { comma, LANGUAGES, useLanguage, useT } from '../../i18n';
 import { LEGAL } from '../../legal/config';
+import { useAppearance } from '../../lib/appearance';
 import { PLUS_ENABLED } from '../../lib/flags';
 import { FREE_PLANS_PER_MONTH } from '../../lib/limits';
 import { openUrl, resetTo } from '../../navigation';
@@ -23,6 +24,7 @@ export default function Settings() {
   const app = useApp();
   const { t, tx } = useT();
   const { choice, lang } = useLanguage();
+  const appearance = useAppearance();
   const language = choice === 'system' ? t('Same as phone') : LANGUAGES.find((l) => l.code === lang)!.native;
   const dietName = tx(DIETS.find((d) => d.id === app.diet)?.name ?? 'Everything');
   const goalName = tx(GOALS.find((g) => g.id === app.goal)?.name ?? 'Just eat well');
@@ -117,6 +119,15 @@ export default function Settings() {
         <LinkRow label={t('App language')} value={language} href="/language" first />
       </Section>
 
+      <Section title={t('Appearance')}>
+        <LinkRow
+          label={t('Appearance')}
+          value={appearance === 'dark' ? t('Dark') : appearance === 'system' ? t('Same as phone') : t('Light')}
+          href="/appearance"
+          first
+        />
+      </Section>
+
       {app.live && app.consent.available ? (
         <Section title={t('Privacy and safety')} footer={t('You can change your AI planning choice at any time.')}>
           <LinkRow label={t('AI planning')} value={app.consent.ai ? t('Allowed') : t('Off')} href="/ai-consent" first />
@@ -155,7 +166,16 @@ export default function Settings() {
         {PLUS_ENABLED ? (
           <ActionRow
             label={t('Restore Purchases')}
-            onPress={() => Alert.alert(t('No purchases found'), t('There’s nothing to restore on this account.'))}
+            onPress={() =>
+              app
+                .restorePurchases()
+                .then((found) =>
+                  found
+                    ? Alert.alert(t('Purchases restored'), t('Kelmi Plus is active on this account.'))
+                    : Alert.alert(t('No purchases found'), t('There’s nothing to restore on this account.')),
+                )
+                .catch((e: Error) => Alert.alert(t('Could not restore purchases'), e.message))
+            }
           />
         ) : null}
         <ActionRow
