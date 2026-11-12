@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '../components/AppText';
@@ -75,6 +75,25 @@ export default function Auth() {
   }, [app.authReady, app.signedIn]);
 
   const [emailOpen, setEmailOpen] = useState(false);
+  // While the keyboard is up over the email form, the receipt and the intro line step aside so the fields stay in view above it.
+  // They come back when the keyboard goes away.
+  const [keyboardUp, setKeyboardUp] = useState(false);
+  useEffect(() => {
+    const ios = Platform.OS === 'ios';
+    const show = Keyboard.addListener(ios ? 'keyboardWillShow' : 'keyboardDidShow', () => {
+      animateLayout();
+      setKeyboardUp(true);
+    });
+    const hide = Keyboard.addListener(ios ? 'keyboardWillHide' : 'keyboardDidHide', () => {
+      animateLayout();
+      setKeyboardUp(false);
+    });
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+  const squeeze = emailOpen && keyboardUp;
   const [viewportHeight, setViewportHeight] = useState(0);
   const shortScreen = viewportHeight > 0 && viewportHeight < SHORT_VIEWPORT;
   const [agreed, setAgreed] = useState(false);
@@ -170,7 +189,7 @@ export default function Auth() {
         <IconButton icon="close" label={t('Close, sign in later')} onPress={() => router.back()} />
       </View>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView onLayout={(e) => setViewportHeight(e.nativeEvent.layout.height)} contentContainerStyle={[styles.content, emailOpen ? null : styles.spread]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <ScrollView onLayout={(e) => setViewportHeight(e.nativeEvent.layout.height)} contentContainerStyle={[styles.content, emailOpen ? null : styles.spread]} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" showsVerticalScrollIndicator={false}>
           {loginOnly ? (
             <View style={styles.helloRow}>
               <View style={styles.helloCopy}>
@@ -191,14 +210,16 @@ export default function Auth() {
             <AppText variant="largeTitle" accessibilityRole="header">
               {hasWeek ? (overBudget ? t('Your week is over budget') : t('Your week fits your budget')) : t('Save Your Plan')}
             </AppText>
-            <AppText color={c.muted}>
-              {hasWeek
-                ? t('You built it. Sign in and it\'s saved, with your grocery list.')
-                : t('You set these up. Sign in and they are kept, ready on any phone you use.')}
-            </AppText>
+            {squeeze ? null : (
+              <AppText color={c.muted}>
+                {hasWeek
+                  ? t('You built it. Sign in and it\'s saved, with your grocery list.')
+                  : t('You set these up. Sign in and they are kept, ready on any phone you use.')}
+              </AppText>
+            )}
           </View>
           )}
-          {loginOnly ? (
+          {squeeze ? null : loginOnly ? (
             emailOpen ? null : (
               <View style={[styles.waiting, { backgroundColor: c.card, borderColor: c.line }]}>
                 <View style={styles.waitPip}>
