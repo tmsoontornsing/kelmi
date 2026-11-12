@@ -83,9 +83,9 @@ export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [str
 
 const styles = StyleSheet.create({
   wrapTight: { alignSelf: 'stretch' },
-  paperTight: { borderWidth: StyleSheet.hairlineWidth, borderTopLeftRadius: 4, borderTopRightRadius: 4, paddingHorizontal: 18, paddingTop: 14, paddingBottom: 8 },
-  rowTight: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, paddingVertical: 5 },
-  budgetTight: { fontFamily: fonts.display, fontSize: 44, lineHeight: 48, letterSpacing: -1 },
+  paperTight: { borderWidth: StyleSheet.hairlineWidth, borderTopLeftRadius: 4, borderTopRightRadius: 4, paddingHorizontal: 18, paddingTop: 12, paddingBottom: 6 },
+  rowTight: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, paddingVertical: 2 },
+  budgetTight: { fontFamily: fonts.display, fontSize: 40, lineHeight: 44, letterSpacing: -1 },
   // No Pip here: the receipt takes all the room its parent gives it, with the rows spread evenly down the paper.
   wrap: { alignSelf: 'stretch', flexGrow: 1 },
   grow: { flex: 1 },
