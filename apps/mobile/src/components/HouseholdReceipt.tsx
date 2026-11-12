@@ -37,10 +37,27 @@ export function DroppingPip() {
 
 // The sign-in screen's proof of what is about to be saved: the person's own household answers, set out like a receipt.
 // Pip drops onto the top edge, and the budget counts up. Reduce Motion shows everything in place.
-export function HouseholdReceipt({ rows, budget }: { rows: [string, string][]; budget: number }) {
+export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [string, string][]; budget: number; compact?: boolean }) {
   const c = useTheme();
   const { t } = useT();
   const shownBudget = useCountUp(budget, 700);
+
+  // With the email form open there is no room for the full receipt or Pip: one line of answers, and the budget beside it.
+  if (compact) {
+    return (
+      <View style={[styles.mini, { backgroundColor: c.card, borderColor: c.line }]}>
+        <View style={styles.miniText}>
+          <AppText variant="eyebrow" color={c.muted}>
+            {t('Your household')}
+          </AppText>
+          <AppText variant="subhead" color={c.text} numberOfLines={2}>
+            {rows.map(([, value]) => value).join(' · ')}
+          </AppText>
+        </View>
+        <AppText variant="money" color={c.primaryText} style={styles.miniBudget} accessibilityLabel={`${t('Weekly budget')} $${budget}`}>{`$${Math.round(shownBudget)}`}</AppText>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.wrap}>
@@ -82,6 +99,9 @@ export function HouseholdReceipt({ rows, budget }: { rows: [string, string][]; b
 }
 
 const styles = StyleSheet.create({
+  mini: { alignSelf: 'stretch', borderWidth: StyleSheet.hairlineWidth, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  miniText: { flex: 1, gap: 2 },
+  miniBudget: { fontFamily: fonts.display, fontSize: 32, lineHeight: 36, letterSpacing: -0.5 },
   wrap: { alignSelf: 'stretch', paddingTop: 66 },
   pip: { position: 'absolute', right: 14, top: 0, zIndex: 2 },
   paper: { borderWidth: StyleSheet.hairlineWidth, borderTopLeftRadius: 4, borderTopRightRadius: 4, paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8, gap: 0 },
