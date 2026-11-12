@@ -1,5 +1,5 @@
 import { loadProfile, loadRecipes } from "../_shared/data.ts";
-import { asCaller, fail, json, readJson } from "../_shared/http.ts";
+import { asCaller, fail, json, rateLimited, readJson } from "../_shared/http.ts";
 import { selectCandidates } from "../_shared/plan-logic.ts";
 import { MEAL_TYPES, type MealType } from "../_shared/provider.ts";
 
@@ -18,6 +18,9 @@ Deno.serve(async (req) => {
   const caller = await asCaller(req);
   if (caller instanceof Response) return caller;
   const { db, userId } = caller;
+  // A person swapping meals asks a handful of times a minute; this is far above that and far below abuse.
+  const limited = await rateLimited(userId, "meal-options", 60, 60);
+  if (limited) return limited;
 
   const body = await readJson(req);
   if (body instanceof Response) return body;

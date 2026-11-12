@@ -75,3 +75,26 @@ export function adminClient(): SupabaseClient {
     auth: { persistSession: false },
   });
 }
+
+// Per-person rate limit for functions that don't have their own cap. Returns a 429 Response when the person is over
+// `max` calls in `windowSeconds`, otherwise null. A failure of the limiter itself lets the request through (it is a
+// second line of defence behind sign-in and the gateway's per-IP limit, and should not take the app down).
+export async function rateLimited(userId: string, bucket: string, max: number, windowSeconds: number): Promise<Response | null> {
+  const { data, error } = await adminClient().rpc("hit_rate_limit", {
+    p_user: userId,
+    p_bucket: bucket,
+    p_max: max,
+    p_window_seconds: windowSeconds,
+  });
+  if (error) {
+    console.error(`rate limit ${bucket}: ${error.message}`);
+    return null;
+  }
+  if (data === false) {
+    return new Response(JSON.stringify({ error: "rate_limited", message: "Too many requests. Try again in a minute." }), {
+      status: 429,
+      headers: { "content-type": "application/json", "retry-after": String(windowSeconds) },
+    });
+  }
+  return null;
+}

@@ -1,7 +1,7 @@
 import { z } from "npm:zod@3.23.8";
 
 import { loadProfile, loadRecipesByIds } from "../_shared/data.ts";
-import { adminClient, asCaller, fail, json, readJson } from "../_shared/http.ts";
+import { adminClient, asCaller, fail, json, rateLimited, readJson } from "../_shared/http.ts";
 import { slotConflicts } from "../_shared/plan-logic.ts";
 import { MEAL_TYPES } from "../_shared/provider.ts";
 
@@ -27,6 +27,8 @@ Deno.serve(async (req) => {
   const caller = await asCaller(req);
   if (caller instanceof Response) return caller;
   const { db, userId } = caller;
+  const limited = await rateLimited(userId, "grocery-list", 30, 60);
+  if (limited) return limited;
 
   const raw = await readJson(req);
   if (raw instanceof Response) return raw;

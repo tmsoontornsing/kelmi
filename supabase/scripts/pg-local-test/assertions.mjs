@@ -509,4 +509,37 @@ await check('i-throttle-hour', 'throttle: 2000/hour (rows spread >1 min old, so 
   await wl('after-window@x.test');
 });
 
+// ================= (k) per-person rate limits + trigger function grants =================
+const hit = (u, b, max, win) => run(asSvc, `select public.hit_rate_limit($1,$2,$3,$4) ok`, [u, b, max, win]).then((r) => r.rows[0].ok);
+await check('k-limit-counts', 'hit_rate_limit: 3 allowed, the 4th refused; another person and another bucket are separate', async () => {
+  for (let i = 0; i < 3; i++) eq(await hit(A, 'k1', 3, 60), true, `call ${i + 1}`);
+  eq(await hit(A, 'k1', 3, 60), false, '4th');
+  eq(await hit(B, 'k1', 3, 60), true, 'other person');
+  eq(await hit(A, 'k2', 3, 60), true, 'other bucket');
+});
+await check('k-limit-window', 'hit_rate_limit: a new window starts after the old one ends', async () => {
+  await db.query(`update public.rate_limits set window_start = now() - interval '2 minutes' where user_id=$1 and bucket='k1'`, [A]);
+  eq(await hit(A, 'k1', 3, 60), true);
+  eq((await q(`select hits from public.rate_limits where user_id=$1 and bucket='k1'`, [A]))[0].hits, 1);
+});
+await check('k-limit-args', 'hit_rate_limit rejects nonsense arguments (22023)', async () => {
+  await fails(hit(null, 'k', 1, 60), { code: '22023' });
+  await fails(hit(A, 'k', 0, 60), { code: '22023' });
+});
+await check('k-limit-locked', 'people and anon cannot run hit_rate_limit or read/write rate_limits', async () => {
+  await fails(run(asA, `select public.hit_rate_limit($1,'k1',999,60)`, [A]), { code: '42501' });
+  await fails(run(asAnon, `select public.hit_rate_limit($1,'k1',999,60)`, [A]), { code: '42501' });
+  await fails(run(asA, `select * from public.rate_limits`), { code: '42501' });
+  await fails(run(asA, `update public.rate_limits set hits = 0`), { code: '42501' });
+});
+await check('k-trigger-grants', 'trigger functions cannot be called through the API by anon or signed-in users', async () => {
+  for (const f of ['experiment_events_daily_cap', 'handle_new_user', 'waitlist_throttle', 'protect_consent_columns', 'pantry_quota', 'protect_meal_item_safety', 'leftovers_quota']) {
+    for (const who of [asAnon, asA]) await fails(run(who, `select public.${f}()`), { code: '42501' });
+  }
+});
+await check('k-triggers-still-fire', 'the revoked trigger functions still fire (new user gets a profile; pantry quota still enforced)', async () => {
+  await db.query(`insert into auth.users (id, email) values ('00000000-0000-4000-8000-0000000000f7','g@x.test')`);
+  ok(await prof('00000000-0000-4000-8000-0000000000f7'), 'no profile created');
+});
+
 process.exit(report() ? 1 : 0);

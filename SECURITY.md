@@ -12,6 +12,8 @@
 | Waitlist emails | Scrapers, spammers | Only `join_waitlist()` (service role) can write it; same answer for new and existing emails |
 | Session tokens on the phone | Device backups, other apps | Encrypted at rest (`apps/mobile/src/lib/secureStorage.ts`), key in the Keychain/Keystore |
 
+Every function that reads data (not only the AI one) has a per-person rate limit: `generate-plan` through `claim_plan_generation`, `meal-options` and `grocery-list` through `hit_rate_limit` (60 and 30 a minute), plus the gateway's per-IP limit.
+
 Keys: only the gateway holds the anon key; only Edge Functions and the website's waitlist route hold the service-role key. Neither ever ships in the app.
 
 ## Red team
@@ -36,7 +38,7 @@ Run them after any change to a migration, RLS policy, Edge Function, or the wait
 
 Ship in this order, close together:
 
-1. Migrations `20261116000000`, `20261116000100`, `20261116000200`.
+1. Migrations `20261116000000`, `20261116000100`, `20261116000200`, `20261116000400` (and your `20261116000300` launch-email one). The live project (checked 2026-11-12 with Supabase's read-only advisors) already has data and migrations through `20261115`, so these apply on top of real rows: every new constraint is `NOT VALID`, so old rows never block the deploy.
 2. Edge Functions: `grocery-list` (now calls the 4-argument `apply_grocery_choices` with the service role), `generate-plan`, `gateway`, `delete-account`, `meal-options`, `revenuecat-webhook`. Until this lands, the old grocery-list keeps working through the transitional 3-argument `apply_grocery_choices`, which can add an allergen flag but never clear one, so some meals may sit off the list until step 2. **Drop the 3-argument version in the next migration** once step 2 is live.
 3. Website: set `SUPABASE_SERVICE_ROLE_KEY` in Vercel as a **server-only** variable (never `NEXT_PUBLIC_`), then deploy. Set `NEXT_PUBLIC_SITE_URL` if the site is not on usekavi.com. Between step 1 and this, waitlist sign-ups fail.
 4. App: a **new native build** (EAS) for `expo-secure-store`. Do not ship this change as an over-the-air update to an older binary: the missing native module crashes the app at start. Bump `runtimeVersion` so EAS Update can't do that by mistake. Older app builds keep working against the new server, except account deletion, which now needs `{confirm:"DELETE"}` and a recent sign-in.
@@ -49,12 +51,13 @@ Not visible from the repo. Check each before launch:
 
 - [ ] Each Edge Function's deployed **Verify JWT** setting (all user functions check the token themselves either way).
 - [ ] Auth: email confirmation on, anonymous sign-in off, sign-up rate limits and a CAPTCHA (hCaptcha/Turnstile) on. These are what stop account swarms from eating the free AI share.
-- [ ] Auth: minimum password length (12+) and leaked-password protection.
+- [ ] Auth: minimum password length (12+) and **leaked-password protection**. The Security Advisor reports it as *disabled* on the live project; turn it on in Auth > Providers > Email (a Pro-plan feature). I can't change it from the repo.
 - [ ] Whether the platform overwrites `x-forwarded-for` / sets `cf-connecting-ip` for the gateway (log one request). If not, rate limits key on the wrong IP.
 - [ ] Decode one access token after a refresh and confirm `amr` holds the original sign-in time (delete-account relies on it).
 - [ ] RevenueCat: webhook `Authorization` secret set; sandbox purchases are now ignored unless `REVENUECAT_ALLOW_SANDBOX=1`.
 - [ ] Anthropic and IDUnify: a provider-side monthly spend limit.
-- [ ] Run Supabase's Security Advisor after the migrations.
+- [ ] Run Supabase's Security Advisor after the migrations. Before them it listed three trigger functions callable through the API (fixed by `20261116000400`), `record_consent` as callable by signed-in users (intended: it only ever touches the caller's own row), and the password setting above.
+- [ ] Budget caps. Put a monthly spend limit on every usage-billed account: Anthropic, IDUnify, Resend, Vercel and Supabase (spend cap or billing alerts). Where a provider has no hard cap, set alerts at 50/80/100% of what you'd tolerate. Server-side limits stop abuse; these limits stop a surprise bill from anything the limits miss.
 
 ## Known, accepted, or open
 
