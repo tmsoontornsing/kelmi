@@ -37,7 +37,7 @@ export function DroppingPip() {
 
 // The sign-in screen's proof of what is about to be saved: the person's own household answers, set out like a receipt.
 // Pip drops onto the top edge, and the budget counts up. Reduce Motion shows everything in place.
-export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [string, string][]; budget: number; compact?: boolean }) {
+export function HouseholdReceipt({ rows, budget, compact = false, summary }: { rows: [string, string][]; budget: number; compact?: boolean; summary?: string }) {
   const c = useTheme();
   const { t } = useT();
   const shownBudget = useCountUp(budget, 700);
@@ -51,7 +51,7 @@ export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [str
             {t('Your household')}
           </AppText>
           <AppText variant="subhead" color={c.text} numberOfLines={2}>
-            {rows.map(([, value]) => value).join(' · ')}
+            {summary ?? rows.map(([, value]) => value).join(' · ')}
           </AppText>
         </View>
         <AppText variant="money" color={c.primaryText} style={styles.miniBudget} accessibilityLabel={`${t('Weekly budget')} $${budget}`}>{`$${Math.round(shownBudget)}`}</AppText>

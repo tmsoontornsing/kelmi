@@ -240,7 +240,7 @@ export default function Auth() {
               fill={shortScreen && !emailOpen}
             />
           ) : (
-            <HouseholdReceipt rows={receiptRows} budget={app.budget} compact={emailOpen} />
+            <HouseholdReceipt rows={receiptRows} budget={app.budget} compact={emailOpen} summary={choiceChips.join(' · ')} />
           )}
 
           <View style={styles.bottom}>
