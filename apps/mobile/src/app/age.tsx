@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
@@ -87,15 +88,20 @@ export default function Age() {
       </View>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-          <View style={styles.copy}>
-            <AppText variant="largeTitle" accessibilityRole="header">
-              {t('When were you born?')}
-            </AppText>
-            <AppText color={c.muted}>{t('Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.')}</AppText>
+          <View style={styles.hero}>
+            <View style={styles.copy}>
+              <AppText variant="eyebrow" color={c.primaryText}>
+                {t('Before we start')}
+              </AppText>
+              <AppText variant="largeTitle" accessibilityRole="header">
+                {t('When were you born?')}
+              </AppText>
+            </View>
+            <Mascot pose="think" size={92} decorative />
           </View>
 
-          <View style={styles.group}>
-            <AppText variant="headline" accessibilityRole="header">
+          <View style={[styles.card, { backgroundColor: c.card, borderColor: c.line }]}>
+            <AppText variant="eyebrow" color={c.muted} accessibilityRole="header">
               {t('Birth month')}
             </AppText>
             <View style={styles.months}>
@@ -111,19 +117,17 @@ export default function Age() {
                       setError(null);
                       setMonth(i + 1);
                     }}
-                    style={[styles.month, { backgroundColor: on ? c.primary : c.card, borderColor: on ? c.primary : c.line }]}
+                    style={[styles.month, { backgroundColor: on ? c.primary : c.bg, borderColor: on ? c.primary : c.line }]}
                   >
-                    <AppText weight="600" color={on ? c.onPrimary : c.text}>
+                    <AppText weight="600" color={on ? c.onPrimary : c.text} numberOfLines={1}>
                       {name}
                     </AppText>
                   </Pressable>
                 );
               })}
             </View>
-          </View>
 
-          <View style={styles.group}>
-            <AppText variant="headline" accessibilityRole="header">
+            <AppText variant="eyebrow" color={c.muted} accessibilityRole="header" style={styles.yearLabel}>
               {t('Birth year')}
             </AppText>
             <TextInput
@@ -138,7 +142,7 @@ export default function Age() {
                 setYear(v.replace(/\D/g, ''));
               }}
               onSubmitEditing={submit}
-              style={[styles.input, { backgroundColor: c.card, color: c.text, borderColor: c.line }]}
+              style={[styles.input, { backgroundColor: c.bg, color: c.text, borderColor: c.line }]}
             />
           </View>
 
@@ -147,6 +151,13 @@ export default function Age() {
               {error}
             </AppText>
           ) : null}
+
+          <View style={styles.privacy}>
+            <Ionicons name="lock-closed-outline" size={18} color={c.muted} style={styles.lock} />
+            <AppText variant="footnote" style={styles.flex}>
+              {t('Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.')}
+            </AppText>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
       <View style={styles.footer}>
@@ -160,12 +171,16 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   flex: { flex: 1 },
   top: { flexDirection: 'row', paddingHorizontal: 12, paddingTop: 8 },
-  content: { paddingHorizontal: space.gutter, paddingBottom: 24, gap: 24 },
-  copy: { gap: 8 },
-  group: { gap: 10 },
+  content: { paddingHorizontal: space.gutter, paddingTop: 8, paddingBottom: 16, gap: 16 },
+  hero: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  copy: { flex: 1, gap: 6 },
+  card: { borderWidth: StyleSheet.hairlineWidth, borderRadius: radius.card, padding: 16, gap: 10 },
   months: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  month: { minWidth: 72, minHeight: 44, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', borderRadius: radius.control, borderWidth: 1 },
-  input: { minHeight: 52, borderRadius: radius.control, borderWidth: 1, paddingHorizontal: 16, fontFamily: fonts.regular, fontSize: 20 },
+  month: { width: '23%', flexGrow: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: radius.control, borderWidth: 1 },
+  yearLabel: { marginTop: 8 },
+  input: { minHeight: 56, borderRadius: radius.control, borderWidth: 1, paddingHorizontal: 16, fontFamily: fonts.display, fontSize: 24, letterSpacing: 2 },
+  privacy: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', paddingHorizontal: 4 },
+  lock: { marginTop: 1 },
   footer: { paddingHorizontal: space.gutter, paddingBottom: 12 },
   blocked: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, paddingHorizontal: 32 },
   center: { textAlign: 'center' },

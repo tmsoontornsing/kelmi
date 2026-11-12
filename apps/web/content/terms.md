@@ -1,7 +1,5 @@
 # Kelmi Terms of Service
 
-> Kelmi suggests meals, prices and nutrition as estimates. Its allergy filter is a helper, not a guarantee: tags can be wrong, so always read labels, and talk to a doctor about medical needs. Kelmi is free, for ages 13 and up in the United States. Most disputes go to individual arbitration, to the extent the law allows, and you can opt out within 30 days.
-
 Effective November 5, 2026
 
 These Terms of Service ("Terms") are an agreement between you and LOGICBAKER COMPANY LIMITED ("LOGICBAKER COMPANY LIMITED", "we", "us") about your use of the Kelmi app and related services (together, "Kelmi"). By creating an account or using Kelmi, you agree to these Terms and acknowledge our Privacy Policy and Consumer Health Data Privacy Policy. If you do not agree, do not use Kelmi.

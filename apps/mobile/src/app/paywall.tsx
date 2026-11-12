@@ -64,7 +64,7 @@ function PaywallScreen() {
     if (startPlan) track('paywall_default_plan', startPlan, `subscribe_tapped_${plan}`);
     const pkg = packages[plan];
     if (!pkg) {
-      if (__DEV__ && !purchases.purchasesAvailable) {
+      if (__DEV__ && !purchases.isConfigured()) {
         app.subscribe();
         finish();
         return;

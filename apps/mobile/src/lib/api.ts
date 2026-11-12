@@ -22,7 +22,7 @@ import * as WebBrowser from 'expo-web-browser';
 
 import { currentLanguage, LANGUAGES, t } from '../i18n';
 import { friendlyAmount } from './amounts';
-import { signInNative, signOutNative } from './nativeSignIn';
+import { revokeNativeAccess, signInNative, signOutNative } from './nativeSignIn';
 import { FREE_PLANS_PER_MONTH } from './limits';
 import { findSwapConflict, type SwapConflict } from './swapSafety';
 import { perServing, type IngredientNutrition } from './nutrition';
@@ -782,4 +782,8 @@ export async function mealOptions(type: MealType, exclude: string[]): Promise<Me
   }));
 }
 
-export const deleteAccount = () => invoke('delete-account', {});
+// Deletes the account on the server, then takes back Kelmi's access to the person's Google account (best effort).
+export async function deleteAccount() {
+  await invoke('delete-account', {});
+  await revokeNativeAccess();
+}

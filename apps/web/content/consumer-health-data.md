@@ -1,7 +1,5 @@
 # Kelmi Consumer Health Data Privacy Policy
 
-> This explains how Kelmi handles the allergy, diet and food information you enter, which some US state laws call consumer health data. We use it only to plan your meals, we never sell it, and we send it to an AI provider only if you allow that. You can withdraw consent and delete it at any time.
-
 Effective November 5, 2026
 
 This policy is for people in the United States and is provided by LOGICBAKER COMPANY LIMITED ("we", "us") under laws such as Washington's My Health My Data Act and Nevada's consumer health data law. It adds detail to our Privacy Policy. It is not medical advice, and Kelmi is not a medical service.

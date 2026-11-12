@@ -1,7 +1,5 @@
 # Kelmi Privacy Policy
 
-> Kelmi collects what it needs to plan your meals: your account, household size, budget, diet, allergies, food preferences, pantry, and lists. It sends food details to an AI provider only if you allow it in the app. We do not sell your information, show ads, or run analytics or tracking. Kelmi does not collect your location. Kelmi is for people 13 and older in the United States, and is not for children under 13. You can delete your account and everything in it from Settings.
-
 Effective November 5, 2026
 
 This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekelmi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.

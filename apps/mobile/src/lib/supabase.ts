@@ -4,16 +4,26 @@ import { AppState } from 'react-native';
 
 import './webcrypto';
 
-// Only the anon key ships in the app. Row-level security protects the data, and the
-// service_role key must never appear in client code.
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+// The app holds no Supabase key. It talks to the project's gateway function (supabase/functions/gateway), which adds the
+// anon key on the server and forwards the request. Only the gateway's address is set here, and that is not a secret.
+// Row-level security still decides what any request can read or write, and the service_role key must never appear in
+// client code.
+const gatewayUrl = process.env.EXPO_PUBLIC_GATEWAY_URL;
 
-export const isSupabaseConfigured = Boolean(url && anonKey);
+// supabase-js insists on a key. This stand-in is replaced by the real one at the gateway; on its own it opens nothing.
+const GATEWAY_PLACEHOLDER = 'kelmi-gateway';
 
-// Null until the env vars are set, so the app can keep running on mock data.
+// The platform cuts a path short when `functions/v1` appears in it twice, and the gateway lives at `/functions/v1/gateway`,
+// so supabase-js's `<gateway>/functions/v1/<name>` calls are sent as `<gateway>/fn/<name>`. The gateway maps them back.
+const viaGateway: typeof fetch = (input, init) =>
+  fetch(typeof input === 'string' ? input.replace('/gateway/functions/v1/', '/gateway/fn/') : input, init);
+
+export const isSupabaseConfigured = Boolean(gatewayUrl);
+
+// Null until the gateway address is set, so the app can keep running on mock data.
 export const supabase = isSupabaseConfigured
-  ? createClient(url!, anonKey!, {
+  ? createClient(gatewayUrl!, GATEWAY_PLACEHOLDER, {
+      global: { fetch: viaGateway },
       auth: {
         storage: AsyncStorage,
         autoRefreshToken: true,
