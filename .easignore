@@ -1,0 +1,37 @@
+# What EAS Build leaves out of the upload. Having this file means EAS no longer reads .gitignore, so the
+# .gitignore rules that matter are repeated here.
+
+# Local tooling and private working files: large and not part of the app
+**/.claude/
+video/
+absorbed-brain/
+HANDOFF-TM.md
+brag-output*/
+usekelmi.com/
+marketing/
+legal/
+docs/
+
+# Dependencies and build output (EAS installs its own)
+**/node_modules/
+**/.next/
+**/.expo/
+**/dist/
+**/web-build/
+**/*.tsbuildinfo
+
+# The native projects are generated in the cloud from app.json
+apps/mobile/ios/
+apps/mobile/android/
+
+# Secrets and signing files never go up (public keys are set as EAS environment variables)
+**/.env
+**/.env*.local
+**/*.p8
+**/*.p12
+**/*.pem
+**/*.key
+**/*.jks
+**/*.mobileprovision
+
+.DS_Store
