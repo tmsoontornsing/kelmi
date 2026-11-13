@@ -1,6 +1,6 @@
 # Usage counts (analytics) with PostHog
 
-What it is: three event names (`app_opened`, `plan_generated`, `grocery_list_built`), no properties, sent to PostHog. Code:
+What it is: three event names (`app_opened`, `plan_generated`, `grocery_list_built`) sent to PostHog with no properties except PostHog's own token, the random id and the library version (`KEEP` in analytics.ts strips the device, OS, locale, time zone and screen details the SDK would add). Code:
 `src/lib/analytics.ts`. Switch: Settings > Usage counts. The SDK is not started, and nothing is sent, unless the person turns the switch on.
 
 ## Set it up (one time)
@@ -20,6 +20,7 @@ What it is: three event names (`app_opened`, `plan_generated`, `grocery_list_bui
 - Only the names in `ANALYTICS_EVENTS` are sent, with no properties. Never a name, email, allergy, diet, food note, recipe, price or typed
   text. A new event = add it to that list, then to the policy wording in `src/legal/documents.ts` ("Usage counts"), then rebuild the legal
   files: `node scripts/build-legal.mjs`.
+- Keep `before_send` stripping everything outside `KEEP`; PostHog still receives the request's IP address, which is why step 1 turns on "Discard client IP data" (the policy says it is discarded, so do that step before shipping).
 - Never call `identify()`, and never turn on autocapture, session replay, surveys or feature flags without a policy change.
 - Never add another tracking SDK (Meta, Google Analytics, Firebase Analytics, AppsFlyer, Adjust, Mixpanel, ...) without a policy change, a new
   App Privacy answer, and likely the App Tracking Transparency prompt.
