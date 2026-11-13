@@ -8,12 +8,12 @@ const OLD_AGE_KEY = 'kavi.age.v2';
 const CONSENT_KEY = 'kavi.consent.pending';
 const AI_ASKED_KEY = 'kavi.ai.asked.';
 
-// Kelmi is for people 13 and older. The age screen asks for birth month and year with nothing pre-selected, and keeps the
+// Kelmi is for people 13 and older. The age screen asks for birth date with nothing pre-selected, and keeps the
 // answer on the phone so someone under 13 cannot go back and try a different year. (v3: the v2 answer was for 18 and
 // older. A v2 'ok' is still ok, since 18+ is also 13+, but a v2 'blocked' is asked again.) The server keeps its own
 // record, set by record_consent('age') once there is an account.
 export type AgeStatus = 'unknown' | 'ok' | 'blocked';
-export const MIN_AGE = 13;
+export { MIN_AGE, meetsMinimumAge } from './ageRule';
 
 export async function getAgeStatus(): Promise<AgeStatus> {
   try {
@@ -24,13 +24,6 @@ export async function getAgeStatus(): Promise<AgeStatus> {
   } catch {
     return 'unknown';
   }
-}
-
-// Whole months since the birth month. Born in the month of their 13th birthday counts as under 13, so a close call
-// never lets a younger person through.
-export function meetsMinimumAge(month: number, year: number, now = new Date()) {
-  const months = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
-  return months > MIN_AGE * 12;
 }
 
 export async function setAgeStatus(status: 'ok' | 'blocked') {

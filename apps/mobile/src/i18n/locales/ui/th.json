@@ -389,14 +389,11 @@
   "Dishes": "เมนู",
   "Style": "สไตล์",
   "Manage or Cancel Subscription": "จัดการหรือยกเลิกการสมัครสมาชิก",
-  "Choose your birth month and enter a four-digit year.": "เลือกเดือนเกิดและกรอกปีเกิดสี่หลัก",
   "Kelmi isn’t available for people under 13": "Kelmi ไม่เปิดให้ผู้ที่อายุต่ำกว่า 13 ปีใช้",
   "Back": "กลับ",
   "When were you born?": "คุณเกิดเมื่อไร",
   "Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.": "Kelmi สำหรับผู้ที่อายุ 13 ปีขึ้นไป เราใช้ข้อมูลนี้เพื่อตรวจสอบอายุเท่านั้น และไม่บันทึกวันเกิดของคุณ",
-  "Birth month": "เดือนเกิด",
   "Birth year": "ปีเกิด",
-  "Year": "ปี",
   "Agree to the Terms of Service and Privacy Policy to continue.": "ยอมรับข้อกำหนดในการให้บริการและนโยบายความเป็นส่วนตัวเพื่อดำเนินการต่อ",
   "I agree to the {terms} and {privacy}.": "ฉันยอมรับ{terms}และ{privacy}",
   "Quantities for {people}": "ปริมาณสำหรับ {people}",
@@ -682,5 +679,8 @@
   "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "ลิงก์อาจหมดอายุ ถูกใช้ไปแล้ว หรือเปิดบนโทรศัพท์เครื่องอื่น ลงชื่อเข้าใช้เพื่อดำเนินการต่อ",
   "Back to Sign In": "กลับไปที่การลงชื่อเข้าใช้",
   "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "เลือกอาการแพ้จากรายการในครัวเรือน เพื่อให้ Kelmi กันอาหารเหล่านั้นออกจากมื้ออาหารของคุณ",
-  "For your safety, sign out and sign back in, then delete your account.": "เพื่อความปลอดภัย โปรดออกจากระบบแล้วลงชื่อเข้าใช้อีกครั้ง จากนั้นจึงลบบัญชี"
+  "For your safety, sign out and sign back in, then delete your account.": "เพื่อความปลอดภัย โปรดออกจากระบบแล้วลงชื่อเข้าใช้อีกครั้ง จากนั้นจึงลบบัญชี",
+  "Choose your birth date.": "เลือกวันเกิดของคุณ",
+  "Previous month": "เดือนก่อนหน้า",
+  "Next month": "เดือนถัดไป"
 }

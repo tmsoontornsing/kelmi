@@ -389,14 +389,11 @@
   "Dishes": "पकवान",
   "Style": "अंदाज़",
   "Manage or Cancel Subscription": "सदस्यता प्रबंधित करें या रद्द करें",
-  "Choose your birth month and enter a four-digit year.": "अपना जन्म का महीना चुनें और चार अंकों का वर्ष दर्ज करें।",
   "Kelmi isn’t available for people under 13": "Kelmi 13 साल से कम उम्र के लोगों के लिए उपलब्ध नहीं है",
   "Back": "वापस",
   "When were you born?": "आपका जन्म कब हुआ?",
   "Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.": "Kelmi 13 साल और उससे अधिक उम्र के लोगों के लिए है। हम इसका उपयोग सिर्फ़ आपकी उम्र जाँचने के लिए करते हैं और आपकी जन्मतिथि सहेजते नहीं हैं।",
-  "Birth month": "जन्म का महीना",
   "Birth year": "जन्म का वर्ष",
-  "Year": "वर्ष",
   "Agree to the Terms of Service and Privacy Policy to continue.": "जारी रखने के लिए सेवा की शर्तों और गोपनीयता नीति से सहमत हों।",
   "I agree to the {terms} and {privacy}.": "मैं {terms} और {privacy} से सहमत हूँ।",
   "Quantities for {people}": "मात्रा {people} के लिए",
@@ -682,5 +679,8 @@
   "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "हो सकता है उसकी समय-सीमा खत्म हो गई हो, वह पहले ही इस्तेमाल हो चुका हो, या किसी दूसरे फ़ोन पर खोला गया हो। जारी रखने के लिए साइन इन करें।",
   "Back to Sign In": "साइन इन पर वापस जाएँ",
   "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "घर में दी गई सूची से अपनी एलर्जी चुनें ताकि Kelmi उन्हें आपके खाने से दूर रख सके।",
-  "For your safety, sign out and sign back in, then delete your account.": "आपकी सुरक्षा के लिए, साइन आउट करके फिर से साइन इन करें, फिर अपना खाता हटाएँ।"
+  "For your safety, sign out and sign back in, then delete your account.": "आपकी सुरक्षा के लिए, साइन आउट करके फिर से साइन इन करें, फिर अपना खाता हटाएँ।",
+  "Choose your birth date.": "अपनी जन्म तिथि चुनें।",
+  "Previous month": "पिछला महीना",
+  "Next month": "अगला महीना"
 }

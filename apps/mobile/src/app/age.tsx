@@ -1,34 +1,33 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '../components/AppText';
 import { IconButton, PrimaryButton } from '../components/Buttons';
+import { BirthDatePicker, type BirthDate } from '../components/BirthDatePicker';
 import { Mascot } from '../components/Mascot';
-import { useLanguage, useT } from '../i18n';
+import { useT } from '../i18n';
 import * as api from '../lib/api';
 import { getAgeStatus, meetsMinimumAge, setAgeStatus, type AgeStatus } from '../lib/consent';
 import { safeAgeNext } from '../lib/safeRoute';
 import { haptic } from '../motion';
 import { useApp } from '../state/AppState';
-import { fonts, radius, space, useTheme } from '../theme';
+import { radius, space, useTheme } from '../theme';
 
-// A neutral age check before anything else: month and year, nothing pre-selected. The birth date is used once to decide
+// A neutral age check before anything else: a calendar with nothing pre-selected. The birth date is used once to decide
 // and is never saved; only the result is, so an under-13 answer sticks on this phone. Someone already signed in (sent here
 // by the server asking for their age) also has the answer recorded on their account.
 export default function Age() {
   const c = useTheme();
   const { t } = useT();
-  const { lang } = useLanguage();
   const app = useApp();
   // Only the places the app itself sends people next; a deep link can't pick somewhere else.
   const next = safeAgeNext(useLocalSearchParams<{ next?: string }>().next);
 
   const [status, setStatus] = useState<AgeStatus | 'loading'>('loading');
-  const [month, setMonth] = useState<number | null>(null);
-  const [year, setYear] = useState('');
+  const [birth, setBirth] = useState<BirthDate | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,22 +37,12 @@ export default function Age() {
     });
   }, [next]);
 
-  const months = Array.from({ length: 12 }, (_, i) => {
-    try {
-      return new Date(2000, i, 1).toLocaleDateString(lang, { month: 'short' });
-    } catch {
-      return String(i + 1);
-    }
-  });
-
   const submit = async () => {
-    const y = Number(year);
-    const now = new Date().getFullYear();
-    if (month === null || !/^\d{4}$/.test(year) || y < now - 110 || y > now) {
-      setError(t('Choose your birth month and enter a four-digit year.'));
+    if (!birth) {
+      setError(t('Choose your birth date.'));
       return;
     }
-    if (meetsMinimumAge(month, y)) {
+    if (meetsMinimumAge(birth)) {
       await setAgeStatus('ok');
       // Signed in already: tell the server now. Otherwise it is recorded right after sign-up or sign-in.
       if (app.signedIn) await api.recordConsent('age').catch(() => {});
@@ -88,80 +77,41 @@ export default function Age() {
       <View style={styles.top}>
         <IconButton icon="chevron-back" label={t('Back')} onPress={() => router.back()} />
       </View>
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-          <View style={styles.hero}>
-            <View style={styles.copy}>
-              <AppText variant="eyebrow" color={c.primaryText}>
-                {t('Before we start')}
-              </AppText>
-              <AppText variant="largeTitle" accessibilityRole="header">
-                {t('When were you born?')}
-              </AppText>
-            </View>
-            <Mascot pose="think" size={92} decorative />
-          </View>
-
-          <View style={[styles.card, { backgroundColor: c.card, borderColor: c.line }]}>
-            <AppText variant="eyebrow" color={c.muted} accessibilityRole="header">
-              {t('Birth month')}
+      <ScrollView style={styles.flex} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.hero}>
+          <View style={styles.copy}>
+            <AppText variant="eyebrow" color={c.primaryText}>
+              {t('Before we start')}
             </AppText>
-            <View style={styles.months}>
-              {months.map((name, i) => {
-                const on = month === i + 1;
-                return (
-                  <Pressable
-                    key={name + i}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: on }}
-                    onPress={() => {
-                      haptic.select();
-                      setError(null);
-                      setMonth(i + 1);
-                    }}
-                    style={[styles.month, { backgroundColor: on ? c.primary : c.bg, borderColor: on ? c.primary : c.line }]}
-                  >
-                    <AppText weight="600" color={on ? c.onPrimary : c.text} numberOfLines={1}>
-                      {name}
-                    </AppText>
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            <AppText variant="eyebrow" color={c.muted} accessibilityRole="header" style={styles.yearLabel}>
-              {t('Birth year')}
-            </AppText>
-            <TextInput
-              accessibilityLabel={t('Birth year')}
-              keyboardType="number-pad"
-              maxLength={4}
-              placeholder={t('Year')}
-              placeholderTextColor={c.muted}
-              value={year}
-              onChangeText={(v) => {
-                setError(null);
-                setYear(v.replace(/\D/g, ''));
-              }}
-              onSubmitEditing={submit}
-              style={[styles.input, { backgroundColor: c.bg, color: c.text, borderColor: c.line }]}
-            />
-          </View>
-
-          {error ? (
-            <AppText variant="subhead" color={c.warn} accessibilityRole="alert" accessibilityLiveRegion="polite">
-              {error}
-            </AppText>
-          ) : null}
-
-          <View style={styles.privacy}>
-            <Ionicons name="lock-closed-outline" size={18} color={c.muted} style={styles.lock} />
-            <AppText variant="footnote" style={styles.flex}>
-              {t('Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.')}
+            <AppText variant="largeTitle" accessibilityRole="header">
+              {t('When were you born?')}
             </AppText>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          <Mascot pose="think" size={92} decorative />
+        </View>
+
+        <View style={[styles.card, { backgroundColor: c.card, borderColor: c.line }]}>
+          <BirthDatePicker
+            onChange={(d) => {
+              setError(null);
+              setBirth(d);
+            }}
+          />
+        </View>
+
+        {error ? (
+          <AppText variant="subhead" color={c.warn} accessibilityRole="alert" accessibilityLiveRegion="polite">
+            {error}
+          </AppText>
+        ) : null}
+
+        <View style={styles.privacy}>
+          <Ionicons name="lock-closed-outline" size={18} color={c.muted} style={styles.lock} />
+          <AppText variant="footnote" style={styles.flex}>
+            {t('Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.')}
+          </AppText>
+        </View>
+      </ScrollView>
       <View style={styles.footer}>
         <PrimaryButton label={t('Continue')} onPress={submit} />
       </View>
@@ -177,10 +127,6 @@ const styles = StyleSheet.create({
   hero: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   copy: { flex: 1, gap: 6 },
   card: { borderWidth: StyleSheet.hairlineWidth, borderRadius: radius.card, padding: 16, gap: 10 },
-  months: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  month: { width: '23%', flexGrow: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: radius.control, borderWidth: 1 },
-  yearLabel: { marginTop: 8 },
-  input: { minHeight: 56, borderRadius: radius.control, borderWidth: 1, paddingHorizontal: 16, fontFamily: fonts.display, fontSize: 24, letterSpacing: 2 },
   privacy: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', paddingHorizontal: 4 },
   lock: { marginTop: 1 },
   footer: { paddingHorizontal: space.gutter, paddingBottom: 12 },

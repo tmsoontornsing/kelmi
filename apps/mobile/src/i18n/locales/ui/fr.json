@@ -389,14 +389,11 @@
   "Dishes": "Plats",
   "Style": "Style",
   "Manage or Cancel Subscription": "Gérer ou résilier l’abonnement",
-  "Choose your birth month and enter a four-digit year.": "Choisissez votre mois de naissance et saisissez une année à quatre chiffres.",
   "Kelmi isn’t available for people under 13": "Kelmi n’est pas disponible pour les moins de 13 ans",
   "Back": "Retour",
   "When were you born?": "Quand êtes-vous né(e) ?",
   "Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.": "Kelmi s’adresse aux personnes de 13 ans et plus. Nous l’utilisons uniquement pour vérifier votre âge et ne conservons pas votre date de naissance.",
-  "Birth month": "Mois de naissance",
   "Birth year": "Année de naissance",
-  "Year": "Année",
   "Agree to the Terms of Service and Privacy Policy to continue.": "Acceptez les Conditions d’utilisation et la Politique de confidentialité pour continuer.",
   "I agree to the {terms} and {privacy}.": "J’accepte les {terms} et la {privacy}.",
   "Quantities for {people}": "Quantités pour {people}",
@@ -682,5 +679,8 @@
   "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "Il a peut-être expiré, déjà été utilisé ou été ouvert sur un autre téléphone. Connectez-vous pour continuer.",
   "Back to Sign In": "Retour à la connexion",
   "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "Choisissez vos allergies dans la liste du Foyer pour que Kelmi puisse les écarter de vos repas.",
-  "For your safety, sign out and sign back in, then delete your account.": "Pour votre sécurité, déconnectez-vous puis reconnectez-vous avant de supprimer votre compte."
+  "For your safety, sign out and sign back in, then delete your account.": "Pour votre sécurité, déconnectez-vous puis reconnectez-vous avant de supprimer votre compte.",
+  "Choose your birth date.": "Choisissez votre date de naissance.",
+  "Previous month": "Mois précédent",
+  "Next month": "Mois suivant"
 }

@@ -389,14 +389,11 @@
   "Dishes": "菜式",
   "Style": "风格",
   "Manage or Cancel Subscription": "管理或取消订阅",
-  "Choose your birth month and enter a four-digit year.": "请选择出生月份，并输入四位数的年份。",
   "Kelmi isn’t available for people under 13": "Kelmi 不适用于 13 岁以下的人",
   "Back": "返回",
   "When were you born?": "你是什么时候出生的？",
   "Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.": "Kelmi 适用于 13 岁及以上的人。我们只用它来核对年龄，不会保存你的出生日期。",
-  "Birth month": "出生月份",
   "Birth year": "出生年份",
-  "Year": "年份",
   "Agree to the Terms of Service and Privacy Policy to continue.": "请同意服务条款和隐私政策后继续。",
   "I agree to the {terms} and {privacy}.": "我同意{terms}和{privacy}。",
   "Quantities for {people}": "份量按{people}计算",
@@ -682,5 +679,8 @@
   "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "链接可能已过期、已被使用，或是在另一部手机上打开的。请登录以继续。",
   "Back to Sign In": "返回登录",
   "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "请在“家庭”中从列表选择你的过敏原，以便 Kelmi 将它们排除在你的餐食之外。",
-  "For your safety, sign out and sign back in, then delete your account.": "为了你的安全，请先退出并重新登录，然后再删除账户。"
+  "For your safety, sign out and sign back in, then delete your account.": "为了你的安全，请先退出并重新登录，然后再删除账户。",
+  "Choose your birth date.": "请选择你的出生日期。",
+  "Previous month": "上个月",
+  "Next month": "下个月"
 }

@@ -50,7 +50,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test:auth": "node --test src/lib/authErrors.test.ts",
-    "test:routes": "node --test src/lib/safeRoute.test.ts"
+    "test:routes": "node --test src/lib/safeRoute.test.ts src/lib/ageRule.test.ts"
   },
   "private": true
 }

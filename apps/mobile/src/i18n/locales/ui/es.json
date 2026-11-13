@@ -389,14 +389,11 @@
   "Dishes": "Platos",
   "Style": "Estilo",
   "Manage or Cancel Subscription": "Administrar o cancelar suscripción",
-  "Choose your birth month and enter a four-digit year.": "Elige tu mes de nacimiento e ingresa un año de cuatro dígitos.",
   "Kelmi isn’t available for people under 13": "Kelmi no está disponible para menores de 13 años",
   "Back": "Atrás",
   "When were you born?": "¿Cuándo naciste?",
   "Kelmi is for people 13 and older. We only use this to check your age, and we don’t save your birth date.": "Kelmi es para personas de 13 años o más. Solo lo usamos para comprobar tu edad y no guardamos tu fecha de nacimiento.",
-  "Birth month": "Mes de nacimiento",
   "Birth year": "Año de nacimiento",
-  "Year": "Año",
   "Agree to the Terms of Service and Privacy Policy to continue.": "Acepta los Términos de servicio y la Política de privacidad para continuar.",
   "I agree to the {terms} and {privacy}.": "Acepto los {terms} y la {privacy}.",
   "Quantities for {people}": "Cantidades para {people}",
@@ -682,5 +679,8 @@
   "It may have expired or already been used, or it was opened on a different phone. Sign in to carry on.": "Puede que haya caducado, que ya se haya usado o que se abriera en otro teléfono. Inicia sesión para continuar.",
   "Back to Sign In": "Volver a iniciar sesión",
   "Choose your allergies from the list in Household so Kelmi can keep them out of your meals.": "Elige tus alergias de la lista en Hogar para que Kelmi pueda mantenerlas fuera de tus comidas.",
-  "For your safety, sign out and sign back in, then delete your account.": "Por tu seguridad, cierra sesión y vuelve a iniciarla, y después elimina tu cuenta."
+  "For your safety, sign out and sign back in, then delete your account.": "Por tu seguridad, cierra sesión y vuelve a iniciarla, y después elimina tu cuenta.",
+  "Choose your birth date.": "Elige tu fecha de nacimiento.",
+  "Previous month": "Mes anterior",
+  "Next month": "Mes siguiente"
 }
