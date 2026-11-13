@@ -1,31 +1,38 @@
-# Usage counts (analytics)
+# Usage counts (analytics) with PostHog
 
-What it is: three usage counts (`app_opened`, `plan_generated`, `grocery_list_built`) written to `experiment_events` in our own Supabase
-database. Code: `src/lib/analytics.ts`. Switch: Settings > Usage counts. No analytics company, no advertising id, no tracking SDK.
+What it is: three event names (`app_opened`, `plan_generated`, `grocery_list_built`) sent to PostHog with no properties except PostHog's own token, the random id and the library version (`KEEP` in analytics.ts strips the device, OS, locale, time zone and screen details the SDK would add). Code:
+`src/lib/analytics.ts`. Switch: Settings > Usage counts. The SDK is not started, and nothing is sent, unless the person turns the switch on.
+
+## Set it up (one time)
+1. Create a free PostHog project at posthog.com (US cloud, or EU cloud if you plan to launch in Europe). Sign the PostHog data processing
+   agreement (Settings > Organization > Legal) and, in the project's Settings > Project > IP data capture configuration, switch on "Discard
+   client IP data". Also turn off session replay, autocapture and surveys for the project.
+2. Copy the project token (starts with `phc_`; it is public by design) and set it where the app is built:
+   `npx eas-cli env:create --name EXPO_PUBLIC_POSTHOG_KEY --value phc_... --environment production --visibility plaintext`
+   and, for the EU cloud, `EXPO_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com`. For local runs put both in `apps/mobile/.env`.
+3. Make a new native build (EAS): PostHog needs new native modules. Without the token the app has no analytics and hides the switch.
+4. Look at the numbers in PostHog > Product analytics: events per day, unique users, and a funnel (`app_opened` > `plan_generated` >
+   `grocery_list_built`).
 
 ## Rules (keep them, or update the privacy policy first)
-- Off unless the person turns it on. `ANALYTICS_DEFAULT_ON` in `src/lib/flags.ts` is `false`. Flip it to `true` only after deciding you
-  want opt-out instead of opt-in (the policy text works either way) and, if you ever launch in the EU/UK, never: consent is required there.
-- Only the names in `ANALYTICS_EVENTS` are sent. Never a name, email, allergy, diet, food note, recipe, price or typed text.
-  A new event = add it to that list, then add it to the policy wording in `src/legal/documents.ts` ("Usage counts"), then rebuild the legal
+- Off unless the person turns it on. `ANALYTICS_DEFAULT_ON` in `src/lib/flags.ts` is `false`. Flip it only after deciding you want
+  opt-out instead of opt-in; for the EU/UK, consent before collecting is required, so never.
+- Only the names in `ANALYTICS_EVENTS` are sent, with no properties. Never a name, email, allergy, diet, food note, recipe, price or typed
+  text. A new event = add it to that list, then to the policy wording in `src/legal/documents.ts` ("Usage counts"), then rebuild the legal
   files: `node scripts/build-legal.mjs`.
-- The table only accepts these names (migration `20261116000500`) and 50 rows a day per account. Old rows are not purged automatically: add a
-  scheduled delete (for example older than 90 days) once there is real volume.
-- Rows belong to the account (`user_id ... on delete cascade`), so deleting the account deletes them.
-- Someone who is not signed in records nothing.
-- Never add a tracking SDK (Meta, Google Analytics, Firebase Analytics, AppsFlyer, Adjust, Mixpanel, ...) without a policy change, a new
+- Keep `before_send` stripping everything outside `KEEP`; PostHog still receives the request's IP address, which is why step 1 turns on "Discard client IP data" (the policy says it is discarded, so do that step before shipping).
+- Never call `identify()`, and never turn on autocapture, session replay, surveys or feature flags without a policy change.
+- Never add another tracking SDK (Meta, Google Analytics, Firebase Analytics, AppsFlyer, Adjust, Mixpanel, ...) without a policy change, a new
   App Privacy answer, and likely the App Tracking Transparency prompt.
-
-## Reading the numbers
-Service role or the SQL editor only (the app can write but not read):
-
-    select event, count(*) as events, count(distinct user_id) as people
-    from experiment_events where experiment = 'app' and created_at > now() - interval '7 days' group by event;
+- Because events are not tied to an account, a person's counts cannot be found or deleted by account. The policy says so.
 
 ## Store forms (answer these when you submit; check them against Apple's and Google's current wording)
-- **App Store Connect > App Privacy.** Usage Data > Product Interaction: collected, linked to the user, purpose Analytics, not used for
-  tracking. Also list Contact Info (email), User ID, and the other data the app already collects (health-related data: allergies and diet).
+- **App Store Connect > App Privacy.** Usage Data > Product Interaction: collected, not linked to the user, purpose Analytics, not used for
+  tracking. Also list Contact Info (email), User ID and the health-related data (allergies, diet) the app already collects.
   "Do you or your third-party partners use data for tracking?": No.
-- **Google Play > Data safety.** App activity > App interactions: collected, optional, not shared, purpose Analytics, encrypted in transit,
-  deletable on request. Declare the other data the app already collects.
+- **Google Play > Data safety.** App activity > App interactions: collected, optional, shared with a service provider (PostHog) for Analytics,
+  encrypted in transit. Declare the other data the app already collects.
 - Do not add the App Tracking Transparency prompt (`NSUserTrackingUsageDescription`): nothing here tracks across other companies' apps or sites.
+
+## Separate from this: A/B tests
+`src/lib/experiments.ts` (off, `EXPERIMENTS_ENABLED = false`) still writes to `experiment_events` in Supabase, only when the same switch is on.

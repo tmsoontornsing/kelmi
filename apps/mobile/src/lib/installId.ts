@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // A random id kept on this phone only. It is not derived from the person, the phone's hardware, or the advertising id,
-// and it is deleted with the app. It keeps an A/B variant steady and lets anonymous usage counts be told apart.
+// and it is deleted with the app. It keeps an A/B variant steady and is used only for A/B variants (usage counts use PostHog's own random id).
 const INSTALL_KEY = 'kavi.installId';
 let installId: string | null = null;
 
