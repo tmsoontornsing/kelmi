@@ -32,6 +32,8 @@ const csp = [
 
 const config: NextConfig = {
   poweredByHeader: false,
+  // Browser source maps would publish the original source of every page. Off by default; stated so nobody turns it on.
+  productionBrowserSourceMaps: false,
   async headers() {
     return [{
       source: '/(.*)',

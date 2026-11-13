@@ -59,6 +59,31 @@ Not visible from the repo. Check each before launch:
 - [ ] Run Supabase's Security Advisor after the migrations. Before them it listed three trigger functions callable through the API (fixed by `20261116000400`), `record_consent` as callable by signed-in users (intended: it only ever touches the caller's own row), and the password setting above.
 - [ ] Budget caps. Put a monthly spend limit on every usage-billed account: Anthropic, IDUnify, Resend, Vercel and Supabase (spend cap or billing alerts). Where a provider has no hard cap, set alerts at 50/80/100% of what you'd tolerate. Server-side limits stop abuse; these limits stop a surprise bill from anything the limits miss.
 
+## Checklist: "Security checks for your AI-built app", part 2 (items 19-36)
+
+Checked against the code on 2026-11-12. "Dashboard" means it can't be seen from the repo.
+
+| # | Check | Status |
+|---|---|---|
+| 19 | XSS | OK. The only `dangerouslySetInnerHTML` uses are fixed strings (theme script) and `JSON.stringify` of our own JSON-LD; no user text is rendered as HTML. CSP limits the rest (see accepted risks). |
+| 20 | CSRF | OK. The app uses bearer tokens, not cookies. The one cookie-less browser POST (`/api/waitlist`) requires an allowed `Origin` and `application/json`. |
+| 21 | Insecure file uploads | OK. Users cannot upload anything. The only bucket (`recipe-images`) has no write policy, a 2 MB limit and a JPEG/PNG/WebP allow-list; uploads are service-role scripts. |
+| 22 | Path traversal | OK. Gateway `routeFor` rejects dot segments, backslashes, encoded slashes and dots, and only forwards `auth/v1`, `rest/v1` and five named functions (fuzzed in `redteam/gateway.test.ts`). |
+| 23 | SSRF | OK. No server fetch takes a URL from a user. Provider hosts are pinned (`ai.idunify.com`, `api.anthropic.com`, localhost-only Ollama); the gateway only builds paths on our own project. |
+| 24 | Broken password reset | N/A in code: the app has no reset flow, and the callback screen accepts only `signup`/`email` token types, so a `recovery` link cannot sign anyone in through it. Reset email, its expiry and rate limit are Supabase settings (dashboard). **Gap:** people who forget a password have no way back in-app; add one (with a recent-sign-in requirement) before launch, or lean on Apple/Google sign-in. |
+| 25 | Weak session management | OK on the phone: tokens encrypted at rest, key in Keychain/Keystore, `persistSession` with refresh, delete-account needs a recent sign-in. Token lifetime and refresh-token reuse detection are dashboard settings (JWT expiry 1 h or less, reuse detection on). |
+| 26 | JWT secrets | OK. No JWT is signed or verified by our code: functions call `auth.getUser(token)`. No secret is in the app or the repo (the app holds only the gateway address). If the legacy JWT secret was ever shared, rotate it (dashboard). |
+| 27 | Permissive CORS | OK. No function or route sends `Access-Control-Allow-*`, so browsers get no cross-origin access; the native app doesn't need it. Don't add `*` later. |
+| 28 | Rate limits | OK. Gateway per-IP, `hit_rate_limit` per person on `meal-options`/`grocery-list`, `claim_plan_generation` caps on AI, waitlist route and DB throttle, `readJson` body caps. |
+| 29 | Exposed environments | OK in the repo: `.env*` ignored (only `.env.example` tracked), only `EXPO_PUBLIC_*` addresses and Google client IDs ship in the app, service-role key is server-only. Check Vercel preview deployments aren't public with production secrets (dashboard). |
+| 30 | Default credentials | OK. No literal passwords, keys or tokens in source (grep). Change any default Supabase/DB passwords from project creation (dashboard). |
+| 31 | Unsigned webhooks | OK. `revenuecat-webhook` requires the `Authorization` secret (hashed constant-time compare), refuses to run if it's unset, and ignores sandbox events. |
+| 32 | Front-end payment checks | OK. `isPlus` in the app only changes what the UI shows. Plus limits are enforced server-side by `claim_plan_generation` reading `subscriptions`, which only the signed webhook writes. |
+| 33 | IDOR / BOLA | OK. Every table has RLS on `auth.uid()`; ids passed to functions are re-checked against the caller (`apply_grocery_choices` takes the verified user); proven by `redteam/rls-tampering.mjs` and `rpc-abuse.mjs`. |
+| 34 | APIs + user input | OK. Body size caps, JSON shape checks, allow-listed enums, `unknown_allergy` fails closed, DB check constraints, prompt-injection tests. |
+| 35 | Exposed logs | OK. Function logs hold codes and provider errors, no emails, tokens, notes or allergy lists; clients only get "Something went wrong" (`fail()`). Keep it that way when adding logs. The app logs nothing sensitive (`console.warn` only in dev paths and generic failures). |
+| 36 | Exposed source maps | OK. Next.js browser source maps are explicitly off (`next.config.ts`); the app ships as Hermes bytecode. If you upload maps to a crash reporter, upload them privately, never to the site or a public bucket. |
+
 ## Known, accepted, or open
 
 - **Re-signup resets the free plan count.** A new account with the same email gets a fresh 3 plans a month. Closing it needs a stable identity (for example a hashed email kept after deletion).
