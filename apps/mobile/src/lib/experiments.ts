@@ -54,7 +54,7 @@ export function useExperiment<E extends ExperimentName>(experiment: E): Variant<
 // Fire and forget: a lost event must never break the screen. Events from someone who is not signed in are dropped.
 export async function track(experiment: ExperimentName, variant: string, event: string): Promise<void> {
   // Off: nothing is collected or sent.
-  // Also off unless the person has allowed anonymous usage counts in Settings.
+  // Also off unless the person has allowed usage counts in Settings.
   if (!EXPERIMENTS_ENABLED || !analyticsOn() || !supabase) return;
   try {
     const { data } = await supabase.auth.getSession();

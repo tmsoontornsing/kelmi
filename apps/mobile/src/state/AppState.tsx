@@ -26,7 +26,7 @@ import {
 import { comma, t, useLanguage } from '../i18n';
 import { sundayReminderIsOn, setSundayReminder } from '../lib/timerAlert';
 import * as api from '../lib/api';
-import { resetAnalytics, trackEvent } from '../lib/analytics';
+import { trackEvent } from '../lib/analytics';
 import * as purchases from '../lib/purchases';
 import { getAgeStatus, getAiAsked, saveConsent, setAiAsked } from '../lib/consent';
 import { TERMS_VERSION } from '../legal/config';
@@ -293,11 +293,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       setSession(data.session);
       setAuthReady(true);
     });
-    const { data } = supabase.auth.onAuthStateChange((event, next) => {
-      setSession(next);
-      if (event === 'INITIAL_SESSION' && next) trackEvent('app_opened');
-      if (event === 'SIGNED_OUT') resetAnalytics();
-    });
+    const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
     return () => data.subscription.unsubscribe();
   }, []);
 

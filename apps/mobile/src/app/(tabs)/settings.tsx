@@ -12,9 +12,9 @@ import { TabScreen } from '../../components/TabScreen';
 import { applianceName, dietAllowsMeat, DIETS, GOALS, MEAT_LEVELS } from '../../data/mock';
 import { comma, LANGUAGES, useLanguage, useT } from '../../i18n';
 import { LEGAL } from '../../legal/config';
-import { setAnalyticsEnabled, useAnalyticsEnabled } from '../../lib/analytics';
+import { analyticsAvailable, setAnalyticsEnabled, useAnalyticsEnabled } from '../../lib/analytics';
 import { useAppearance } from '../../lib/appearance';
-import { ANALYTICS_ENABLED, PLUS_ENABLED } from '../../lib/flags';
+import { PLUS_ENABLED } from '../../lib/flags';
 import { FREE_PLANS_PER_MONTH } from '../../lib/limits';
 import { openUrl, resetTo } from '../../navigation';
 import { useApp, type PlanStatus } from '../../state/AppState';
@@ -137,8 +137,8 @@ export default function Settings() {
         </Section>
       ) : null}
 
-      {ANALYTICS_ENABLED && app.live ? (
-        <Section title={t('Usage counts')} footer={t('Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.')}>
+      {analyticsAvailable ? (
+        <Section title={t('Usage counts')} footer={t('Off unless you turn it on. It never includes your allergies, food notes, or email, and it isn’t linked to your account.')}>
           <SwitchRow
             label={t('Share usage counts')}
             detail={t('Counts which parts of Kelmi get used')}
