@@ -5,13 +5,13 @@ import { ANALYTICS_DEFAULT_ON, ANALYTICS_ENABLED } from './flags';
 import { getInstallId } from './installId';
 import { supabase } from './supabase';
 
-// Anonymous usage counts, so we can see which parts of the app get used. Rules this file keeps:
+// Usage counts, so we can see which parts of the app get used. Rules this file keeps:
 //  - Nothing is recorded unless the person has switched it on in Settings (or the default in flags.ts is on and they
 //    have not switched it off). Turning it off stops collection at once.
 //  - Only the event names listed below are ever sent, with a random per-install id. Never a name, email, allergy,
 //    diet, food note, recipe, price, or anything typed. Adding an event means adding its name here and to the privacy policy.
-//  - Rows go to experiment_events in Supabase (the same database as the account), tied to the account only so they are
-//    deleted with it. No analytics company is involved, there is no advertising id, and nothing is shared or sold.
+//  - Rows go to experiment_events in Supabase (the same database as the account), linked to the account only so they are
+//    deleted with it. The table itself only accepts these names (migration 20261116000500). No analytics company is involved, there is no advertising id, and nothing is shared or sold.
 //  - Someone who is not signed in has no account to attach events to, so nothing is recorded for them.
 export const ANALYTICS_EVENTS = ['app_opened', 'plan_generated', 'grocery_list_built'] as const;
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[number];
@@ -49,6 +49,14 @@ export function setAnalyticsEnabled(on: boolean) {
   markReady();
   listeners.forEach((l) => l(on));
   AsyncStorage.setItem(KEY, on ? 'on' : 'off').catch(() => {});
+}
+
+// On sign-out the choice goes back to the default, so the next person to sign in on this phone is never counted under
+// someone else's consent.
+export function resetAnalytics() {
+  enabled = ANALYTICS_ENABLED && ANALYTICS_DEFAULT_ON;
+  AsyncStorage.removeItem(KEY).catch(() => {});
+  listeners.forEach((l) => l(enabled));
 }
 
 export function useAnalyticsEnabled(): boolean {

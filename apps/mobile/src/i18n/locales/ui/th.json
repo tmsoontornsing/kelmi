@@ -684,7 +684,7 @@
   "Previous month": "เดือนก่อนหน้า",
   "Next month": "เดือนถัดไป",
   "Usage counts": "จำนวนการใช้งาน",
-  "Share anonymous usage counts": "แชร์จำนวนการใช้งานแบบไม่ระบุตัวตน",
   "Counts which parts of Kelmi get used": "นับว่าส่วนใดของ Kelmi ถูกใช้งาน",
-  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.": "ปิดอยู่จนกว่าคุณจะเปิด ไม่เคยรวมอาการแพ้ บันทึกอาหาร หรืออีเมลของคุณ และจะถูกลบพร้อมบัญชีของคุณ"
+  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.": "ปิดอยู่จนกว่าคุณจะเปิด ไม่เคยรวมอาการแพ้ บันทึกอาหาร หรืออีเมลของคุณ และจะถูกลบพร้อมบัญชีของคุณ",
+  "Share usage counts": "แชร์จำนวนการใช้งาน"
 }

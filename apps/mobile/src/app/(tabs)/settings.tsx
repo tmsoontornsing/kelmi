@@ -140,7 +140,7 @@ export default function Settings() {
       {ANALYTICS_ENABLED && app.live ? (
         <Section title={t('Usage counts')} footer={t('Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.')}>
           <SwitchRow
-            label={t('Share anonymous usage counts')}
+            label={t('Share usage counts')}
             detail={t('Counts which parts of Kelmi get used')}
             value={analytics}
             onChange={setAnalyticsEnabled}

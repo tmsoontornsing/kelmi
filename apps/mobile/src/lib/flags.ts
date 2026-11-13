@@ -5,7 +5,8 @@
 // The code stays so it can be switched back on when purchases work.
 export const PLUS_ENABLED = false;
 
-// A/B tests write to experiment_events in Supabase. Off until the privacy policy covers them and there is something to test.
+// A/B tests write to experiment_events in Supabase. Off until the privacy policy covers them (it lists only the three usage
+// counts today, not the paywall events) and there is something to test.
 export const EXPERIMENTS_ENABLED = false;
 
 // Anonymous usage counts (src/lib/analytics.ts). ANALYTICS_ENABLED shows the Settings switch and allows collection at all.

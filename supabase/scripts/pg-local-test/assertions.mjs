@@ -345,15 +345,16 @@ await check('g-experiment-fields', 'experiment_events: 65-char and empty fields 
   const ins = (i, e, v, ev) => run(asB, `insert into public.experiment_events (user_id, install_id, experiment, variant, event) values ($1,$2,$3,$4,$5)`, [B, i, e, v, ev]);
   for (const [k, args] of [['install', ['x'.repeat(65), 'e', 'v', 'ev']], ['experiment', ['i', 'x'.repeat(65), 'v', 'ev']], ['variant', ['i', 'e', 'x'.repeat(65), 'ev']], ['event', ['i', 'e', 'v', 'x'.repeat(65)]],
     ['empty-install', ['', 'e', 'v', 'ev']], ['empty-event', ['i', 'e', 'v', '']]]) await fails(ins(...args), { code: '23514' });
-  await ins('i', 'e', 'v', 'ev');
+  await ins('i', 'app', 'all', 'app_opened');
+  await fails(ins('i', 'e', 'v', 'ev'), { code: '23514' }); // names outside the allow-list
 });
-await check('g-experiment-500-day', 'experiment_events: 500/day per user; the 501st is silently dropped (no error), others unaffected', async () => {
+await check('g-experiment-500-day', 'experiment_events: 50/day per user; the 51st is silently dropped (no error), others unaffected', async () => {
   const u = await mkUser(200);
-  for (let i = 0; i < 500; i++) await db.query(`insert into public.experiment_events (user_id, install_id, experiment, variant, event) values ($1,'i','e','v','ev')`, [u]);
-  eq((await q(`select count(*)::int n from public.experiment_events where user_id=$1`, [u]))[0].n, 500);
-  await run((f) => as(db, 'authenticated', u, f), `insert into public.experiment_events (user_id, install_id, experiment, variant, event) values ($1,'i','e','v','ev')`, [u]);
-  eq((await q(`select count(*)::int n from public.experiment_events where user_id=$1`, [u]))[0].n, 500, 'still 500');
-  await run(asB, `insert into public.experiment_events (user_id, install_id, experiment, variant, event) values ($1,'i','e','v','ev2')`, [B]);
+  for (let i = 0; i < 50; i++) await db.query(`insert into public.experiment_events (user_id, install_id, experiment, variant, event) values ($1,'i','app','all','app_opened')`, [u]);
+  eq((await q(`select count(*)::int n from public.experiment_events where user_id=$1`, [u]))[0].n, 50);
+  await run((f) => as(db, 'authenticated', u, f), `insert into public.experiment_events (user_id, install_id, experiment, variant, event) values ($1,'i','app','all','app_opened')`, [u]);
+  eq((await q(`select count(*)::int n from public.experiment_events where user_id=$1`, [u]))[0].n, 50, 'still 50');
+  await run(asB, `insert into public.experiment_events (user_id, install_id, experiment, variant, event) values ($1,'i','app','all','plan_generated')`, [B]);
 });
 await check('g-experiment-no-read', 'authenticated cannot read experiment_events back (no select policy)', async () => {
   eq((await run(asB, `select * from public.experiment_events`)).rows.length, 0);
