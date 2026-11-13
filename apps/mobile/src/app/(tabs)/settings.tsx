@@ -12,8 +12,9 @@ import { TabScreen } from '../../components/TabScreen';
 import { applianceName, dietAllowsMeat, DIETS, GOALS, MEAT_LEVELS } from '../../data/mock';
 import { comma, LANGUAGES, useLanguage, useT } from '../../i18n';
 import { LEGAL } from '../../legal/config';
+import { setAnalyticsEnabled, useAnalyticsEnabled } from '../../lib/analytics';
 import { useAppearance } from '../../lib/appearance';
-import { PLUS_ENABLED } from '../../lib/flags';
+import { ANALYTICS_ENABLED, PLUS_ENABLED } from '../../lib/flags';
 import { FREE_PLANS_PER_MONTH } from '../../lib/limits';
 import { openUrl, resetTo } from '../../navigation';
 import { useApp, type PlanStatus } from '../../state/AppState';
@@ -25,6 +26,7 @@ export default function Settings() {
   const { t, tx } = useT();
   const { choice, lang } = useLanguage();
   const appearance = useAppearance();
+  const analytics = useAnalyticsEnabled();
   const language = choice === 'system' ? t('Same as phone') : LANGUAGES.find((l) => l.code === lang)!.native;
   const dietName = tx(DIETS.find((d) => d.id === app.diet)?.name ?? 'Everything');
   const goalName = tx(GOALS.find((g) => g.id === app.goal)?.name ?? 'Just eat well');
@@ -132,6 +134,18 @@ export default function Settings() {
         <Section title={t('Privacy and safety')} footer={t('You can change your AI planning choice at any time.')}>
           <LinkRow label={t('AI planning')} value={app.consent.ai ? t('Allowed') : t('Off')} href="/ai-consent" first />
           <LinkRow label={t('Allergy notice')} value={app.consent.allergy ? t('Acknowledged') : t('Not yet')} href="/allergy-ack" />
+        </Section>
+      ) : null}
+
+      {ANALYTICS_ENABLED && app.live ? (
+        <Section title={t('Usage counts')} footer={t('Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.')}>
+          <SwitchRow
+            label={t('Share anonymous usage counts')}
+            detail={t('Counts which parts of Kelmi get used')}
+            value={analytics}
+            onChange={setAnalyticsEnabled}
+            first
+          />
         </Section>
       ) : null}
 

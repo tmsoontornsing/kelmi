@@ -682,5 +682,9 @@
   "For your safety, sign out and sign back in, then delete your account.": "Por tu seguridad, cierra sesión y vuelve a iniciarla, y después elimina tu cuenta.",
   "Choose your birth date.": "Elige tu fecha de nacimiento.",
   "Previous month": "Mes anterior",
-  "Next month": "Mes siguiente"
+  "Next month": "Mes siguiente",
+  "Usage counts": "Conteos de uso",
+  "Share anonymous usage counts": "Compartir conteos de uso anónimos",
+  "Counts which parts of Kelmi get used": "Cuenta qué partes de Kelmi se usan",
+  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.": "Desactivado salvo que lo actives. Nunca incluye tus alergias, notas de comida ni tu correo, y se elimina con tu cuenta."
 }

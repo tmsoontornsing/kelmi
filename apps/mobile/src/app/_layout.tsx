@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 import { Celebrations } from '../components/Lottie';
 import { LanguageProvider } from '../i18n';
+import { startAnalytics } from '../lib/analytics';
 import { startAppearance } from '../lib/appearance';
 import { getAgeStatus } from '../lib/consent';
 import { AppStateProvider, useApp } from '../state/AppState';
@@ -14,6 +15,7 @@ import { useTheme } from '../theme';
 SplashScreen.preventAutoHideAsync();
 // Light unless the person chose otherwise in Settings. Runs before the first screen draws.
 startAppearance();
+startAnalytics();
 
 // Kelmi is for people 13 and older. Sign-up and onboarding are only reachable once this phone has a passing answer on the age screen, so a
 // deep link or a saved route can't skip it. Someone already signed in has been through it and edits their household freely.

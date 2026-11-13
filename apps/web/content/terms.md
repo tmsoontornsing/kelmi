@@ -77,11 +77,11 @@ To the extent the law allows, you agree to defend and indemnify LOGICBAKER COMPA
 
 ## 14. Resolving disputes
 
-- Talk to us first. Before filing a claim, contact us at [CONTACT EMAIL] and describe the problem and what you want. We will try to resolve it within 60 days.
+- Talk to us first. Before filing a claim, contact us at support@usekelmi.com and describe the problem and what you want. We will try to resolve it within 60 days.
 - Arbitration. If we cannot resolve it, you and we agree to resolve any dispute arising from or relating to Kelmi or these Terms by binding individual arbitration administered by the American Arbitration Association under its Consumer Arbitration Rules, instead of in court. The Federal Arbitration Act governs this section. The arbitrator may award the same individual relief a court could. We will pay arbitration filing and arbitrator fees beyond what you would pay to file in court, unless the arbitrator finds your claim frivolous.
 - Exceptions. Either side may bring an individual claim in small claims court, or ask a court to stop infringement of intellectual property.
 - No class actions. Claims may be brought only on an individual basis, not as a plaintiff or class member in any class, consolidated, or representative action. If this waiver is found unenforceable for a claim, that claim proceeds in court, not in arbitration.
-- Opting out. You can opt out of arbitration within 30 days of first accepting these Terms by emailing [CONTACT EMAIL] with your name, the email on your account, and a clear statement that you opt out of arbitration.
+- Opting out. You can opt out of arbitration within 30 days of first accepting these Terms by emailing support@usekelmi.com with your name, the email on your account, and a clear statement that you opt out of arbitration.
 - Governing law and courts. These Terms are governed by the laws of the State of [STATE], without regard to conflict of law rules, except that the Federal Arbitration Act governs this section. Any claim not subject to arbitration will be heard only in the state or federal courts located in [COUNTY], [STATE], and you and we consent to their jurisdiction.
 - Time limit. To the extent the law allows, any claim must be brought within one year after it arose, or it is permanently barred.
 
@@ -96,5 +96,4 @@ These Terms, the Privacy Policy and the Consumer Health Data Privacy Policy are 
 ## 17. Contact
 
 LOGICBAKER COMPANY LIMITED  
-[MAILING ADDRESS]  
-[CONTACT EMAIL]
+support@usekelmi.com

@@ -1,7 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 
+import { analyticsOn } from './analytics';
 import { EXPERIMENTS_ENABLED } from './flags';
+import { getInstallId } from './installId';
 import { supabase } from './supabase';
 
 // A/B tests. A device is put in one variant per experiment, once, by hashing a random id kept on the device, so the
@@ -16,23 +17,6 @@ export const EXPERIMENTS = {
 
 export type ExperimentName = keyof typeof EXPERIMENTS;
 export type Variant<E extends ExperimentName> = (typeof EXPERIMENTS)[E][number];
-
-const INSTALL_KEY = 'kavi.installId';
-let installId: string | null = null;
-
-async function getInstallId(): Promise<string> {
-  if (installId) return installId;
-  try {
-    installId = await AsyncStorage.getItem(INSTALL_KEY);
-  } catch {}
-  if (!installId) {
-    installId = Array.from({ length: 4 }, () => Math.random().toString(36).slice(2, 10)).join('');
-    try {
-      await AsyncStorage.setItem(INSTALL_KEY, installId);
-    } catch {}
-  }
-  return installId;
-}
 
 // FNV-1a, so the same id and experiment always give the same number.
 export function hash(text: string): number {
@@ -70,7 +54,8 @@ export function useExperiment<E extends ExperimentName>(experiment: E): Variant<
 // Fire and forget: a lost event must never break the screen. Events from someone who is not signed in are dropped.
 export async function track(experiment: ExperimentName, variant: string, event: string): Promise<void> {
   // Off: nothing is collected or sent.
-  if (!EXPERIMENTS_ENABLED || !supabase) return;
+  // Also off unless the person has allowed anonymous usage counts in Settings.
+  if (!EXPERIMENTS_ENABLED || !analyticsOn() || !supabase) return;
   try {
     const { data } = await supabase.auth.getSession();
     const userId = data.session?.user.id;

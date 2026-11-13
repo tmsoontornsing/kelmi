@@ -141,7 +141,7 @@ export const TERMS: LegalDoc = {
     },
 
     { h: '17. Contact' },
-    { p: `${L.company}\n${L.address}\n${L.email}` },
+    { p: `${L.company}\n${L.email}` },
   ],
 };
 
@@ -174,7 +174,7 @@ export const PRIVACY: LegalDoc = {
       p: 'Our hosting and sign-in providers record technical information needed to run and secure Kelmi, such as your IP address, device and app version, and the times you sign in or make requests. We also keep a record of each meal plan request (your account ID, the time, and which provider and how much computing it used) so we can apply the monthly limit and prevent abuse.',
     },
     {
-      p: 'Kelmi\'s in-app analytics and A/B test event logging is switched off, so the app does not record which screens you view or which buttons you tap. Kelmi does not include analytics, advertising, or tracking software from other companies, does not use an advertising identifier, and does not track you across other companies\' apps or websites. This could change in the future. If it does, we will update this Policy and tell you before it takes effect, and we will ask for your consent where the law requires it.',
+      p: 'Usage counts (optional, off unless you turn them on). If you switch on "Share anonymous usage counts" in Settings, Kelmi records when you open the app, when a meal plan is made, and when a grocery list is built, together with a random number kept on your phone. It never includes your name, email, allergies, diet, food notes, recipes, or anything you type. The counts are stored in our own database, with Supabase as our service provider, are used only to see which features get used and to fix what does not work, are deleted when you delete your account, and are never sold or shared for advertising. You can turn them off at any time and collection stops right away. Kelmi does not include analytics, advertising, or tracking software from other companies, does not use an advertising identifier, and does not track you across other companies\' apps or websites. If this changes, we will update this Policy and tell you before it takes effect, and we will ask for your consent where the law requires it.',
     },
 
     { h: '3. Sensitive information' },
@@ -283,7 +283,7 @@ export const PRIVACY: LegalDoc = {
     },
 
     { h: '15. Contact us' },
-    { p: `${L.company}\n${L.address}\n${L.email}` },
+    { p: `${L.company}\n${L.email}` },
   ],
 };
 
@@ -323,6 +323,7 @@ export const CONSUMER_HEALTH: LegalDoc = {
       ],
     },
     { p: 'We do not sell consumer health data and we do not share it for advertising. We do not collect it for any purpose other than those in section 2.' },
+    { p: 'Optional usage counts (see the Privacy Policy) never include your allergies, dislikes, diet, or food notes.' },
 
     { h: '4. Your rights' },
     {
@@ -349,7 +350,7 @@ export const CONSUMER_HEALTH: LegalDoc = {
     },
 
     { h: '7. Contact' },
-    { p: `${L.company}\n${L.address}\n${L.email}` },
+    { p: `${L.company}\n${L.email}` },
   ],
 };
 

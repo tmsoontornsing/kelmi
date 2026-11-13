@@ -682,5 +682,9 @@
   "For your safety, sign out and sign back in, then delete your account.": "เพื่อความปลอดภัย โปรดออกจากระบบแล้วลงชื่อเข้าใช้อีกครั้ง จากนั้นจึงลบบัญชี",
   "Choose your birth date.": "เลือกวันเกิดของคุณ",
   "Previous month": "เดือนก่อนหน้า",
-  "Next month": "เดือนถัดไป"
+  "Next month": "เดือนถัดไป",
+  "Usage counts": "จำนวนการใช้งาน",
+  "Share anonymous usage counts": "แชร์จำนวนการใช้งานแบบไม่ระบุตัวตน",
+  "Counts which parts of Kelmi get used": "นับว่าส่วนใดของ Kelmi ถูกใช้งาน",
+  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.": "ปิดอยู่จนกว่าคุณจะเปิด ไม่เคยรวมอาการแพ้ บันทึกอาหาร หรืออีเมลของคุณ และจะถูกลบพร้อมบัญชีของคุณ"
 }

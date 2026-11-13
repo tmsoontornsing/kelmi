@@ -8,6 +8,12 @@ export const PLUS_ENABLED = false;
 // A/B tests write to experiment_events in Supabase. Off until the privacy policy covers them and there is something to test.
 export const EXPERIMENTS_ENABLED = false;
 
+// Anonymous usage counts (src/lib/analytics.ts). ANALYTICS_ENABLED shows the Settings switch and allows collection at all.
+// ANALYTICS_DEFAULT_ON is what a person gets before they choose: false means nothing is recorded until they switch it on.
+// The privacy policy (src/legal/documents.ts, "Usage counts") is written for either value; change both together if you flip it.
+export const ANALYTICS_ENABLED = true;
+export const ANALYTICS_DEFAULT_ON = false;
+
 // Features that only need the phone (Cook mode, swapping a meal, sending the list, the full nutrition label) are open to
 // everyone while Plus is hidden, because a lock with no way to unlock it is a dead end. Once Plus is enabled they follow
 // the subscription again.

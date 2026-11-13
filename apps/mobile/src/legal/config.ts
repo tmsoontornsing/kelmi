@@ -5,9 +5,7 @@ export const LEGAL = {
   // The legal entity that owns Kelmi, e.g. "Kelmi Labs LLC". Prefer an LLC or corporation over your own name.
   company: 'LOGICBAKER COMPANY LIMITED',
   // Where people send privacy requests and legal notices. Must be monitored.
-  email: '[CONTACT EMAIL]',
-  // A postal address for legal notices (a registered agent's address works).
-  address: '[MAILING ADDRESS]',
+  email: 'support@usekelmi.com',
   // The US state whose law governs the Terms and where disputes are heard, e.g. "Delaware".
   state: '[STATE]',
   // The county for court claims, e.g. "New Castle County".

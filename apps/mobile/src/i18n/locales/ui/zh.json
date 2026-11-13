@@ -682,5 +682,9 @@
   "For your safety, sign out and sign back in, then delete your account.": "为了你的安全，请先退出并重新登录，然后再删除账户。",
   "Choose your birth date.": "请选择你的出生日期。",
   "Previous month": "上个月",
-  "Next month": "下个月"
+  "Next month": "下个月",
+  "Usage counts": "使用次数统计",
+  "Share anonymous usage counts": "分享匿名使用次数",
+  "Counts which parts of Kelmi get used": "统计 Kelmi 的哪些功能被使用",
+  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it is deleted with your account.": "除非你打开，否则保持关闭。绝不包含你的过敏信息、饮食备注或邮箱，并会随账号一并删除。"
 }

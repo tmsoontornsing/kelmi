@@ -26,6 +26,7 @@ import {
 import { comma, t, useLanguage } from '../i18n';
 import { sundayReminderIsOn, setSundayReminder } from '../lib/timerAlert';
 import * as api from '../lib/api';
+import { trackEvent } from '../lib/analytics';
 import * as purchases from '../lib/purchases';
 import { getAgeStatus, getAiAsked, saveConsent, setAiAsked } from '../lib/consent';
 import { TERMS_VERSION } from '../legal/config';
@@ -292,7 +293,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       setSession(data.session);
       setAuthReady(true);
     });
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
+    const { data } = supabase.auth.onAuthStateChange((event, next) => {
+      setSession(next);
+      if (event === 'INITIAL_SESSION' && next) trackEvent('app_opened');
+    });
     return () => data.subscription.unsubscribe();
   }, []);
 
@@ -483,6 +487,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       }
       haptic.success();
       celebrate('confetti');
+      trackEvent('plan_generated');
     } catch (e) {
       if (api.errorCode(e) === 'age_required' && !afterAge) {
         planning.current = false;
@@ -731,6 +736,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       const conflicts = await api.buildGroceryList(planId, choice);
       await reloadWeek(userId, people);
       haptic.success();
+      trackEvent('grocery_list_built');
       return conflicts;
     },
     addLeftovers: async (recipeId: string, name: string, servings: number) => {
