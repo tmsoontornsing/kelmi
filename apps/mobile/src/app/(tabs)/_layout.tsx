@@ -8,7 +8,14 @@ export default function TabsLayout() {
   const c = useTheme();
   const { t } = useT();
   return (
-    <NativeTabs tintColor={c.primary} labelStyle={{ fontFamily: fonts.medium, fontSize: 11 }}>
+    // A solid bar: left to the system default it goes see-through at the end of a scroll and the page text shows
+    // through the icons.
+    <NativeTabs
+      tintColor={c.primary}
+      backgroundColor={c.card}
+      disableTransparentOnScrollEdge
+      labelStyle={{ fontFamily: fonts.medium, fontSize: 11 }}
+    >
       <NativeTabs.Trigger name="week">
         <NativeTabs.Trigger.Label>{t('This Week')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="calendar" md="calendar_month" />
