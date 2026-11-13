@@ -38,7 +38,7 @@ function ShareCard({ name, stars, innerRef }: { name: string; stars: number; inn
       <View style={styles.cardBottom}>
         <AppText style={styles.cardName} color={CARD.ink} numberOfLines={3}>{name}</AppText>
         <Stars value={stars} size={64} color={CARD.star} off={CARD.starOff} />
-        <AppText style={styles.cardFoot} color={CARD.ink}>{t('Planned with Kelmi · usekavi.com')}</AppText>
+        <AppText style={styles.cardFoot} color={CARD.ink}>{t('Planned with Kelmi · usekelmi.com')}</AppText>
       </View>
     </View>
   );
@@ -67,11 +67,11 @@ export function RateMeal({ recipeId, name }: { recipeId: string; name: string })
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(uri, { mimeType: 'image/png', UTI: 'public.png', dialogTitle: t('Share your meal') });
       } else {
-        await Share.share({ message: t('I made {name} with Kelmi and gave it {n} stars. usekavi.com', { name, n: stars }) });
+        await Share.share({ message: t('I made {name} with Kelmi and gave it {n} stars. usekelmi.com', { name, n: stars }) });
       }
     } catch {
       // The picture couldn't be made; a plain message still shares.
-      Share.share({ message: t('I made {name} with Kelmi and gave it {n} stars. usekavi.com', { name, n: stars }) }).catch(() => {});
+      Share.share({ message: t('I made {name} with Kelmi and gave it {n} stars. usekelmi.com', { name, n: stars }) }).catch(() => {});
     } finally {
       setBusy(false);
     }

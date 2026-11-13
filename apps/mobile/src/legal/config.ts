@@ -14,9 +14,9 @@ export const LEGAL = {
   // PLACEHOLDER DATE: this must be changed to the real publication date before release.
   effective: 'November 5, 2026',
   // Where the same documents live on the web. App Store Connect and Google Play need these URLs.
-  termsUrl: 'https://usekavi.com/terms',
-  privacyUrl: 'https://usekavi.com/privacy',
-  healthUrl: 'https://usekavi.com/consumer-health-data',
+  termsUrl: 'https://usekelmi.com/terms',
+  privacyUrl: 'https://usekelmi.com/privacy',
+  healthUrl: 'https://usekelmi.com/consumer-health-data',
 };
 
 export const legalReady = () => !Object.values(LEGAL).some((v) => v.startsWith('['));
