@@ -3,14 +3,16 @@
 
 # Local tooling and private working files: large and not part of the app
 **/.claude/
-video/
-absorbed-brain/
+/video/
+/absorbed-brain/
 HANDOFF-TM.md
 brag-output*/
 usekelmi.com/
-marketing/
-legal/
-docs/
+/marketing/
+/docs/
+/apps/mobile/marketing/
+/apps/mobile/legal/
+/apps/mobile/docs/
 
 # Dependencies and build output (EAS installs its own)
 **/node_modules/
