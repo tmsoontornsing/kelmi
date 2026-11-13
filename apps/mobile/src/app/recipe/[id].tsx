@@ -126,7 +126,7 @@ export default function Recipe() {
     const name = lang === 'en' ? titleCase(meal.name) : tx(meal.name);
     const ingredients = detail ? detail.ingredients.map((i) => `• ${line(i.name)}`).join('\n') : '';
     const steps = detail ? detail.steps.map((st, i) => `${i + 1}. ${tx(st)}`).join('\n') : '';
-    shareText([name, minutes(meal.minutes), ingredients && `${t('Ingredients')}\n${ingredients}`, steps && `${t('Steps')}\n${steps}`, t('Planned with Kelmi · usekavi.com')].filter(Boolean).join('\n\n'), name);
+    shareText([name, minutes(meal.minutes), ingredients && `${t('Ingredients')}\n${ingredients}`, steps && `${t('Steps')}\n${steps}`, t('Planned with Kelmi · usekelmi.com')].filter(Boolean).join('\n\n'), name);
   };
 
   return (
