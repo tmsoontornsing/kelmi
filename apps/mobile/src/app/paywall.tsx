@@ -255,11 +255,10 @@ function PaywallScreen() {
             {t('{trial} free, then {price} per {period}', { ...terms, trial: trialText })}
           </AppText>
         ) : null}
-        <AppText variant="footnote" style={styles.center}>
+        <AppText variant="footnote" color={c.muted} style={[styles.center, styles.fine]}>
           {renewal}
         </AppText>
         <View style={styles.links}>
-          <TextButton label={t('Not Now')} bold={false} color={c.muted} onPress={() => router.back()} />
           <TextButton label={t('Terms')} bold={false} color={c.muted} onPress={() => router.push('/legal/terms')} />
           <TextButton label={t('Privacy')} bold={false} color={c.muted} onPress={() => router.push('/legal/privacy')} />
         </View>
@@ -492,7 +491,8 @@ const styles = StyleSheet.create({
   benefit: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingVertical: 10 },
   iconTile: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 16 },
-  footer: { paddingHorizontal: space.gutter, paddingTop: 12, gap: 6, borderTopWidth: StyleSheet.hairlineWidth, alignItems: 'stretch' },
+  fine: { fontSize: 11, lineHeight: 14 },
+  footer: { paddingHorizontal: space.gutter, paddingTop: 10, gap: 4, borderTopWidth: StyleSheet.hairlineWidth, alignItems: 'stretch' },
   shineWrap: { borderRadius: radius.pill, overflow: 'hidden' },
   shineBand: { position: 'absolute', top: -20, bottom: -20, width: 46, backgroundColor: 'rgba(255,255,255,0.28)' },
 });
