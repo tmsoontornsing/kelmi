@@ -41,17 +41,17 @@ About $59 a year, shown as roughly $4.92 a month, billed yearly. Cancel any time
 
 ## Free trial
 
-Recommendation: a **7-day free trial on the yearly plan only**, none on monthly.
+Recommendation: a **3-day free trial on the yearly plan only**, none on monthly. (Set up in App Store Connect on 2026-11-13: free for the first 3 days, United States, no end date. You chose 3 days over the 7 I first suggested.)
 
 - The free plan already gives 3 plans a month, so people can try Kelmi without a card. A trial on top mainly helps the
   person who hit the 3-plan limit and wants to see a full month before paying about $59 for the year.
-- Seven days covers one full weekly plan and a shop, which is the moment people see the value.
+- Three days is short enough that fewer people forget to cancel; if people don't reach the "aha" moment in three days, consider a longer trial.
 - No trial on monthly keeps the yearly plan the obviously better deal.
 - Review it after launch with real data (trial starts, trial-to-paid rate, refunds) before changing it.
 
 How it works in the app: the trial is configured in the store (an introductory offer with a free period), not in the app.
 `freeTrialOf()` in `src/lib/purchases.ts` reads it from the RevenueCat package, so the paywall then shows "Start free trial",
-"7 days free, then $X per year", and the trial renewal wording Apple requires. With no trial in the store, the paywall is
+"3 days free, then $X per year", and the trial renewal wording Apple requires. With no trial in the store, the paywall is
 unchanged. Changing the trial length later needs no app update.
 
 ## What is built, and what is left
@@ -62,7 +62,7 @@ Built in the app and on the server: purchases (`src/lib/purchases.ts`), the payw
 Left, all outside the code (each needs your accounts):
 
 1. **App Store Connect:** create the subscription group and the yearly (and monthly) auto-renewing subscriptions; add the
-   7-day free introductory offer to the yearly one; fill in the subscription review details and screenshot.
+   3-day free introductory offer to the yearly one (done); fill in the subscription review details and screenshot.
 2. **Google Play:** same products, if Android ships.
 3. **RevenueCat:** create the project and the iOS (and Android) apps; import the products; create the entitlement `plus`
    (the id the app expects), an offering marked current with Annual and Monthly packages; add the webhook pointing at the
