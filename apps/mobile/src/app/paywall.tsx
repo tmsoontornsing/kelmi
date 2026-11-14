@@ -156,8 +156,14 @@ function PaywallScreen() {
       ? t('Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID when you confirm. Turn off auto-renew at least 24 hours before the period ends to avoid the next charge. Manage or cancel any time in your App Store account settings.', terms)
       : t('Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account when you confirm. Turn off auto-renew at least 24 hours before the period ends to avoid the next charge. Manage or cancel any time in Google Play, under Payments and subscriptions.', terms);
 
+  // One icon per benefit, in the same order as the list above.
+  const benefitIcons = ['calendar-outline', 'swap-horizontal', 'timer-outline', 'wallet-outline', 'share-outline'] as const;
+
   return (
     <SafeAreaView edges={modalEdges} style={[styles.root, { backgroundColor: c.bg }]}>
+      <View pointerEvents="none" style={[styles.blobBig, { backgroundColor: c.tint }]} />
+      <View pointerEvents="none" style={[styles.blobSmall, { backgroundColor: c.badge }]} />
+
       <View style={styles.top}>
         <TextButton label={t('Restore')} bold={false} color={c.muted} onPress={restore} />
         <IconButton icon="close" label={t('Close, stay on the free plan')} onPress={() => router.back()} />
@@ -165,35 +171,50 @@ function PaywallScreen() {
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
-          <Sparkle delay={900} size={22} color={c.primary} style={{ left: '18%', top: 18 }} />
-          <Sparkle delay={1050} size={16} color="#A7D96B" style={{ right: '16%', top: 10 }} />
-          <Sparkle delay={1200} size={14} color={c.primary} style={{ left: '26%', bottom: 14 }} />
-          <Sparkle delay={1350} size={20} color="#A7D96B" style={{ right: '24%', bottom: 22 }} />
+          <Sparkle delay={900} size={22} color={c.primary} style={{ left: '16%', top: 20 }} />
+          <Sparkle delay={1050} size={16} color="#A7D96B" style={{ right: '14%', top: 12 }} />
+          <Sparkle delay={1200} size={14} color={c.primary} style={{ left: '24%', bottom: 16 }} />
+          <Sparkle delay={1350} size={20} color="#A7D96B" style={{ right: '22%', bottom: 24 }} />
+          <Halo color={c.tint} />
           <PipEntrance>
             <Mascot pose="cheer" size={100} tappable label={t('Pip, Kelmi\'s jar, cheering')} />
           </PipEntrance>
         </View>
 
-        <View style={styles.priceBlock}>
-          {chosen.badge ? (
-            <PopIn delay={1000}>
-              <Breathe amount={1.06}>
-                <View style={[styles.chip, { backgroundColor: c.badge }]}>
-                  <AppText variant="footnote" weight="700" color={c.badgeText}>{tx(chosen.badge)}</AppText>
-                </View>
-              </Breathe>
-            </PopIn>
-          ) : null}
-          <Animated.View style={[styles.center, { transform: [{ scale: pop }] }]}>
-            <AppText
-              style={[styles.bigPrice, { fontFamily: fonts.display }]}
-              accessibilityLabel={`${priceOf(chosen)} ${t('per {period}', { period: tx(chosen.per) })}`}
-            >
-              {heroPrice}
-            </AppText>
+        <Reveal index={1}>
+          <View style={[styles.priceCard, { backgroundColor: c.card, borderColor: c.line }]}>
+            {trial ? (
+              <View pointerEvents="none" style={styles.ribbonWrap}>
+                <PopIn delay={800}>
+                  <View style={[styles.ribbon, { backgroundColor: c.primary }]}>
+                    <AppText variant="footnote" weight="700" color={c.onPrimary}>{t('{trial} free', { trial: trialText })}</AppText>
+                  </View>
+                </PopIn>
+              </View>
+            ) : null}
+            {chosen.badge ? (
+              <View pointerEvents="none" style={styles.sticker}>
+                <PopIn delay={1000}>
+                  <Breathe amount={1.06}>
+                    <View style={[styles.chip, { backgroundColor: c.badge }]}>
+                      <AppText variant="footnote" weight="700" color={c.badgeText}>{tx(chosen.badge)}</AppText>
+                    </View>
+                  </Breathe>
+                </PopIn>
+              </View>
+            ) : null}
+            <Animated.View style={[styles.priceRow, { transform: [{ scale: pop }] }]}>
+              <AppText
+                style={[styles.bigPrice, { fontFamily: fonts.display }]}
+                accessibilityLabel={`${priceOf(chosen)} ${t('per {period}', { period: tx(chosen.per) })}`}
+              >
+                {heroPrice}
+              </AppText>
+              <AppText color={c.muted} style={styles.per}>{t('per {period}', { period: tx(chosen.per) })}</AppText>
+            </Animated.View>
             <AppText color={c.muted} style={styles.center}>{tx(chosen.billed)}</AppText>
-          </Animated.View>
-        </View>
+          </View>
+        </Reveal>
 
         <Reveal index={2}>
           <AppText variant="headline" accessibilityRole="header" style={styles.center}>
@@ -201,13 +222,13 @@ function PaywallScreen() {
           </AppText>
         </Reveal>
 
-        <View style={styles.benefits}>
+        <View style={[styles.benefitCard, { backgroundColor: c.card, borderColor: c.line }]}>
           {benefits.map((b, i) => (
             <Reveal key={b} index={3 + i} lift={10}>
-              <View style={styles.benefit}>
+              <View style={[styles.benefit, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: c.line }]}>
                 <PopIn delay={700 + i * 140}>
-                  <View style={[styles.check, { backgroundColor: c.tint }]}>
-                    <Ionicons name="checkmark" size={14} color={c.primaryText} />
+                  <View style={[styles.iconTile, { backgroundColor: c.tint }]}>
+                    <Ionicons name={benefitIcons[i] ?? 'checkmark'} size={18} color={c.primaryText} />
                   </View>
                 </PopIn>
                 <AppText style={styles.flex}>{b}</AppText>
@@ -219,7 +240,9 @@ function PaywallScreen() {
 
       <View style={[styles.footer, { borderTopColor: c.line }]}>
         <Breathe amount={1.025}>
-          <PrimaryButton label={trial ? t('Start free trial') : t('Continue')} feedback="success" loading={busy} onPress={subscribe} />
+          <Shine>
+            <PrimaryButton label={trial ? t('Start free trial') : t('Continue')} feedback="success" loading={busy} onPress={subscribe} />
+          </Shine>
         </Breathe>
         {trial ? (
           <AppText variant="footnote" weight="600" style={styles.center}>
@@ -244,6 +267,7 @@ function PaywallScreen() {
     </SafeAreaView>
   );
 }
+
 
 // Pip drops in from above with a tilt and settles with a bounce, once the sheet is up.
 function PipEntrance({ children }: { children: ReactNode }) {
@@ -334,20 +358,83 @@ function Sparkle({ delay, size, color, style }: { delay: number; size: number; c
   );
 }
 
+
+// A soft ring that swells and fades behind Pip, over and over, like a heartbeat.
+function Halo({ color }: { color: string }) {
+  const v = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (reduceMotion()) return;
+    const loop = Animated.loop(Animated.timing(v, { toValue: 1, duration: 2200, easing: Easing.out(Easing.quad), useNativeDriver: true }));
+    loop.start();
+    return () => loop.stop();
+  }, [v]);
+  return (
+    <>
+      <View pointerEvents="none" style={[styles.halo, { backgroundColor: color }]} />
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.halo,
+          { backgroundColor: color, opacity: v.interpolate({ inputRange: [0, 1], outputRange: [0.7, 0] }), transform: [{ scale: v.interpolate({ inputRange: [0, 1], outputRange: [1, 1.7] }) }] },
+        ]}
+      />
+    </>
+  );
+}
+
+// A band of light that sweeps across the button every few seconds.
+function Shine({ children }: { children: ReactNode }) {
+  const [w, setW] = useState(0);
+  const v = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (reduceMotion() || !w) return;
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(2200),
+        Animated.timing(v, { toValue: 1, duration: 900, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+        Animated.timing(v, { toValue: 0, duration: 0, useNativeDriver: true }),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [v, w]);
+  return (
+    <View style={styles.shineWrap} onLayout={(e) => setW(e.nativeEvent.layout.width)}>
+      {children}
+      {w ? (
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.shineBand, { transform: [{ translateX: v.interpolate({ inputRange: [0, 1], outputRange: [-80, w + 40] }) }, { rotate: '18deg' }] }]}
+        />
+      ) : null}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   root: { flex: 1 },
   flex: { flex: 1, gap: 2 },
+  blobBig: { position: 'absolute', top: -90, right: -90, width: 300, height: 300, borderRadius: 150, opacity: 0.85 },
+  blobSmall: { position: 'absolute', top: 150, left: -70, width: 170, height: 170, borderRadius: 85, opacity: 0.22 },
   top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, paddingTop: 8 },
-  content: { paddingHorizontal: space.gutter, paddingTop: 0, paddingBottom: 12, gap: 12 },
+  content: { paddingHorizontal: space.gutter, paddingTop: 0, paddingBottom: 12, gap: 14 },
   center: { textAlign: 'center', alignItems: 'center' },
-  hero: { height: 122, alignItems: 'center', justifyContent: 'center' },
+  hero: { height: 128, alignItems: 'center', justifyContent: 'center' },
+  halo: { position: 'absolute', width: 118, height: 118, borderRadius: 59 },
   sparkle: { position: 'absolute' },
-  priceBlock: { alignItems: 'center', gap: 10 },
+  priceCard: { borderWidth: StyleSheet.hairlineWidth, borderRadius: radius.card + 6, paddingTop: 22, paddingBottom: 16, paddingHorizontal: 16, alignItems: 'center', gap: 2 },
+  ribbonWrap: { position: 'absolute', top: -14, left: 10, transform: [{ rotate: '-6deg' }] },
+  ribbon: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.pill },
+  sticker: { position: 'absolute', top: -14, right: 10, transform: [{ rotate: '7deg' }] },
   chip: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.pill },
-  bigPrice: { fontSize: 52, lineHeight: 58, letterSpacing: -1, textAlign: 'center', fontVariant: ['tabular-nums'] },
-  benefits: { gap: 10, paddingTop: 2 },
-  benefit: { flexDirection: 'row', gap: 12, alignItems: 'center' },
-  check: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  priceRow: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center', gap: 6 },
+  bigPrice: { fontSize: 50, lineHeight: 56, letterSpacing: -1, fontVariant: ['tabular-nums'] },
+  per: { fontSize: 15 },
+  benefitCard: { borderWidth: StyleSheet.hairlineWidth, borderRadius: radius.card, paddingHorizontal: 12 },
+  benefit: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingVertical: 10 },
+  iconTile: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 16 },
   footer: { paddingHorizontal: space.gutter, paddingTop: 12, gap: 6, borderTopWidth: StyleSheet.hairlineWidth, alignItems: 'stretch' },
+  shineWrap: { borderRadius: radius.pill, overflow: 'hidden' },
+  shineBand: { position: 'absolute', top: -20, bottom: -20, width: 46, backgroundColor: 'rgba(255,255,255,0.28)' },
 });
