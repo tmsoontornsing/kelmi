@@ -73,15 +73,13 @@ export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [str
           ))}
           <View style={[styles.tear, { borderColor: c.control }]}>
             <AppText variant="headline">{t('Weekly budget')}</AppText>
-            <View>
-              <AppText variant="money" color={c.primaryText} style={compact ? styles.budgetTight : styles.budget} accessibilityLabel={`${budget}`}>{`${Math.round(shownBudget)}`}</AppText>
-              {compact ? null : (
-                <Twinkles
-                  color="#8CC63F"
-                  spots={[{ left: -14, top: -2, size: 16 }, { right: -6, top: -10, size: 20 }, { right: 20, bottom: -4, size: 14 }]}
-                />
-              )}
-            </View>
+            <AppText variant="money" color={c.primaryText} style={compact ? styles.budgetTight : styles.budget} accessibilityLabel={`$${budget}`}>{`$${Math.round(shownBudget)}`}</AppText>
+            {compact ? null : (
+              <Twinkles
+                color="#8CC63F"
+                spots={[{ left: "46%", top: 0, size: 16 }, { right: 0, top: -4, size: 20 }, { right: 58, bottom: -6, size: 14 }]}
+              />
+            )}
           </View>
         </View>
         <Svg width="100%" height={9} viewBox="0 0 300 9" preserveAspectRatio="none" accessibilityElementsHidden importantForAccessibility="no">
