@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Redirect, router } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Alert, Animated, Easing, Platform, ScrollView, StyleSheet, View, type ViewStyle } from 'react-native';
+import { Alert, Animated, Easing, Platform, Pressable, ScrollView, StyleSheet, View, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '../components/AppText';
@@ -133,16 +133,13 @@ function PaywallScreen() {
     Animated.spring(pop, { toValue: 1, useNativeDriver: true, damping: 7, stiffness: 180 }).start();
   }, [plan, pop]);
 
-  // The other plan, one tap away. Yearly leads; monthly is the quiet link under the button.
-  const other = PLANS.find((p) => p.id !== plan) ?? PLANS[1];
-  const yearly = PLANS[0];
-  const monthly = PLANS[1];
-  const savePct = Math.round((1 - yearly.price / (monthly.price * 12)) * 100);
-  const switchPlan = () => {
+  // Yearly leads; the toggle above the price switches to monthly and back.
+  const pickPlan = (id: (typeof PLANS)[number]['id']) => {
+    if (id === plan) return;
     haptic.select();
     animateLayout();
-    setPlan(other.id);
-    if (startPlan) track('paywall_default_plan', startPlan, `plan_picked_${other.id}`);
+    setPlan(id);
+    if (startPlan) track('paywall_default_plan', startPlan, `plan_picked_${id}`);
   };
 
   // Apple's required renewal terms, one whole paragraph per store so each names its own account and settings the way
@@ -182,6 +179,15 @@ function PaywallScreen() {
         </View>
 
         <Reveal index={1}>
+          <PlanToggle
+            value={plan}
+            onChange={pickPlan}
+            items={PLANS.map((p) => ({ id: p.id, label: tx(p.name) }))}
+            label={t('Choose a plan')}
+          />
+        </Reveal>
+
+        <Reveal index={2}>
           <View style={[styles.priceCard, { backgroundColor: c.card, borderColor: c.line }]}>
             {trial ? (
               <View pointerEvents="none" style={styles.ribbonWrap}>
@@ -249,12 +255,6 @@ function PaywallScreen() {
             {t('{trial} free, then {price} per {period}', { ...terms, trial: trialText })}
           </AppText>
         ) : null}
-        <TextButton
-          label={plan === 'annual' ? t('Or pay {price} a month', { price: priceOf(monthly) }) : t('Switch to yearly and save {n}%', { n: savePct })}
-          bold={false}
-          color={c.primaryText}
-          onPress={switchPlan}
-        />
         <AppText variant="footnote" style={styles.center}>
           {renewal}
         </AppText>
@@ -359,6 +359,61 @@ function Sparkle({ delay, size, color, style }: { delay: number; size: number; c
 }
 
 
+// A two-way switch: a pill that slides under the chosen label. Reads as one radio group to a screen reader.
+function PlanToggle({
+  value,
+  onChange,
+  items,
+  label,
+}: {
+  value: string;
+  onChange: (id: (typeof PLANS)[number]['id']) => void;
+  items: { id: (typeof PLANS)[number]['id']; label: string }[];
+  label: string;
+}) {
+  const c = useTheme();
+  const [w, setW] = useState(0);
+  const index = Math.max(0, items.findIndex((i) => i.id === value));
+  const slide = useRef(new Animated.Value(index)).current;
+  useEffect(() => {
+    if (reduceMotion()) {
+      slide.setValue(index);
+      return;
+    }
+    Animated.spring(slide, { toValue: index, useNativeDriver: true, damping: 14, stiffness: 190, mass: 0.8 }).start();
+  }, [index, slide]);
+  const seg = Math.max(0, (w - 8) / items.length);
+  return (
+    <View
+      accessibilityRole="radiogroup"
+      accessibilityLabel={label}
+      onLayout={(e) => setW(e.nativeEvent.layout.width)}
+      style={[styles.toggle, { backgroundColor: c.tint, borderColor: c.line }]}
+    >
+      {seg ? (
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.toggleThumb, { width: seg, backgroundColor: c.primary, transform: [{ translateX: slide.interpolate({ inputRange: [0, items.length - 1 || 1], outputRange: [0, seg * (items.length - 1)] }) }] }]}
+        />
+      ) : null}
+      {items.map((item) => {
+        const on = item.id === value;
+        return (
+          <Pressable
+            key={item.id}
+            accessibilityRole="radio"
+            accessibilityState={{ checked: on }}
+            onPress={() => onChange(item.id)}
+            style={styles.toggleItem}
+          >
+            <AppText weight="600" color={on ? c.onPrimary : c.muted}>{item.label}</AppText>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 // A soft ring that swells and fades behind Pip, over and over, like a heartbeat.
 function Halo({ color }: { color: string }) {
   const v = useRef(new Animated.Value(0)).current;
@@ -422,6 +477,9 @@ const styles = StyleSheet.create({
   hero: { height: 128, alignItems: 'center', justifyContent: 'center' },
   halo: { position: 'absolute', width: 118, height: 118, borderRadius: 59 },
   sparkle: { position: 'absolute' },
+  toggle: { flexDirection: 'row', alignSelf: 'center', width: '78%', marginBottom: 12, padding: 4, borderRadius: radius.pill, borderWidth: StyleSheet.hairlineWidth },
+  toggleThumb: { position: 'absolute', top: 4, bottom: 4, left: 4, borderRadius: radius.pill },
+  toggleItem: { flex: 1, minHeight: 40, alignItems: 'center', justifyContent: 'center' },
   priceCard: { borderWidth: StyleSheet.hairlineWidth, borderRadius: radius.card + 6, paddingTop: 22, paddingBottom: 16, paddingHorizontal: 16, alignItems: 'center', gap: 2 },
   ribbonWrap: { position: 'absolute', top: -14, left: 10, transform: [{ rotate: '-6deg' }] },
   ribbon: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.pill },
