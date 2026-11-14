@@ -219,9 +219,6 @@ export function EmailAuthForm({
         ) : null}
 
         <View>
-        <View pointerEvents="none" style={styles.lead}>
-          <Ionicons name="mail-outline" size={20} color={focus === 'email' ? c.primary : c.muted} />
-        </View>
         <TextInput
           ref={emailRef}
           accessibilityLabel={t('Email')}
@@ -240,12 +237,12 @@ export function EmailAuthForm({
           onSubmitEditing={() => passwordRef.current?.focus()}
           style={[styles.input, styles.withLead, { backgroundColor: c.card, color: c.text, borderColor: border('email') }]}
         />
+        <View pointerEvents="none" style={styles.lead}>
+          <Ionicons name="mail-outline" size={20} color={focus === 'email' ? c.primary : c.muted} />
+        </View>
         </View>
 
         <View>
-          <View pointerEvents="none" style={styles.lead}>
-            <Ionicons name="lock-closed-outline" size={20} color={focus === 'password' ? c.primary : c.muted} />
-          </View>
           <TextInput
             ref={passwordRef}
             accessibilityLabel={t('Password')}
@@ -264,6 +261,9 @@ export function EmailAuthForm({
             onSubmitEditing={submit}
             style={[styles.input, styles.password, styles.withLead, { backgroundColor: c.card, color: c.text, borderColor: border('password') }]}
           />
+          <View pointerEvents="none" style={styles.lead}>
+            <Ionicons name="lock-closed-outline" size={20} color={focus === 'password' ? c.primary : c.muted} />
+          </View>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={show ? t('Hide password') : t('Show password')}
