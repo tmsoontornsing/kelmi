@@ -2,11 +2,11 @@
 
 Effective November 5, 2026
 
-This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekavi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.
+This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekelmi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.
 
 ## 1. Information you give us
 
-- Account. Your email address, and your password if you sign up with email (we store only a secure hash of it). If you sign in with Apple or Google, we receive your email address (Apple may give us a private relay address instead) and a user ID, and Google may also share your name and profile picture.
+- Account. Your email address, and your full name and password if you sign up with email (we store only a secure hash of the password). We keep your name with your account and do not send it to the AI providers. If you sign in with Apple or Google, we receive your email address (Apple may give us a private relay address instead) and a user ID, and Google may also share your name and profile picture.
 - Household profile. How many people you cook for, your weekly grocery budget, your diet (for example vegetarian or halal), allergies, foods you dislike, foods you like, your goal and meat preference, any food notes you type in Settings (for example “low sugar”), and the kitchen equipment you have.
 - Your lists. Pantry items, meal plans, meals you swap, which meals you choose to shop for (and which you skip, like nights eating out), grocery lists and what you check off, leftover meals and how many servings are left, and steps you mark done.
 - Recipe edits. If you change a recipe, Kelmi saves your own version to your account: the amounts you changed, ingredients you left out, steps you rewrote, and any note you add. The original recipe is not changed.
@@ -77,7 +77,7 @@ To make a request, email support@usekelmi.com from the address on your account. 
 
 ## 9. The website and the waitlist
 
-- Waitlist. If you join the waitlist on usekavi.com, we collect your email address and the time you joined. We use it only to send you one email when Kelmi is available. We do not use it for anything else and do not sell or share it for advertising. The form has a link to this Policy.
+- Waitlist. If you join the waitlist on usekelmi.com, we collect your email address and the time you joined. We use it only to send you one email when Kelmi is available. We do not use it for anything else and do not sell or share it for advertising. The form has a link to this Policy.
 - Getting off the waitlist. Email support@usekelmi.com and ask us to remove you, or use the unsubscribe link in any email we send you. We will delete your address.
 - Hosting and logs. The website is served by a hosting provider, which, like most hosts, records technical information such as your IP address, browser type, the pages you request and the time, in server logs, to deliver and secure the site. We use this only for running and protecting the site.
 - Cookies and storage. The website sets no cookies. If you use the light/dark toggle, it saves your choice in your browser's local storage under the name "kavi-theme". This stays on your device and is not sent to us. The website has no analytics and no advertising or tracking scripts.

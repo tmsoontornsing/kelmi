@@ -710,5 +710,7 @@
   "Enter your email above, then tap Forgot password.": "Saisissez d’abord votre e-mail ci-dessus, puis touchez Mot de passe oublié ?.",
   "Forgot password?": "Mot de passe oublié ?",
   "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "S’il existe un compte pour {email}, nous avons envoyé un lien pour choisir un nouveau mot de passe. Touchez-le sur ce téléphone.",
-  "Choose a password you have not used before.": "Choisissez un mot de passe que vous n’avez pas déjà utilisé."
+  "Choose a password you have not used before.": "Choisissez un mot de passe que vous n’avez pas déjà utilisé.",
+  "Full name": "Nom complet",
+  "Enter your full name.": "Saisissez votre nom complet."
 }
