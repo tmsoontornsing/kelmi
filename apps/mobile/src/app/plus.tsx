@@ -34,7 +34,7 @@ function PlusScreen() {
   const { t, tx } = useT();
   // The page's scroll position, which drives the Pip's parallax and each card's entrance.
   const scrollY = useRef(new Animated.Value(0)).current;
-  const price = Math.round(useCountUp(annual.price));
+  const price = useCountUp(annual.price);
 
   // What else Plus adds beyond the two demos above.
   const extras = [
@@ -162,8 +162,8 @@ function PlusScreen() {
         <View style={[styles.footer, { borderTopColor: c.line, backgroundColor: c.bg }]}>
           <View style={styles.priceRow}>
             <View style={styles.flex}>
-              <AppText style={styles.price}>{t('{price} a year', { price: `$${price}` })}</AppText>
-              <AppText variant="footnote">{t('About {price} a month, billed yearly', { price: '$4.92' })}</AppText>
+              <AppText style={styles.price}>{t('{price} a year', { price: `$${price.toFixed(2)}` })}</AppText>
+              <AppText variant="footnote">{t('About {price} a month, billed yearly', { price: '$5.00' })}</AppText>
             </View>
             <Pulse>
               <Wobble>

@@ -773,7 +773,7 @@ const OFF_DIET: Record<string, string[]> = {
 export const likeFitsDiet = (food: string, diet: DietId) => !(OFF_DIET[diet] ?? []).includes(food);
 
 export const PLANS = [
-  { id: 'annual', name: 'Annual', price: 59, per: 'year', billed: 'Billed yearly, about $4.92 a month', badge: 'Save 38%', best: true },
+  { id: 'annual', name: 'Annual', price: 59.99, per: 'year', billed: 'Billed yearly, about $5.00 a month', badge: 'Save 37%', best: true },
   { id: 'monthly', name: 'Monthly', price: 7.99, per: 'month', billed: 'Billed every month', badge: '', best: false },
 ] as const;
 

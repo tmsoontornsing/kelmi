@@ -3,7 +3,7 @@
 // Kelmi Plus. Billing (RevenueCat and Stripe) is not wired up, so nothing may sell or imply a subscription yet. While this is
 // false the Plus screens redirect away and every price, upgrade button, restore row and "part of Kelmi Plus" lock is hidden.
 // The code stays so it can be switched back on when purchases work.
-export const PLUS_ENABLED = false;
+export const PLUS_ENABLED = true;
 
 // A/B tests write to experiment_events in Supabase. Off until the privacy policy covers them (it lists only the three usage
 // counts today, not the paywall events) and there is something to test.
