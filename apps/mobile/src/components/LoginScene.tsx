@@ -11,16 +11,16 @@ type IconName = ComponentProps<typeof Ionicons>['name'];
 // Food and grocery icons that drift up the screen behind the log-in page, each at its own speed, size and sway.
 // left is a percentage of the width, so they spread out on any phone.
 const DRIFTERS: { icon: IconName; left: number; size: number; delay: number; duration: number; sway: number; lime?: boolean }[] = [
-  { icon: 'nutrition', left: 6, size: 30, delay: 0, duration: 9000, sway: 16 },
-  { icon: 'leaf', left: 22, size: 24, delay: 2200, duration: 11000, sway: 22, lime: true },
-  { icon: 'pizza', left: 40, size: 28, delay: 4200, duration: 10000, sway: 14 },
-  { icon: 'cart', left: 58, size: 30, delay: 800, duration: 12000, sway: 18 },
-  { icon: 'egg', left: 74, size: 24, delay: 5200, duration: 9500, sway: 20, lime: true },
-  { icon: 'fish', left: 88, size: 28, delay: 3000, duration: 11500, sway: 16 },
-  { icon: 'pricetag', left: 14, size: 22, delay: 6400, duration: 10500, sway: 12, lime: true },
-  { icon: 'restaurant', left: 50, size: 26, delay: 7400, duration: 12500, sway: 24 },
-  { icon: 'flame', left: 68, size: 22, delay: 1600, duration: 10000, sway: 14 },
-  { icon: 'cafe', left: 32, size: 24, delay: 8600, duration: 11000, sway: 18, lime: true },
+  { icon: 'nutrition', left: 6, size: 30, delay: 0, duration: 6500, sway: 16 },
+  { icon: 'leaf', left: 22, size: 24, delay: 450, duration: 7600, sway: 22, lime: true },
+  { icon: 'pizza', left: 40, size: 28, delay: 900, duration: 8700, sway: 14 },
+  { icon: 'cart', left: 58, size: 30, delay: 1350, duration: 9800, sway: 18 },
+  { icon: 'egg', left: 74, size: 24, delay: 1800, duration: 6500, sway: 20, lime: true },
+  { icon: 'fish', left: 88, size: 28, delay: 2250, duration: 7600, sway: 16 },
+  { icon: 'pricetag', left: 14, size: 22, delay: 2700, duration: 8700, sway: 12, lime: true },
+  { icon: 'restaurant', left: 50, size: 26, delay: 3150, duration: 9800, sway: 24 },
+  { icon: 'flame', left: 68, size: 22, delay: 3600, duration: 6500, sway: 14 },
+  { icon: 'cafe', left: 32, size: 24, delay: 4050, duration: 7600, sway: 18, lime: true },
 ];
 
 function Drifter({ item, height, tint, lime }: { item: (typeof DRIFTERS)[number]; height: number; tint: string; lime: string }) {
@@ -49,7 +49,7 @@ function Drifter({ item, height, tint, lime }: { item: (typeof DRIFTERS)[number]
         still
           ? { top: `${(item.left * 7) % 80}%`, opacity: 0.18 }
           : {
-              opacity: v.interpolate({ inputRange: [0, 0.12, 0.85, 1], outputRange: [0, 0.34, 0.34, 0] }),
+              opacity: v.interpolate({ inputRange: [0, 0.12, 0.85, 1], outputRange: [0, 0.5, 0.5, 0] }),
               transform: [
                 { translateY: v.interpolate({ inputRange: [0, 1], outputRange: [height + 20, -60] }) },
                 { translateX: v.interpolate({ inputRange: [0, 0.25, 0.5, 0.75, 1], outputRange: [0, item.sway, 0, -item.sway, 0] }) },
