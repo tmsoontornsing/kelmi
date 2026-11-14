@@ -6,7 +6,7 @@ const opts = { sanitizeOps: false, sanitizeResources: false };
 Deno.env.set("NEXT_PUBLIC_SUPABASE_URL", STUB_BASE);
 Deno.env.set("NEXT_PUBLIC_SUPABASE_ANON_KEY", "ANON.KEY.stub");
 Deno.env.set("SUPABASE_SERVICE_ROLE_KEY", "SERVICE.ROLE.stub");
-Deno.env.set("NEXT_PUBLIC_SITE_URL", "https://usekavi.com");
+Deno.env.set("NEXT_PUBLIC_SITE_URL", "https://usekelmi.com");
 const { POST } = await import("../../../apps/web/src/app/api/waitlist/route.ts");
 
 const onList = new Set<string>(["victim@example.com"]);
@@ -25,7 +25,7 @@ setRouter(async (req, body) => {
   return new Response(null, { status: 201 });
 });
 
-const HOST = "usekavi.com";
+const HOST = "usekelmi.com";
 const req = (h: Record<string, string>, body: BodyInit = JSON.stringify({ email: `p${crypto.randomUUID().slice(0, 8)}@example.com` })) =>
   new Request(`https://${HOST}/api/waitlist`, { method: "POST", headers: { host: HOST, "content-type": "application/json", ...h }, body, duplex: "half" } as RequestInit);
 
@@ -35,12 +35,12 @@ Deno.test({ name: "Origin / Sec-Fetch-Site spoofing", ...opts, async fn() {
   const c = (await POST(req({ "sec-fetch-site": "same-origin", "x-forwarded-for": "1.1.1.3" }))).status;
   const d = (await POST(req({ origin: "null", "x-forwarded-for": "1.1.1.4" }))).status;
   record("web waitlist: cross-site Origin from a browser", a === 403 && d === 403 ? "BLOCKED" : "PROVEN", `Origin evil -> ${a}, Origin null -> ${d}`);
-  const e = (await POST(req({ origin: "https://usekavi.com.evil.example", "x-forwarded-for": "1.1.1.5" }))).status;
+  const e = (await POST(req({ origin: "https://usekelmi.com.evil.example", "x-forwarded-for": "1.1.1.5" }))).status;
   const f = (await POST(req({ origin: `https://${HOST}`, "x-forwarded-for": "1.1.1.6" }))).status;
   record(
     "web waitlist: same-site check passes with attacker-set X-Forwarded-Host or Sec-Fetch-Site (non-browser client)",
     b === 200 || c === 200 || e === 200 ? "PROVEN" : "BLOCKED",
-    `Origin evil + X-Forwarded-Host evil -> ${b}; no Origin + Sec-Fetch-Site: same-origin -> ${c}; Origin usekavi.com.evil.example -> ${e}; control Origin https://${HOST} -> ${f}. Origin is now compared to a fixed list (NEXT_PUBLIC_SITE_URL, VERCEL_URL, localhost outside production), never to the request's own Host. A script can still send the right Origin, so this stops cross-site browser posts, not bots.`,
+    `Origin evil + X-Forwarded-Host evil -> ${b}; no Origin + Sec-Fetch-Site: same-origin -> ${c}; Origin usekelmi.com.evil.example -> ${e}; control Origin https://${HOST} -> ${f}. Origin is now compared to a fixed list (NEXT_PUBLIC_SITE_URL, VERCEL_URL, localhost outside production), never to the request's own Host. A script can still send the right Origin, so this stops cross-site browser posts, not bots.`,
   );
 }});
 

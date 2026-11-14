@@ -12,7 +12,7 @@ Each recipe's calories, protein, carbs, fiber, sugars, fat, saturated fat, chole
 
 ## Legal
 
-The Terms of Service and Privacy Policy live in `src/legal/documents.ts`, with business details in `src/legal/config.ts`. The app shows them at `/legal/terms` and `/legal/privacy`; `node scripts/build-legal.mjs` writes the same text to `legal/*.md` for the website. When Kelmi starts collecting new data or uses a new service, update the Privacy Policy and the store privacy forms in the same change. `docs/legal-checklist.md` lists what must happen before release. Never describe allergen filtering, prices, or nutrition as guaranteed in UI copy.
+The Terms of Service and Privacy Policy live in `src/legal/documents.ts`, with business details in `src/legal/config.ts`. The app shows them at `/legal/terms` and `/legal/privacy`; `node scripts/build-legal.mjs` writes the same text to `legal/*.md` for the website. When Kelmi starts collecting new data or uses a new service, update the Privacy Policy and the store privacy forms in the same change. `docs/legal-review.md` lists what is fixed, what must happen before release, and the open questions for the US and Thai lawyers. `node scripts/legal-gate.mjs` blocks release while a placeholder remains. Never describe allergen filtering, prices, or nutrition as guaranteed in UI copy.
 
 ## Reminders
 

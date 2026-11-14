@@ -188,7 +188,7 @@ function PaywallScreen() {
               </View>
             ) : null}
             <AppText variant="title" accessibilityRole="header">
-              {pitch ? pitch.title : t('Plan every week, stay under budget')}
+              {pitch ? pitch.title : t('Plan every week around your budget')}
             </AppText>
             {pitch ? <AppText variant="subhead" color={c.muted}>{pitch.body}</AppText> : null}
           </Reveal>

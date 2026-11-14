@@ -38,6 +38,11 @@ const GROUPS: { id: 'fonts' | 'framework' | 'libraries'; items: [string, string]
       ['react-native-view-shot', 'MIT'],
       ['@react-native-async-storage/async-storage', 'MIT'],
       ['@react-native-community/slider', 'MIT'],
+      ['@react-native-community/datetimepicker', 'MIT'],
+      ['@react-native-google-signin/google-signin', 'MIT'],
+      ['react-native-purchases (RevenueCat)', 'MIT'],
+      ['posthog-react-native', 'MIT'],
+      ['aes-js', 'MIT'],
     ],
   },
 ];

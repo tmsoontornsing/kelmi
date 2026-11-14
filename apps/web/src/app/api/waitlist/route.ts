@@ -53,7 +53,7 @@ async function readBody(req: Request): Promise<string | null> {
 // Vercel's own VERCEL_URL covers the deployment being served (previews included); localhost only outside production.
 // The request's own Host / X-Forwarded-Host are not used, because a non-browser caller can set them to anything.
 function allowedOrigins(): Set<string> {
-  const list = new Set<string>(['https://usekavi.com', 'https://www.usekavi.com']);
+  const list = new Set<string>(['https://usekelmi.com', 'https://www.usekelmi.com']);
   for (const o of (process.env.NEXT_PUBLIC_SITE_URL ?? '').split(',')) {
     try { if (o.trim()) list.add(new URL(o.trim()).origin); } catch {}
   }

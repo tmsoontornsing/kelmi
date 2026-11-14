@@ -2,7 +2,7 @@
 
 Effective November 5, 2026
 
-This policy is for people in the United States and is provided by LOGICBAKER COMPANY LIMITED ("we", "us") under laws such as Washington's My Health My Data Act and Nevada's consumer health data law. It adds detail to our Privacy Policy. It is not medical advice, and Kelmi is not a medical service.
+This policy is for people in the United States and is provided by LOGICBAKER COMPANY LIMITED, a company registered in Thailand at [REGISTERED ADDRESS] ("we", "us"), under laws such as Washington's My Health My Data Act and Nevada's consumer health data law. It adds detail to our Privacy Policy. It is not medical advice, and Kelmi is not a medical service.
 
 ## 1. What consumer health data we collect
 
@@ -12,7 +12,7 @@ This policy is for people in the United States and is provided by LOGICBAKER COM
 - Food notes you type in Settings (for example "low sugar" or "easy on the stomach"), which are free text and may describe a health condition if you choose to write one.
 - Your eating goal and meat preference, and the nutrition estimates shown for your meals.
 
-We collect this only from you, when you enter it. We do not collect it from other sources.
+We collect this only from you, when you enter it. We do not collect it from other sources. Before Kelmi plans meals with it, the app asks for your consent on a separate screen (the allergy notice, "I understand and agree"), and we record when you gave it.
 
 Kelmi is for people 13 and older. It is not directed to children under 13 and we do not knowingly collect their information; if we learn we have, we delete it. People 13 to 17 may use Kelmi, and their consumer health data is handled the same way as everyone else's under this policy. We do not sell it, and it goes to an AI provider only if the person allows it in the app. Laws on minors' health-related data vary by state, and we do not claim this policy meets all of them.
 
@@ -32,7 +32,7 @@ Optional usage counts (see the Privacy Policy) never include your allergies, dis
 
 ## 4. Your rights
 
-- Withdraw consent. You can stop AI sharing in the app's Settings at any time. You can also leave allergy, diet and notes blank, or remove them.
+- Withdraw consent. You can stop AI sharing in the app's Settings at any time. You can also leave allergy, diet and notes blank, or remove them, which withdraws your consent for them.
 - Access. Ask us to confirm whether we collect your consumer health data, and for a copy of it.
 - Delete. Delete it yourself in Settings, delete your whole account in Settings (Delete account), or ask us to delete it.
 - Know who received it. Ask us for a list of the third parties and affiliates that received your consumer health data.
@@ -51,4 +51,5 @@ We use encryption in transit and access controls that limit each account to its 
 ## 7. Contact
 
 LOGICBAKER COMPANY LIMITED  
+[REGISTERED ADDRESS]  
 support@usekelmi.com

@@ -1,9 +1,10 @@
 // Kelmi's Terms of Service, Privacy Policy and Consumer Health Data Privacy Policy. This file is the one source: the app
 // renders it on the legal screens, and scripts/build-legal.mjs writes the same text to legal/*.md and apps/web/content/*.md.
 //
-// DRAFT: written to match how Kelmi works at launch (United States only, ages 13 and up, free), not reviewed by a lawyer.
-// Have a licensed attorney review it before release, and update it whenever Kelmi starts collecting something new,
-// uses a new service provider, or starts charging money.
+// DRAFT: written to match how Kelmi works at launch (United States only, ages 13 and up, a free plan plus the optional
+// Kelmi Plus subscription sold through Apple and Google, run by a company registered in Thailand), not reviewed by a
+// lawyer. Have a US attorney and a Thai attorney review it before release, and update it whenever Kelmi starts collecting
+// something new, uses a new service provider, or changes what it charges.
 
 import { LEGAL } from './config';
 
@@ -22,7 +23,7 @@ export const TERMS: LegalDoc = {
   blocks: [
     { p: `Effective ${L.effective}` },
     {
-      p: `These Terms of Service ("Terms") are an agreement between you and ${L.company} ("${L.company}", "we", "us") about your use of the Kelmi app and related services (together, "Kelmi"). By creating an account or using Kelmi, you agree to these Terms and acknowledge our Privacy Policy and Consumer Health Data Privacy Policy. If you do not agree, do not use Kelmi.`,
+      p: `These Terms of Service ("Terms") are an agreement between you and ${L.company}, a company registered in ${L.country} ("${L.company}", "we", "us"), about your use of the Kelmi app and related services (together, "Kelmi"). By creating an account or using Kelmi, you agree to these Terms and acknowledge our Privacy Policy and Consumer Health Data Privacy Policy. If you do not agree, do not use Kelmi.`,
     },
     {
       p: 'Please read section 3 (food, allergies and health) and section 14 (disputes) carefully. To the extent the law allows, section 14 requires most disputes to be resolved by individual arbitration instead of in court, and waives class actions, unless you opt out within 30 days.',
@@ -30,7 +31,7 @@ export const TERMS: LegalDoc = {
 
     { h: '1. Who can use Kelmi' },
     {
-      p: 'Kelmi is offered only in the United States, and only to people who are at least 13 years old. By using Kelmi you confirm that you are 13 or older and located in the United States. Do not use Kelmi if you are under 13, if you are outside the United States, or if the law forbids you from using it. If you are under 18, you should use Kelmi only with the permission of a parent or guardian. That is a requirement on you: Kelmi does not check for or collect that permission. If you are under 18, you may have rights under your state\'s law, including rights to cancel certain contracts, that these Terms do not take away. We may end accounts that we believe do not meet these rules.',
+      p: 'Kelmi is offered only in the United States, and only to people who are at least 13 years old. By using Kelmi you confirm that you are 13 or older and located in the United States. Do not use Kelmi if you are under 13, if you are outside the United States, or if the law forbids you from using it. If you are under 18, you should use Kelmi only with the permission of a parent or guardian, and you must not buy Kelmi Plus without that parent or guardian\'s permission. That is a requirement on you: Kelmi does not check for or collect that permission. Apple and Google offer parents tools, such as Ask to Buy and purchase approvals, to control purchases. If you are under 18, you may have rights under your state\'s law, including rights to cancel certain contracts, that these Terms do not take away. We may end accounts that we believe do not meet these rules.',
     },
 
     { h: '2. Your account' },
@@ -53,9 +54,24 @@ export const TERMS: LegalDoc = {
       ],
     },
 
-    { h: '4. Cost and limits' },
+    { h: '4. Free plan, Kelmi Plus, and billing' },
     {
-      p: 'Kelmi is free to use today, and we do not charge for it. The free plan includes three meal plans a month. We may add paid plans in the future. If we do, we will tell you the features, price and billing terms in the app before you are asked to pay or charged anything, and nothing will be charged unless you clearly choose to buy it. We may also change or end the free plan or its limits, with notice if the change is material (see section 9).',
+      p: 'Kelmi has a free plan and an optional paid subscription, Kelmi Plus. The free plan includes three meal plans a month and up to 20 pantry items. Kelmi Plus adds the features described in the app, and includes up to 40 meal plans a month so the service cannot be abused. You never have to buy Kelmi Plus to use the free plan.',
+    },
+    {
+      list: [
+        'Buying. Kelmi Plus is sold only through the Apple App Store or Google Play, using your Apple or Google account. The app shows the price, billing period, and any free trial before you buy, and nothing is charged unless you confirm the purchase in Apple\'s or Google\'s purchase screen. Apple or Google, not us, take the payment, and their terms for purchases also apply.',
+        'Automatic renewal. Kelmi Plus is a subscription that renews automatically at the end of each billing period (monthly or yearly, as you chose), at the price then in effect, and your Apple or Google account is charged for each renewal, until you cancel. To avoid being charged for the next period, cancel at least 24 hours before the current period ends.',
+        'Free trials. If you start a free trial, it turns into a paid subscription and you are charged when the trial ends, unless you cancel at least 24 hours before it ends. A trial is offered once per person, as Apple or Google decide.',
+        'Cancelling. You can cancel any time in your App Store account settings (iPhone: Settings, your name, Subscriptions) or in Google Play (Payments and subscriptions). Kelmi also links there from Settings. After you cancel, Kelmi Plus stays on until the end of the period you have paid for, then your account moves to the free plan. Deleting the app or your Kelmi account does not cancel a subscription; you must cancel it with Apple or Google.',
+        'Refunds. Payments are handled by Apple or Google, so refunds are decided by them under their own refund policies, and you request them from Apple (reportaproblem.apple.com) or Google Play. We cannot issue refunds for store purchases ourselves. Except where the law requires otherwise, we do not give refunds or credits for partial periods. Nothing here limits any right to a refund you have under the law of your state.',
+        'Price changes. We may change the price of Kelmi Plus. A new price will not apply to a period you have already paid for. If the price of your subscription goes up, Apple or Google will tell you before it takes effect and, where the store or the law requires, ask you to agree to it; if you do not want to pay the new price, cancel before it applies.',
+        'When Plus ends. If your subscription ends, Plus features turn off. You can still see and delete what you made with them (such as your edited recipes), but adding more is limited to the free plan.',
+        'If we stop offering Plus. If we stop offering Kelmi Plus or end Kelmi, we will stop renewals and tell you in advance, and you can ask Apple or Google about a refund for any unused paid period.',
+      ],
+    },
+    {
+      p: 'We may change what the free plan or Kelmi Plus includes, or their limits. If a change takes away something material that you are paying for, we will tell you in advance, and it will not apply until your next billing period, so you can cancel first (see section 9).',
     },
 
     { h: '5. Acceptable use' },
@@ -82,7 +98,7 @@ export const TERMS: LegalDoc = {
 
     { h: '8. Third-party services' },
     {
-      p: 'Kelmi relies on services from other companies, such as Apple and Google for sign-in, AI providers (only if you allow them, see the Privacy Policy), and cloud providers for hosting. Their own terms and privacy policies apply to your use of their services. We are not responsible for services we do not control. Links to other websites are for convenience only.',
+      p: 'Kelmi relies on services from other companies, such as Apple and Google for sign-in and payments, RevenueCat to keep track of subscriptions, AI providers (only if you allow them, see the Privacy Policy), and cloud providers for hosting. Their own terms and privacy policies apply to your use of their services. We are not responsible for services we do not control. Links to other websites are for convenience only.',
     },
     {
       p: 'Maps and stores. Kelmi has a button that opens your phone\'s maps app (Apple Maps or Google Maps) with a search for grocery stores. The maps app, and the stores it shows, are not ours. We do not choose, check, or endorse the results, and we do not promise that any store exists, is open, is nearby, is safe to visit, has the products you want, or charges the prices Kelmi estimates. Check hours and availability yourself before you go, take care when traveling, and follow local laws, including when driving. We are not responsible for travel, purchases, or products you buy at any store, or for anything that happens there.',
@@ -123,9 +139,9 @@ export const TERMS: LegalDoc = {
         'Arbitration. If we cannot resolve it, you and we agree to resolve any dispute arising from or relating to Kelmi or these Terms by binding individual arbitration administered by the American Arbitration Association under its Consumer Arbitration Rules, instead of in court. The Federal Arbitration Act governs this section. The arbitrator may award the same individual relief a court could. We will pay arbitration filing and arbitrator fees beyond what you would pay to file in court, unless the arbitrator finds your claim frivolous.',
         'Exceptions. Either side may bring an individual claim in small claims court, or ask a court to stop infringement of intellectual property.',
         'No class actions. Claims may be brought only on an individual basis, not as a plaintiff or class member in any class, consolidated, or representative action. If this waiver is found unenforceable for a claim, that claim proceeds in court, not in arbitration.',
-        // The opt-out only works if LEGAL.email is a real, monitored address. See docs/launch-owner-todo.md.
+        // The opt-out only works if LEGAL.email is a real, monitored address. See docs/legal-review.md.
         `Opting out. You can opt out of arbitration within 30 days of first accepting these Terms by emailing ${L.email} with your name, the email on your account, and a clear statement that you opt out of arbitration.`,
-        `Governing law and courts. These Terms are governed by the laws of the State of ${L.state}, without regard to conflict of law rules, except that the Federal Arbitration Act governs this section. Any claim not subject to arbitration will be heard only in the state or federal courts located in ${L.county}, ${L.state}, and you and we consent to their jurisdiction.`,
+        `Governing law and courts. These Terms are governed by the laws of the State of ${L.state}, without regard to conflict of law rules, except that the Federal Arbitration Act governs this section. This choice of law does not take away any protection you have under the mandatory consumer protection laws of the state where you live. Any claim not subject to arbitration, other than a small claims case, which you may bring in your own county, will be heard only in the state or federal courts located in ${L.county}, ${L.state}, and you and we consent to their jurisdiction.`,
         'Time limit. To the extent the law allows, any claim must be brought within one year after it arose, or it is permanently barred.',
       ],
     },
@@ -137,11 +153,14 @@ export const TERMS: LegalDoc = {
 
     { h: '16. General' },
     {
-      p: 'These Terms, the Privacy Policy and the Consumer Health Data Privacy Policy are the whole agreement between you and us about Kelmi. If any part is unenforceable, the rest stays in effect. Our not enforcing a right is not a waiver of it. You may not transfer these Terms; we may transfer them in connection with a merger, acquisition, or sale of assets. Neither side is liable for delays caused by events beyond its reasonable control.',
+      p: 'These Terms, the Privacy Policy and the Consumer Health Data Privacy Policy are the whole agreement between you and us about Kelmi. If any part is unenforceable, the rest stays in effect. Our not enforcing a right is not a waiver of it. You may not transfer these Terms; we may transfer them in connection with a merger, acquisition, or sale of assets. Neither side is liable for delays caused by events beyond its reasonable control. These Terms are written in English; if a translation differs, the English version controls, to the extent the law allows.',
+    },
+    {
+      p: `Notice to California residents. Under California Civil Code section 1789.3: Kelmi is provided by ${L.company}, ${L.address}, ${L.email}. The free plan costs nothing; Kelmi Plus costs the price shown in the app before you buy. To resolve a complaint about Kelmi, contact us at ${L.email}. You may also contact the Complaint Assistance Unit of the Division of Consumer Services of the California Department of Consumer Affairs in writing at 1625 North Market Blvd., Suite N 112, Sacramento, CA 95834, or by telephone at (916) 445-1254 or (800) 952-5210.`,
     },
 
     { h: '17. Contact' },
-    { p: `${L.company}\n${L.email}` },
+    { p: `${L.company}\n${L.address}\n${L.email}` },
   ],
 };
 
@@ -153,6 +172,9 @@ export const PRIVACY: LegalDoc = {
     {
       p: `This Privacy Policy explains what information ${L.company} ("we", "us") collects through the Kelmi app, the usekelmi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.`,
     },
+    {
+      p: `Who is responsible. ${L.company}, a company registered in ${L.country}, at ${L.address}, decides how your information is used and is responsible for it (the "data controller" under Thailand's Personal Data Protection Act B.E. 2562, the "PDPA"). For any privacy question or request, contact us at ${L.email}.`,
+    },
 
     { h: '1. Information you give us' },
     {
@@ -162,6 +184,7 @@ export const PRIVACY: LegalDoc = {
         'Your lists. Pantry items, meal plans, meals you swap, which meals you choose to shop for (and which you skip, like nights eating out), grocery lists and what you check off, leftover meals and how many servings are left, and steps you mark done.',
         'Recipe edits. If you change a recipe, Kelmi saves your own version to your account: the amounts you changed, ingredients you left out, steps you rewrote, and any note you add. The original recipe is not changed.',
         'Meal ratings. The stars you give a meal after cooking it, kept private to your account. If you share a meal, Kelmi draws a picture on your phone with the dish name, your stars and the Kelmi name, and hands it to your phone\'s share sheet. It contains nothing about you, and Kelmi does not see where you send it.',
+        'Purchases (only if you buy Kelmi Plus). Which plan you bought, whether it is in a free trial, active, cancelled or expired, when it renews or ends, the store (Apple or Google), and the store\'s transaction identifiers. This comes from Apple or Google through RevenueCat (see section 6), which also checks for a subscription each time you sign in. We never receive your card or bank details; Apple or Google keep those.',
         'Preferences. Settings such as reminder and notification choices.',
         'Reminders (only if you choose "Add list to Reminders" on iPhone). Kelmi asks for permission to use Reminders, then adds your grocery items to a list named Kelmi Groceries. Kelmi reads only that list, to avoid adding an item twice, and never reads your other reminders. Those reminders live on your device and in your Apple account, under Apple\'s privacy practices; they are not sent to us. You can turn the permission off in iPhone Settings.',
         'Stores near you (only if you tap the location button on the grocery list). Kelmi asks you to confirm, then opens your phone\'s maps app (Apple Maps or Google Maps) with a search for grocery stores. Kelmi does not ask for, read, or store your location, and does not send it anywhere. Your maps app uses your location under its own privacy policy and your phone\'s location settings.',
@@ -179,7 +202,7 @@ export const PRIVACY: LegalDoc = {
 
     { h: '3. Sensitive information' },
     {
-      p: 'Your allergies, dislikes, diet, and typed food notes can reveal information about your health or, in the case of a choice such as halal, your religious beliefs. Some laws treat this as sensitive or "consumer health" data. We collect it only because you choose to give it, and use it only to plan your meals and grocery lists. You can leave it blank, change it, or delete it in Settings at any time. We never sell it, use it for advertising, or use it to make decisions about you that have legal or similarly significant effects.',
+      p: 'Your allergies, dislikes, diet, and typed food notes can reveal information about your health or, in the case of a choice such as halal, your religious beliefs. Some laws, including Thailand\'s PDPA and Washington\'s My Health My Data Act, treat this as sensitive or "consumer health" data. We collect it only because you choose to give it, and use it only to plan your meals and grocery lists. Before Kelmi plans meals with it, the app asks for your explicit consent on its own screen (the allergy notice, "I understand and agree"), and we record when you gave it. You can leave it blank, change it, or delete it in Settings at any time; removing it, or deleting your account, withdraws your consent for it. We never sell it, use it for advertising, or use it to make decisions about you that have legal or similarly significant effects.',
     },
 
     { h: '4. AI meal planning' },
@@ -207,6 +230,16 @@ export const PRIVACY: LegalDoc = {
       ],
     },
     { p: 'We do not sell your personal information, share it for cross-context behavioral advertising, or use it to show you ads.' },
+    { p: 'Our legal grounds. Where a law such as the PDPA asks for a legal ground for each use, we rely on:' },
+    {
+      list: [
+        'Our contract with you (the Terms): to run your account, plan your meals, build your lists, and provide Kelmi Plus if you buy it.',
+        'Your consent: for sending your food details to an AI provider, for using allergies, diet and food notes (sensitive data), for optional usage counts, and for notifications and Reminders. You can withdraw consent at any time, as described in this Policy; that does not affect what was done before.',
+        'Our legitimate interests: to keep Kelmi secure, prevent fraud and abuse, enforce limits, and fix problems, in ways that do not override your rights.',
+        'Legal obligations: to keep records the law requires, such as tax and accounting records, and to respond to lawful requests.',
+      ],
+    },
+    { p: 'An email address is needed to create an account, and we cannot provide an account without it. Everything else in your household profile is optional, but Kelmi cannot plan around details you leave out, such as an allergy.' },
 
     { h: '6. Who we share it with' },
     {
@@ -214,7 +247,8 @@ export const PRIVACY: LegalDoc = {
         'Supabase, our database, sign-in and hosting provider, which stores your account and data for us as a service provider.',
         'PostHog, our analytics provider, only if you switch on "Share usage counts" in Settings. It receives the three counts described in section 2, tied to a random number and not to you, and acts for us as a service provider.',
         'AI providers (Anthropic and IDUnify AI), only if you allow it. See section 4.',
-        'Apple and Google. If you sign in with Apple or Google, they are independent companies that decide for themselves how to handle your sign-in under their own privacy policies; they are not our service providers. If we later add paid plans, Apple or Google will likewise be independent controllers of payment information.',
+        'RevenueCat, our subscription provider. When you sign in on an iPhone or Android phone, the app gives RevenueCat your Kelmi account ID (a random code, not your name or email) so a subscription follows your account, and RevenueCat\'s software also receives technical details such as your device model, system version, app version, store country and network address. If you buy Kelmi Plus, it also receives your purchase records from Apple or Google, and tells us whether your subscription is active. It never receives your food details, and acts for us as a service provider.',
+        'Apple and Google. If you sign in with Apple or Google, they are independent companies that decide for themselves how to handle your sign-in under their own privacy policies; they are not our service providers. If you buy Kelmi Plus, Apple or Google take the payment and are likewise independent controllers of your payment information.',
         'Maps apps you choose to open. When you tap the grocery store button, your phone hands a search for "grocery store" to Apple Maps or Google Maps. We send them no personal information, and they are not our service providers; their own privacy policies apply.',
         'For legal reasons: when required by law or valid legal process, or to protect the rights, safety, and property of you, others, or us.',
         'In a business transfer, such as a merger or sale of assets, subject to this Policy.',
@@ -226,6 +260,7 @@ export const PRIVACY: LegalDoc = {
       list: [
         'Account and profile data (email, household profile, pantry, plans, lists, ratings, recipe edits): kept while your account exists. We delete it from our active systems when you delete your account in Settings.',
         'Meal plan request records: kept while your account exists, and deleted with it.',
+        'Subscription records: kept while your account exists. When you delete your account, we delete our copy and ask RevenueCat to delete its record of you. Apple and Google keep their own purchase records, and sales reports from them that the law requires us to keep for tax and accounting do not include your name or email.',
         'Backups: copies of deleted data in backups are removed on our database provider\'s backup cycle, which we expect to be up to about 30 days.',
         'Waitlist emails: kept until Kelmi launches and we send the launch email, or until you ask us to remove you, and then deleted within a reasonable time (see section 9).',
         'Server logs: kept by our hosting providers for the periods they set, normally short.',
@@ -240,6 +275,9 @@ export const PRIVACY: LegalDoc = {
         'Delete your account and its data: Settings, Delete account.',
         `Ask for a copy of your information, or ask us to correct or delete it, by emailing ${L.email}.`,
       ],
+    },
+    {
+      p: `Because we are a company registered in ${L.country}, the PDPA gives you, wherever you live, the right to be informed; to access and get a copy of your information; to receive it in a commonly used electronic format and have it sent to another company where technically possible; to object to how we use it; to ask us to delete, destroy or anonymize it; to ask us to restrict how we use it; to correct it; and to withdraw consent at any time. You can also complain to Thailand's Personal Data Protection Committee (the Office of the Personal Data Protection Commission, www.pdpc.or.th). Some of these rights have limits set by law, and we will tell you if one applies.`,
     },
     {
       p: 'Kelmi is offered only in the United States for now. Depending on the state where you live, such as California, Virginia, Colorado, Connecticut, Washington, Nevada, and others, you may have the right to know what personal information we hold and how we use it, to access and receive a portable copy, to correct it, to delete it, to limit the use of sensitive information, to withdraw consent, and to opt out of sale, sharing for advertising, and profiling. We offer these choices to everyone who uses Kelmi, whether or not the law of your state requires it. Because we do not sell or share personal information for advertising, there is nothing to opt out of; if that ever changes, we will honor Global Privacy Control signals. We will not discriminate against you for using your rights.',
@@ -265,7 +303,10 @@ export const PRIVACY: LegalDoc = {
 
     { h: '11. Where Kelmi is offered' },
     {
-      p: 'Kelmi is offered only in the United States, and your information is stored and processed in the United States. We do not offer Kelmi in the European Union, the United Kingdom, Switzerland, Thailand or any other country, and we do not design this Policy to meet those countries\' laws. If you are outside the United States, please do not use Kelmi or give us your information. If we expand to other countries, we will publish a policy for them first.',
+      p: 'Kelmi is offered only to people in the United States. We do not offer it in the European Union, the United Kingdom, Switzerland or any other country, and this Policy is not designed to meet the laws of countries where Kelmi is not offered. If you are outside the United States, please do not use Kelmi or give us your information. If we expand to other countries, we will publish a policy for them first.',
+    },
+    {
+      p: `Your information is stored and processed in the United States by Supabase. Because ${L.company} is based in ${L.country}, our team may also view and manage it from ${L.country}, and our service providers (section 6) may process it in the United States or other countries where they work. We follow the PDPA when we handle your information, and we send it to other countries only where the PDPA allows it, such as where it is needed to provide Kelmi to you under our contract, or with your consent, and we require our service providers to protect it.`,
     },
 
     { h: '12. Children' },
@@ -275,7 +316,7 @@ export const PRIVACY: LegalDoc = {
 
     { h: '13. Security' },
     {
-      p: 'We protect your information with measures such as encryption in transit, access controls that limit each account to its own data, and keeping secret keys off your device. No system is perfectly secure, so we cannot guarantee security. If a breach affects your information, we will notify you as the law requires.',
+      p: 'We protect your information with measures such as encryption in transit, access controls that limit each account to its own data, and keeping secret keys off your device. No system is perfectly secure, so we cannot guarantee security. If a breach affects your information, we will notify you, and the authorities, as the law requires.',
     },
 
     { h: '14. Changes to this Policy' },
@@ -284,7 +325,7 @@ export const PRIVACY: LegalDoc = {
     },
 
     { h: '15. Contact us' },
-    { p: `${L.company}\n${L.email}` },
+    { p: `${L.company}\n${L.address}\n${L.email}` },
   ],
 };
 
@@ -294,7 +335,7 @@ export const CONSUMER_HEALTH: LegalDoc = {
   blocks: [
     { p: `Effective ${L.effective}` },
     {
-      p: `This policy is for people in the United States and is provided by ${L.company} ("we", "us") under laws such as Washington's My Health My Data Act and Nevada's consumer health data law. It adds detail to our Privacy Policy. It is not medical advice, and Kelmi is not a medical service.`,
+      p: `This policy is for people in the United States and is provided by ${L.company}, a company registered in ${L.country} at ${L.address} ("we", "us"), under laws such as Washington's My Health My Data Act and Nevada's consumer health data law. It adds detail to our Privacy Policy. It is not medical advice, and Kelmi is not a medical service.`,
     },
 
     { h: '1. What consumer health data we collect' },
@@ -307,7 +348,7 @@ export const CONSUMER_HEALTH: LegalDoc = {
         'Your eating goal and meat preference, and the nutrition estimates shown for your meals.',
       ],
     },
-    { p: 'We collect this only from you, when you enter it. We do not collect it from other sources.' },
+    { p: 'We collect this only from you, when you enter it. We do not collect it from other sources. Before Kelmi plans meals with it, the app asks for your consent on a separate screen (the allergy notice, "I understand and agree"), and we record when you gave it.' },
     { p: 'Kelmi is for people 13 and older. It is not directed to children under 13 and we do not knowingly collect their information; if we learn we have, we delete it. People 13 to 17 may use Kelmi, and their consumer health data is handled the same way as everyone else\'s under this policy. We do not sell it, and it goes to an AI provider only if the person allows it in the app. Laws on minors\' health-related data vary by state, and we do not claim this policy meets all of them.' },
 
     { h: '2. Why we collect and use it' },
@@ -329,7 +370,7 @@ export const CONSUMER_HEALTH: LegalDoc = {
     { h: '4. Your rights' },
     {
       list: [
-        'Withdraw consent. You can stop AI sharing in the app\'s Settings at any time. You can also leave allergy, diet and notes blank, or remove them.',
+        'Withdraw consent. You can stop AI sharing in the app\'s Settings at any time. You can also leave allergy, diet and notes blank, or remove them, which withdraws your consent for them.',
         'Access. Ask us to confirm whether we collect your consumer health data, and for a copy of it.',
         'Delete. Delete it yourself in Settings, delete your whole account in Settings (Delete account), or ask us to delete it.',
         'Know who received it. Ask us for a list of the third parties and affiliates that received your consumer health data.',
@@ -351,7 +392,7 @@ export const CONSUMER_HEALTH: LegalDoc = {
     },
 
     { h: '7. Contact' },
-    { p: `${L.company}\n${L.email}` },
+    { p: `${L.company}\n${L.address}\n${L.email}` },
   ],
 };
 

@@ -1,4 +1,5 @@
 import { adminClient, asCaller, fail, json, readJson } from "../_shared/http.ts";
+import { deleteRevenueCatCustomer } from "../_shared/revenuecat.ts";
 
 // POST { confirm: "DELETE" }, Authorization: Bearer <the signed-in user's access token>
 //
@@ -83,5 +84,13 @@ Deno.serve(async (req) => {
 
   const { error } = await admin.auth.admin.deleteUser(caller.userId);
   if (error) return fail("delete-account", "delete_failed", error.message);
+
+  // Then RevenueCat's copy (the Privacy Policy promises it). Only after the account is gone, so a failed account delete
+  // never leaves a live account without its subscription record. A failure here is logged for a manual follow-up in the
+  // RevenueCat dashboard; the person's account is already deleted either way.
+  const rc = await deleteRevenueCatCustomer(caller.userId, Deno.env.get("REVENUECAT_SECRET_KEY"));
+  if (rc.result !== "deleted") {
+    console.error(JSON.stringify({ evt: `revenuecat_delete_${rc.result}`, status: rc.status ?? null, user_id: caller.userId }));
+  }
   return json({ deleted: true });
 });
