@@ -711,6 +711,7 @@
   "Forgot password?": "忘记密码？",
   "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "如果 {email} 有对应的账户，我们已发送设置新密码的链接。请在这部手机上点开它。",
   "Choose a password you have not used before.": "请选择一个你以前没用过的密码。",
-  "Full name": "全名",
-  "Enter your full name.": "请输入你的全名。"
+  "First name": "名",
+  "Last name": "姓",
+  "Enter your first and last name.": "请输入你的名和姓。"
 }
