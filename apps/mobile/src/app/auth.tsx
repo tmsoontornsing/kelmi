@@ -226,7 +226,7 @@ export default function Auth() {
           )}
           {squeeze ? null : loginOnly ? (
             emailOpen ? null : (
-              <View style={[styles.waiting, { backgroundColor: c.card, borderColor: c.line }]}>
+              <View style={[styles.waiting, { backgroundColor: `${c.card}B8`, borderColor: c.line }]}>
                 <View style={styles.waitPip}>
                   <LivelyPip size={110} />
                 </View>
