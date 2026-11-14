@@ -114,12 +114,17 @@ const friendlyAuthError = (message: string) => {
   return message;
 };
 
-export async function signUpWithEmail(email: string, password: string, fullName: string): Promise<EmailSignUpResult> {
+export type PersonName = { first: string; last: string };
+
+export async function signUpWithEmail(email: string, password: string, name: PersonName): Promise<EmailSignUpResult> {
   const { data, error } = await db().auth.signUp({
     email: email.trim(),
     password,
     // The name is kept with the account as user metadata, the same place Google puts the name it shares.
-    options: { emailRedirectTo: Linking.createURL('auth-callback'), data: { full_name: fullName.trim() } },
+    options: {
+      emailRedirectTo: Linking.createURL('auth-callback'),
+      data: { first_name: name.first.trim(), last_name: name.last.trim(), full_name: `${name.first.trim()} ${name.last.trim()}` },
+    },
   });
   if (error) throw new Error(friendlyAuthError(error.message));
   return data.session ? 'signed-in' : 'confirm';

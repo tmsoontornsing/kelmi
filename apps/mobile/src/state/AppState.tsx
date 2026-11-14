@@ -104,7 +104,7 @@ type Actions = {
   revokeAiConsent: () => Promise<void>;
   retryProfileSave: () => void;
   signInWithProvider: (provider: api.OAuthProvider) => Promise<boolean>;
-  signUpWithEmail: (email: string, password: string, fullName: string) => Promise<api.EmailSignUpResult>;
+  signUpWithEmail: (email: string, password: string, name: api.PersonName) => Promise<api.EmailSignUpResult>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signIn: () => void;
   signOut: () => Promise<void>;
@@ -611,7 +611,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     },
     retryProfileSave: () => setSaveNonce((n) => n + 1),
     signInWithProvider: (provider: api.OAuthProvider) => api.signInWithProvider(provider),
-    signUpWithEmail: (email: string, password: string, fullName: string) => api.signUpWithEmail(email, password, fullName),
+    signUpWithEmail: (email: string, password: string, name: api.PersonName) => api.signUpWithEmail(email, password, name),
     signInWithEmail: (email: string, password: string) => api.signInWithEmail(email, password),
     // Example mode only. Live sign-in goes through Apple, Google, or email.
     signIn: () => setDemoSignedIn(true),

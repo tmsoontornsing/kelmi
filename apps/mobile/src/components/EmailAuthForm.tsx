@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ElementRef } from 'react';
 import { ActivityIndicator, Animated, Easing, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { useT } from '../i18n';
-import type { EmailSignUpResult } from '../lib/api';
+import type { EmailSignUpResult, PersonName } from '../lib/api';
 import { animateLayout, haptic, PressableScale, reduceMotion, Reveal } from '../motion';
 import { fonts, radius, useTheme } from '../theme';
 import { AppText } from './AppText';
@@ -33,7 +33,7 @@ export function EmailAuthForm({
   onForgotPassword,
   initialMode = 'signup',
 }: {
-  onSubmit: (mode: Mode, email: string, password: string, fullName: string) => Promise<EmailSignUpResult>;
+  onSubmit: (mode: Mode, email: string, password: string, name: PersonName) => Promise<EmailSignUpResult>;
   onBack: () => void;
   // Sends the reset email for the address typed in. Without it the "Forgot password?" link is not shown.
   onForgotPassword?: (email: string) => Promise<void>;
@@ -43,15 +43,17 @@ export function EmailAuthForm({
   const { t } = useT();
   const strengthLabel = [t('Too short'), t('Weak'), t('Okay'), t('Good'), t('Strong')];
   const [mode, setMode] = useState<Mode>(initialMode);
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
-  const [focus, setFocus] = useState<'name' | 'email' | 'password' | null>(null);
+  const [focus, setFocus] = useState<'first' | 'last' | 'email' | 'password' | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [resetSentTo, setResetSentTo] = useState<string | null>(null);
+  const lastRef = useRef<ElementRef<typeof TextInput>>(null);
   const emailRef = useRef<ElementRef<typeof TextInput>>(null);
   const passwordRef = useRef<ElementRef<typeof TextInput>>(null);
 
@@ -93,14 +95,14 @@ export function EmailAuthForm({
 
   const submit = async () => {
     if (busy) return;
-    if (mode === 'signup' && fullName.trim().length < 2) return fail(t('Enter your full name.'));
+    if (mode === 'signup' && (!firstName.trim() || !lastName.trim())) return fail(t('Enter your first and last name.'));
     if (!looksLikeEmail(email)) return fail(t('Enter the email you want to use.'));
     if (mode === 'signup' && password.length < MIN_LENGTH) return fail(t('Use at least {n} characters for the password.', { n: MIN_LENGTH }));
     if (mode === 'signin' && !password) return fail(t('Enter your password.'));
     setBusy(true);
     setError(null);
     try {
-      const result = await onSubmit(mode, email, password, fullName);
+      const result = await onSubmit(mode, email, password, { first: firstName, last: lastName });
       if (result === 'confirm') {
         haptic.success();
         animateLayout();
@@ -141,7 +143,7 @@ export function EmailAuthForm({
   if (sentTo) return <CheckInbox email={sentTo} onBack={() => setSentTo(null)} />;
   if (resetSentTo) return <CheckInbox email={resetSentTo} reset onBack={() => setResetSentTo(null)} />;
 
-  const border = (field: 'name' | 'email' | 'password') => (focus === field ? c.primary : c.control);
+  const border = (field: 'first' | 'last' | 'email' | 'password') => (focus === field ? c.primary : c.control);
 
   return (
     <Reveal lift={10} style={styles.form}>
@@ -179,24 +181,47 @@ export function EmailAuthForm({
         </View>
 
         {mode === 'signup' ? (
-          <TextInput
-            accessibilityLabel={t('Full name')}
-            autoCapitalize="words"
-            autoComplete="name"
-            autoCorrect={false}
-            textContentType="name"
-            returnKeyType="next"
-            placeholder={t('Full name')}
-            placeholderTextColor={c.muted}
-            value={fullName}
-            onChangeText={setFullName}
-            onFocus={() => setFocus('name')}
-            onBlur={() => setFocus(null)}
-            onSubmitEditing={() => emailRef.current?.focus()}
-            style={[styles.input, { backgroundColor: c.card, color: c.text, borderColor: border('name') }]}
-          />
+          <View style={styles.nameRow}>
+            <TextInput
+              accessibilityLabel={t('First name')}
+              autoCapitalize="words"
+              autoComplete="given-name"
+              autoCorrect={false}
+              textContentType="givenName"
+              returnKeyType="next"
+              placeholder={t('First name')}
+              placeholderTextColor={c.muted}
+              value={firstName}
+              onChangeText={setFirstName}
+              onFocus={() => setFocus('first')}
+              onBlur={() => setFocus(null)}
+              onSubmitEditing={() => lastRef.current?.focus()}
+              style={[styles.input, styles.half, { backgroundColor: c.card, color: c.text, borderColor: border('first') }]}
+            />
+            <TextInput
+              ref={lastRef}
+              accessibilityLabel={t('Last name')}
+              autoCapitalize="words"
+              autoComplete="family-name"
+              autoCorrect={false}
+              textContentType="familyName"
+              returnKeyType="next"
+              placeholder={t('Last name')}
+              placeholderTextColor={c.muted}
+              value={lastName}
+              onChangeText={setLastName}
+              onFocus={() => setFocus('last')}
+              onBlur={() => setFocus(null)}
+              onSubmitEditing={() => emailRef.current?.focus()}
+              style={[styles.input, styles.half, { backgroundColor: c.card, color: c.text, borderColor: border('last') }]}
+            />
+          </View>
         ) : null}
 
+        <View>
+        <View pointerEvents="none" style={styles.lead}>
+          <Ionicons name="mail-outline" size={20} color={focus === 'email' ? c.primary : c.muted} />
+        </View>
         <TextInput
           ref={emailRef}
           accessibilityLabel={t('Email')}
@@ -213,10 +238,14 @@ export function EmailAuthForm({
           onFocus={() => setFocus('email')}
           onBlur={() => setFocus(null)}
           onSubmitEditing={() => passwordRef.current?.focus()}
-          style={[styles.input, { backgroundColor: c.card, color: c.text, borderColor: border('email') }]}
+          style={[styles.input, styles.withLead, { backgroundColor: c.card, color: c.text, borderColor: border('email') }]}
         />
+        </View>
 
         <View>
+          <View pointerEvents="none" style={styles.lead}>
+            <Ionicons name="lock-closed-outline" size={20} color={focus === 'password' ? c.primary : c.muted} />
+          </View>
           <TextInput
             ref={passwordRef}
             accessibilityLabel={t('Password')}
@@ -233,7 +262,7 @@ export function EmailAuthForm({
             onFocus={() => setFocus('password')}
             onBlur={() => setFocus(null)}
             onSubmitEditing={submit}
-            style={[styles.input, styles.password, { backgroundColor: c.card, color: c.text, borderColor: border('password') }]}
+            style={[styles.input, styles.password, styles.withLead, { backgroundColor: c.card, color: c.text, borderColor: border('password') }]}
           />
           <Pressable
             accessibilityRole="button"
@@ -352,6 +381,10 @@ const styles = StyleSheet.create({
   },
   input: { minHeight: 48, borderWidth: 1.5, borderRadius: radius.control, paddingHorizontal: 14, fontSize: 17, fontFamily: fonts.regular },
   password: { paddingRight: 48 },
+  nameRow: { flexDirection: 'row', gap: 10 },
+  half: { flex: 1, minWidth: 0 },
+  lead: { position: 'absolute', left: 14, top: 0, bottom: 0, justifyContent: 'center' },
+  withLead: { paddingLeft: 44 },
   eye: { position: 'absolute', right: 14, top: 0, bottom: 0, justifyContent: 'center' },
   meterRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   meter: { flex: 1, flexDirection: 'row', gap: 4 },

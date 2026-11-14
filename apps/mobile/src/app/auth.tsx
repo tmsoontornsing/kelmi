@@ -12,7 +12,7 @@ import { HouseholdReceipt } from '../components/HouseholdReceipt';
 import { BudgetPreview } from '../components/BudgetPreview';
 import { dietAllowsMeat, DIETS, GOALS, MEAT_LEVELS } from '../data/mock';
 import { comma, useT } from '../i18n';
-import { requestPasswordReset } from '../lib/api';
+import { requestPasswordReset, type PersonName } from '../lib/api';
 import { markConsentPending } from '../lib/consent';
 import { safeAuthFrom } from '../lib/safeRoute';
 import { PLUS_ENABLED } from '../lib/flags';
@@ -134,7 +134,7 @@ export default function Auth() {
     }
   };
 
-  const withEmail = async (mode: 'signup' | 'signin', email: string, password: string, fullName: string) => {
+  const withEmail = async (mode: 'signup' | 'signin', email: string, password: string, name: PersonName) => {
     if (!agreed) throw new Error(t('Agree to the Terms of Service and Privacy Policy to continue.'));
     await markConsentPending();
     if (mode === 'signin') {
@@ -142,7 +142,7 @@ export default function Auth() {
       enter();
       return 'signed-in' as const;
     }
-    const result = await app.signUpWithEmail(email, password, fullName);
+    const result = await app.signUpWithEmail(email, password, name);
     if (result === 'signed-in') enter();
     return result;
   };
