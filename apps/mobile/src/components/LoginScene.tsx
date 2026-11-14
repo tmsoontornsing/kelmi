@@ -187,3 +187,6 @@ export function LivelyPip({ size = 120 }: { size?: number }) {
   );
 }
 
+const styles = StyleSheet.create({
+  drifter: { position: 'absolute', top: 0 },
+});
