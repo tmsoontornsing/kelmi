@@ -20,7 +20,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
 const locales = join(src, 'i18n', 'locales');
 const catalogDir = join(root, '..', '..', 'supabase', 'catalog', 'starter');
-const LANGS = ['es', 'zh', 'hi', 'fr', 'pt', 'th'];
+const LANGS = ['es', 'zh', 'hi', 'fr', 'pt', 'th', 'ja'];
 
 // ---- UI keys: string literals passed to t( or tn(.
 
