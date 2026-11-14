@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Animated, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '../components/AppText';
@@ -16,7 +16,7 @@ import { requestPasswordReset, type PersonName } from '../lib/api';
 import { markConsentPending } from '../lib/consent';
 import { safeAuthFrom } from '../lib/safeRoute';
 import { PLUS_ENABLED } from '../lib/flags';
-import { animateLayout, haptic } from '../motion';
+import { animateLayout, haptic, reduceMotion } from '../motion';
 import { modalEdges, resetTo } from '../navigation';
 import { useApp } from '../state/AppState';
 import { space, useTheme } from '../theme';
@@ -104,6 +104,16 @@ export default function Auth() {
   const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Set when someone tries to sign in without ticking the box: the box turns red, shakes, and says why.
+  const [needsAgree, setNeedsAgree] = useState(false);
+  const shake = useRef(new Animated.Value(0)).current;
+  const flagAgreement = () => {
+    haptic.error();
+    animateLayout();
+    setNeedsAgree(true);
+    if (reduceMotion()) return;
+    Animated.sequence([10, -10, 7, -7, 3, 0].map((toValue) => Animated.timing(shake, { toValue, duration: 55, useNativeDriver: true }))).start();
+  };
 
   // New accounts see the paywall once, over their first week; someone returning to an existing account goes straight in.
   // resetTo closes this sheet along with the rest of onboarding.
@@ -115,8 +125,7 @@ export default function Auth() {
   // Nothing is pre-ticked: the person agrees on purpose, and the time and version are saved with their account.
   const needAgreement = () => {
     if (agreed) return false;
-    haptic.error();
-    setError(t('Agree to the Terms of Service and Privacy Policy to continue.'));
+    flagAgreement();
     return true;
   };
 
@@ -135,7 +144,10 @@ export default function Auth() {
   };
 
   const withEmail = async (mode: 'signup' | 'signin', email: string, password: string, name: PersonName) => {
-    if (!agreed) throw new Error(t('Agree to the Terms of Service and Privacy Policy to continue.'));
+    if (!agreed) {
+      setNeedsAgree(true);
+      throw new Error(t('Agree to the Terms of Service and Privacy Policy to continue.'));
+    }
     await markConsentPending();
     if (mode === 'signin') {
       await app.signInWithEmail(email, password);
@@ -154,6 +166,7 @@ export default function Auth() {
   };
 
   const agreeRow = (
+    <Animated.View style={{ transform: [{ translateX: shake }] }}>
     <Pressable
             accessibilityRole="checkbox"
             accessibilityState={{ checked: agreed }}
@@ -161,10 +174,11 @@ export default function Auth() {
             onPress={() => {
               haptic.select();
               setError(null);
+              setNeedsAgree(false);
               setAgreed((a) => !a);
             }}
             hitSlop={6}
-            style={styles.agree}
+            style={[styles.agree, needsAgree && !agreed ? { borderWidth: 1.5, borderColor: c.warn, borderRadius: 12, paddingHorizontal: 8, backgroundColor: `${c.warn}14` } : null]}
           >
             <Ionicons name={agreed ? 'checkbox' : 'square-outline'} size={26} color={agreed ? c.primary : c.muted} />
             <AppText variant="footnote" style={styles.agreeText}>
@@ -186,6 +200,12 @@ export default function Auth() {
                 )}
             </AppText>
     </Pressable>
+    {needsAgree && !agreed && !emailOpen ? (
+      <AppText variant="subhead" color={c.warn} accessibilityRole="alert" accessibilityLiveRegion="polite" style={styles.agreeError}>
+        {t('Agree to the Terms of Service and Privacy Policy to continue.')}
+      </AppText>
+    ) : null}
+    </Animated.View>
   );
 
   return (
@@ -314,5 +334,6 @@ const styles = StyleSheet.create({
   actions: { alignSelf: 'stretch', gap: 10 },
   agree: { alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 44 },
   agreeText: { flex: 1 },
+  agreeError: { marginTop: 4 },
   link: { textDecorationLine: 'underline' },
 });
