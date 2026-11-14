@@ -12,6 +12,7 @@ import { HouseholdReceipt } from '../components/HouseholdReceipt';
 import { BudgetPreview } from '../components/BudgetPreview';
 import { dietAllowsMeat, DIETS, GOALS, MEAT_LEVELS } from '../data/mock';
 import { comma, useT } from '../i18n';
+import { requestPasswordReset } from '../lib/api';
 import { markConsentPending } from '../lib/consent';
 import { safeAuthFrom } from '../lib/safeRoute';
 import { PLUS_ENABLED } from '../lib/flags';
@@ -271,7 +272,7 @@ export default function Auth() {
           {emailOpen ? null : agreeRow}
           <View style={styles.actions}>
             {emailOpen ? (
-              <EmailAuthForm initialMode={loginOnly ? 'signin' : 'signup'} onSubmit={withEmail} onBack={() => toggleEmail(false)} />
+              <EmailAuthForm initialMode={loginOnly ? 'signin' : 'signup'} onSubmit={withEmail} onForgotPassword={requestPasswordReset} onBack={() => toggleEmail(false)} />
             ) : (
               <>
                 <ProviderButton provider="apple" disabled={busy} onPress={() => withProvider('apple')} />

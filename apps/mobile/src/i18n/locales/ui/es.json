@@ -698,5 +698,17 @@
   "{n} years": "{n} años",
   "{trial} free, then {price} per {period}": "{trial} gratis, luego {price} por {period}",
   "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "Tu prueba gratis de {trial} empieza hoy. Al terminar, Kelmi Plus se renueva automáticamente a {price} por {period} hasta que canceles. El cobro se carga a tu Apple ID, a menos que desactives la renovación automática al menos 24 horas antes de que termine la prueba. Gestiona o cancela cuando quieras en los ajustes de tu cuenta de App Store.",
-  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "Tu prueba gratis de {trial} empieza hoy. Al terminar, Kelmi Plus se renueva automáticamente a {price} por {period} hasta que canceles. El cobro se carga a tu cuenta de Google Play, a menos que canceles al menos 24 horas antes de que termine la prueba. Gestiona o cancela cuando quieras en Google Play, en Pagos y suscripciones."
+  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "Tu prueba gratis de {trial} empieza hoy. Al terminar, Kelmi Plus se renueva automáticamente a {price} por {period} hasta que canceles. El cobro se carga a tu cuenta de Google Play, a menos que canceles al menos 24 horas antes de que termine la prueba. Gestiona o cancela cuando quieras en Google Play, en Pagos y suscripciones.",
+  "Checking your link…": "Comprobando tu enlace…",
+  "It may have expired or already been used, or it was opened on a different phone. Ask for a new link from the sign-in page.": "Puede que haya caducado, que ya se haya usado o que se abriera en otro teléfono. Pide un enlace nuevo desde la página de inicio de sesión.",
+  "Almost there": "Ya casi",
+  "Choose a new password": "Elige una contraseña nueva",
+  "You are signed in. Pick a password to use next time.": "Has iniciado sesión. Elige una contraseña para la próxima vez.",
+  "New password": "Contraseña nueva",
+  "Save new password": "Guardar contraseña nueva",
+  "Skip for now": "Omitir por ahora",
+  "Enter your email above, then tap Forgot password.": "Escribe tu correo arriba y toca ¿Olvidaste tu contraseña?.",
+  "Forgot password?": "¿Olvidaste tu contraseña?",
+  "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "Si hay una cuenta para {email}, te enviamos un enlace para elegir una contraseña nueva. Tócalo en este teléfono.",
+  "Choose a password you have not used before.": "Elige una contraseña que no hayas usado antes."
 }

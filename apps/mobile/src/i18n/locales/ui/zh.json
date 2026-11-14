@@ -698,5 +698,17 @@
   "{n} years": "{n} 年",
   "{trial} free, then {price} per {period}": "免费 {trial}，之后每{period} {price}",
   "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "您的 {trial} 免费试用今天开始。试用结束后，Kelmi Plus 将按每{period} {price} 自动续订，直到您取消。除非您在试用结束前至少 24 小时关闭自动续订，否则款项将从您的 Apple ID 扣除。您可随时在 App Store 账户设置中管理或取消。",
-  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "您的 {trial} 免费试用今天开始。试用结束后，Kelmi Plus 将按每{period} {price} 自动续订，直到您取消。除非您在试用结束前至少 24 小时取消，否则款项将从您的 Google Play 账户扣除。您可随时在 Google Play 的“付款和订阅”中管理或取消。"
+  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "您的 {trial} 免费试用今天开始。试用结束后，Kelmi Plus 将按每{period} {price} 自动续订，直到您取消。除非您在试用结束前至少 24 小时取消，否则款项将从您的 Google Play 账户扣除。您可随时在 Google Play 的“付款和订阅”中管理或取消。",
+  "Checking your link…": "正在检查你的链接…",
+  "It may have expired or already been used, or it was opened on a different phone. Ask for a new link from the sign-in page.": "链接可能已过期、已被使用，或是在另一部手机上打开的。请在登录页面重新获取链接。",
+  "Almost there": "快好了",
+  "Choose a new password": "设置新密码",
+  "You are signed in. Pick a password to use next time.": "你已登录。请设置下次使用的密码。",
+  "New password": "新密码",
+  "Save new password": "保存新密码",
+  "Skip for now": "暂时跳过",
+  "Enter your email above, then tap Forgot password.": "请先在上方输入邮箱，再点“忘记密码？”。",
+  "Forgot password?": "忘记密码？",
+  "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "如果 {email} 有对应的账户，我们已发送设置新密码的链接。请在这部手机上点开它。",
+  "Choose a password you have not used before.": "请选择一个你以前没用过的密码。"
 }

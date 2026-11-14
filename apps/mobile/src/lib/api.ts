@@ -109,6 +109,7 @@ const friendlyAuthError = (message: string) => {
   if (m.includes('invalid login')) return t('That email and password do not match.');
   if (m.includes('already registered')) return t('There is already an account with that email. Try signing in.');
   if (m.includes('rate limit')) return t('Too many tries. Wait a minute and try again.');
+  if (m.includes('same password') || m.includes('different from the old')) return t('Choose a password you have not used before.');
   if (m.includes('email not confirmed')) return t('Confirm your email first. Check your inbox for the link.');
   return message;
 };
@@ -125,6 +126,19 @@ export async function signUpWithEmail(email: string, password: string): Promise<
 
 export async function signInWithEmail(email: string, password: string): Promise<void> {
   const { error } = await db().auth.signInWithPassword({ email: email.trim(), password });
+  if (error) throw new Error(friendlyAuthError(error.message));
+}
+
+// Sends the reset email. Supabase answers the same whether or not the address has an account, so this never says which.
+// The link returns to kelmi://reset-password with a one-time code that only this phone can use (PKCE).
+export async function requestPasswordReset(email: string): Promise<void> {
+  const { error } = await db().auth.resetPasswordForEmail(email.trim(), { redirectTo: Linking.createURL('reset-password') });
+  if (error) throw new Error(friendlyAuthError(error.message));
+}
+
+// Sets a new password for whoever is signed in, which the reset link does just before this is called.
+export async function updatePassword(password: string): Promise<void> {
+  const { error } = await db().auth.updateUser({ password });
   if (error) throw new Error(friendlyAuthError(error.message));
 }
 

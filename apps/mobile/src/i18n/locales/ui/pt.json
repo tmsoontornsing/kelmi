@@ -698,5 +698,17 @@
   "{n} years": "{n} anos",
   "{trial} free, then {price} per {period}": "{trial} grátis, depois {price} por {period}",
   "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "Seu teste grátis de {trial} começa hoje. Depois, o Kelmi Plus renova automaticamente por {price} por {period} até você cancelar. A cobrança é feita no seu ID Apple, a menos que você desative a renovação automática pelo menos 24 horas antes do fim do teste. Gerencie ou cancele quando quiser nos ajustes da sua conta da App Store.",
-  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "Seu teste grátis de {trial} começa hoje. Depois, o Kelmi Plus renova automaticamente por {price} por {period} até você cancelar. A cobrança é feita na sua conta do Google Play, a menos que você cancele pelo menos 24 horas antes do fim do teste. Gerencie ou cancele quando quiser no Google Play, em Pagamentos e assinaturas."
+  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "Seu teste grátis de {trial} começa hoje. Depois, o Kelmi Plus renova automaticamente por {price} por {period} até você cancelar. A cobrança é feita na sua conta do Google Play, a menos que você cancele pelo menos 24 horas antes do fim do teste. Gerencie ou cancele quando quiser no Google Play, em Pagamentos e assinaturas.",
+  "Checking your link…": "Verificando seu link…",
+  "It may have expired or already been used, or it was opened on a different phone. Ask for a new link from the sign-in page.": "Ele pode ter expirado, já ter sido usado ou aberto em outro celular. Peça um novo link na página de login.",
+  "Almost there": "Quase lá",
+  "Choose a new password": "Escolha uma nova senha",
+  "You are signed in. Pick a password to use next time.": "Você entrou. Escolha uma senha para usar da próxima vez.",
+  "New password": "Nova senha",
+  "Save new password": "Salvar nova senha",
+  "Skip for now": "Pular por enquanto",
+  "Enter your email above, then tap Forgot password.": "Digite seu e-mail acima e toque em Esqueceu a senha?.",
+  "Forgot password?": "Esqueceu a senha?",
+  "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "Se houver uma conta para {email}, enviamos um link para escolher uma nova senha. Toque nele neste celular.",
+  "Choose a password you have not used before.": "Escolha uma senha que você ainda não usou."
 }
