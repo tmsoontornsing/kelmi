@@ -41,12 +41,11 @@ About $59 a year, shown as roughly $4.92 a month, billed yearly. Cancel any time
 
 ## Free trial
 
-Recommendation: a **3-day free trial on the yearly plan only**, none on monthly. (Set up in App Store Connect on 2026-11-13: free for the first 3 days, United States, no end date. You chose 3 days over the 7 I first suggested.)
+Recommendation: a **3-day free trial on both plans** (you chose to add it to monthly as well, so both buttons say "Start free trial"). (Set up in App Store Connect on 2026-11-13: free for the first 3 days, United States, no end date. You chose 3 days over the 7 I first suggested.)
 
 - The free plan already gives 3 plans a month, so people can try Kelmi without a card. A trial on top mainly helps the
   person who hit the 3-plan limit and wants to see a full month before paying about $59 for the year.
 - Three days is short enough that fewer people forget to cancel; if people don't reach the "aha" moment in three days, consider a longer trial.
-- No trial on monthly keeps the yearly plan the obviously better deal.
 - Review it after launch with real data (trial starts, trial-to-paid rate, refunds) before changing it.
 
 How it works in the app: the trial is configured in the store (an introductory offer with a free period), not in the app.
