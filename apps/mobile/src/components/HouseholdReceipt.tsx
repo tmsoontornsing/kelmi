@@ -6,6 +6,7 @@ import { useT } from '../i18n';
 import { Reveal, reduceMotion, useCountUp } from '../motion';
 import { fonts, useTheme } from '../theme';
 import { AppText } from './AppText';
+import { LivelyPip, Twinkles } from './LoginScene';
 import { Mascot } from './Mascot';
 
 // Pip falls in from above and settles on the top edge of the card below with a tilt, a beat after the card starts to appear.
@@ -48,9 +49,16 @@ export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [str
     <View style={compact ? styles.wrapTight : styles.wrap}>
       <Reveal lift={22} style={compact ? undefined : styles.grow}>
         <View style={[compact ? styles.paperTight : styles.paper, { backgroundColor: c.card, borderColor: c.line }]}>
-          <AppText variant="eyebrow" color={c.muted}>
-            {t('Your household')}
-          </AppText>
+          <View style={styles.head}>
+            <AppText variant="eyebrow" color={c.muted}>
+              {t('Your household')}
+            </AppText>
+            {compact ? null : (
+              <View style={styles.headPip}>
+                <LivelyPip size={58} pad={14} poses={['save', 'cheer', 'love', 'yum']} />
+              </View>
+            )}
+          </View>
           {rows.map(([label, value], i) => (
             <Reveal key={label} index={i + 1} lift={8}>
               <View style={compact ? styles.rowTight : styles.row}>
@@ -65,7 +73,15 @@ export function HouseholdReceipt({ rows, budget, compact = false }: { rows: [str
           ))}
           <View style={[styles.tear, { borderColor: c.control }]}>
             <AppText variant="headline">{t('Weekly budget')}</AppText>
-            <AppText variant="money" color={c.primaryText} style={compact ? styles.budgetTight : styles.budget} accessibilityLabel={`$${budget}`}>{`$${Math.round(shownBudget)}`}</AppText>
+            <View>
+              <AppText variant="money" color={c.primaryText} style={compact ? styles.budgetTight : styles.budget} accessibilityLabel={`${budget}`}>{`${Math.round(shownBudget)}`}</AppText>
+              {compact ? null : (
+                <Twinkles
+                  color="#8CC63F"
+                  spots={[{ left: -14, top: -2, size: 16 }, { right: -6, top: -10, size: 20 }, { right: 20, bottom: -4, size: 14 }]}
+                />
+              )}
+            </View>
           </View>
         </View>
         <Svg width="100%" height={9} viewBox="0 0 300 9" preserveAspectRatio="none" accessibilityElementsHidden importantForAccessibility="no">
@@ -89,6 +105,8 @@ const styles = StyleSheet.create({
   // No Pip here: the receipt takes all the room its parent gives it, with the rows spread evenly down the paper.
   wrap: { alignSelf: 'stretch', flexGrow: 1 },
   grow: { flex: 1 },
+  head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 20 },
+  headPip: { marginTop: -22, marginRight: -6 },
   pip: { position: 'absolute', right: 14, top: 0, zIndex: 2 },
   paper: { borderWidth: StyleSheet.hairlineWidth, borderTopLeftRadius: 4, borderTopRightRadius: 4, paddingHorizontal: 18, paddingTop: 20, paddingBottom: 16, flex: 1, justifyContent: 'space-between' },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, paddingVertical: 8 },

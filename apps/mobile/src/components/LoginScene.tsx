@@ -119,7 +119,7 @@ export function LoginBackdrop() {
 const PIP_CYCLE: MascotPose[] = ['wave', 'cheer', 'love', 'yum'];
 
 // Pip for the log-in page: drops in, bobs, ripples a halo, and changes pose every few seconds with a hop. Tap Pip for a poke.
-export function LivelyPip({ size = 120 }: { size?: number }) {
+export function LivelyPip({ size = 120, pad = 40, poses = PIP_CYCLE }: { size?: number; pad?: number; poses?: MascotPose[] }) {
   const c = useTheme();
   const [i, setI] = useState(0);
   const drop = useRef(new Animated.Value(reduceMotion() ? 1 : 0)).current;
@@ -141,7 +141,7 @@ export function LivelyPip({ size = 120 }: { size?: number }) {
     ];
     loops.forEach((l) => l.start());
     const timer = setInterval(() => {
-      setI((n) => (n + 1) % PIP_CYCLE.length);
+      setI((n) => (n + 1) % poses.length);
       hop.setValue(0);
       Animated.spring(hop, { toValue: 1, useNativeDriver: true, damping: 5, stiffness: 220 }).start();
     }, 3200);
@@ -149,9 +149,9 @@ export function LivelyPip({ size = 120 }: { size?: number }) {
       loops.forEach((l) => l.stop());
       clearInterval(timer);
     };
-  }, [drop, bob, hop, ring]);
+  }, [drop, bob, hop, ring, poses.length]);
 
-  const box = size + 40;
+  const box = size + pad;
   return (
     <View style={{ width: box, height: box, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
       {[0, 0.5].map((o) => (
@@ -181,7 +181,7 @@ export function LivelyPip({ size = 120 }: { size?: number }) {
           ],
         }}
       >
-        <Mascot pose={PIP_CYCLE[i]} size={size} tappable decorative />
+        <Mascot pose={poses[i % poses.length]} size={size} tappable decorative />
       </Animated.View>
     </View>
   );
@@ -190,3 +190,46 @@ export function LivelyPip({ size = 120 }: { size?: number }) {
 const styles = StyleSheet.create({
   drifter: { position: 'absolute', top: 0 },
 });
+
+// A few sparkles that pop and fade in turn, to put around something worth noticing (like the budget). Positions are
+// offsets inside the parent, which should be relatively positioned.
+export function Twinkles({ spots, color }: { spots: { left?: number | string; right?: number | string; top?: number | string; bottom?: number | string; size: number }[]; color: string }) {
+  return (
+    <>
+      {spots.map((spot, i) => (
+        <Twinkle key={i} index={i} spot={spot} color={color} />
+      ))}
+    </>
+  );
+}
+
+function Twinkle({ index, spot, color }: { index: number; spot: ViewStyle & { size: number }; color: string }) {
+  const v = useRef(new Animated.Value(reduceMotion() ? 1 : 0)).current;
+  useEffect(() => {
+    if (reduceMotion()) return;
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(index * 500),
+        Animated.timing(v, { toValue: 1, duration: 600, easing: Easing.out(Easing.back(2)), useNativeDriver: true }),
+        Animated.delay(500),
+        Animated.timing(v, { toValue: 0, duration: 500, useNativeDriver: true }),
+        Animated.delay(900),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [v, index]);
+  const { size, ...position } = spot;
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        { position: "absolute" },
+        position,
+        { opacity: v, transform: [{ scale: v }, { rotate: v.interpolate({ inputRange: [0, 1], outputRange: ["-30deg", "10deg"] }) }] },
+      ]}
+    >
+      <Ionicons name="sparkles" size={size} color={color} />
+    </Animated.View>
+  );
+}

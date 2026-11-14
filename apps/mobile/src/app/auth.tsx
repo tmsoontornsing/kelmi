@@ -190,7 +190,7 @@ export default function Auth() {
 
   return (
     <SafeAreaView edges={modalEdges} style={[styles.root, { backgroundColor: c.bg }]}>
-      {loginOnly ? <LoginBackdrop /> : null}
+      <LoginBackdrop />
       <View style={styles.top}>
         <IconButton icon="close" label={t('Close, sign in later')} onPress={() => router.back()} />
       </View>
