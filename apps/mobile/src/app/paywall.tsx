@@ -1,20 +1,18 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Redirect, router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Alert, Animated, Easing, Platform, ScrollView, StyleSheet, View, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '../components/AppText';
 import { IconButton, PrimaryButton, TextButton } from '../components/Buttons';
-import { RadioDot } from '../components/Controls';
 import { Mascot } from '../components/Mascot';
 import { money, PLANS } from '../data/mock';
 import { PLUS_ENABLED } from '../lib/flags';
-import { FREE_PLANS_PER_MONTH } from '../lib/limits';
 import * as purchases from '../lib/purchases';
 import { useT } from '../i18n';
 import { track, useExperiment } from '../lib/experiments';
-import { haptic, PressableScale, Reveal } from '../motion';
+import { animateLayout, haptic, reduceMotion, Reveal, useCountUp } from '../motion';
 import { celebrate } from '../motion/celebrate';
 import { modalEdges } from '../navigation';
 import { useApp } from '../state/AppState';
@@ -110,15 +108,42 @@ function PaywallScreen() {
     }
   };
 
+  // The five reasons shown on the page; the rest of Plus is on the Plus screen.
   const benefits = [
     t('A fresh plan every week'),
     t('Swap any meal and watch the budget update'),
-    t('Keep the meals you love and plan the rest again'),
     t('Cook mode with step timers, and edit any recipe'),
     t('Savings report and full nutrition on every recipe'),
     t('Send your list to anyone, or to Reminders'),
-    t('No limit on pantry items'),
   ];
+
+  // The big price counts up from zero when the sheet opens, then settles on the store's own string. It pops when the plan changes.
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setArmed(true), 450);
+    return () => clearTimeout(id);
+  }, []);
+  const target = packages[plan]?.product.price ?? chosen.price;
+  const counted = useCountUp(armed ? target : 0, 900);
+  const heroPrice = Math.abs(counted - target) > 0.004 ? `$${counted.toFixed(2)}` : priceOf(chosen);
+  const pop = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (reduceMotion()) return;
+    pop.setValue(0.88);
+    Animated.spring(pop, { toValue: 1, useNativeDriver: true, damping: 7, stiffness: 180 }).start();
+  }, [plan, pop]);
+
+  // The other plan, one tap away. Yearly leads; monthly is the quiet link under the button.
+  const other = PLANS.find((p) => p.id !== plan) ?? PLANS[1];
+  const yearly = PLANS[0];
+  const monthly = PLANS[1];
+  const savePct = Math.round((1 - yearly.price / (monthly.price * 12)) * 100);
+  const switchPlan = () => {
+    haptic.select();
+    animateLayout();
+    setPlan(other.id);
+    if (startPlan) track('paywall_default_plan', startPlan, `plan_picked_${other.id}`);
+  };
 
   // Apple's required renewal terms, one whole paragraph per store so each names its own account and settings the way
   // that store does.
@@ -134,103 +159,79 @@ function PaywallScreen() {
   return (
     <SafeAreaView edges={modalEdges} style={[styles.root, { backgroundColor: c.bg }]}>
       <View style={styles.top}>
-        <TextButton
-          label={t('Restore')}
-          bold={false}
-          color={c.muted}
-          onPress={restore}
-        />
+        <TextButton label={t('Restore')} bold={false} color={c.muted} onPress={restore} />
         <IconButton icon="close" label={t('Close, stay on the free plan')} onPress={() => router.back()} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Reveal>
-          <View style={styles.intro}>
-            <Mascot pose="cheer" size={104} tappable label={t('Pip, Kelmi\'s jar, cheering')} />
-            <AppText variant="largeTitle" accessibilityRole="header" style={styles.center}>
-              {t('Plan every week, stay under budget')}
-            </AppText>
-            <AppText color={c.muted} style={styles.center}>
-              {t('The free plan covers {n} weeks a month. Kelmi Plus covers all of them.', { n: FREE_PLANS_PER_MONTH })}
-            </AppText>
-          </View>
-        </Reveal>
+        <View style={styles.hero}>
+          <Sparkle delay={900} size={22} color={c.primary} style={{ left: '18%', top: 18 }} />
+          <Sparkle delay={1050} size={16} color="#A7D96B" style={{ right: '16%', top: 10 }} />
+          <Sparkle delay={1200} size={14} color={c.primary} style={{ left: '26%', bottom: 14 }} />
+          <Sparkle delay={1350} size={20} color="#A7D96B" style={{ right: '24%', bottom: 22 }} />
+          <PipEntrance>
+            <Mascot pose="cheer" size={100} tappable label={t('Pip, Kelmi\'s jar, cheering')} />
+          </PipEntrance>
+        </View>
 
-        <Reveal index={1}>
-          <View accessibilityRole="radiogroup" accessibilityLabel={t('Choose a plan')} style={styles.plans}>
-            {PLANS.map((p) => {
-              const on = p.id === plan;
-              return (
-                <View key={p.id} style={styles.planWrap}>
-                  <PressableScale
-                    accessibilityRole="radio"
-                    accessibilityState={{ checked: on }}
-                    accessibilityLabel={t('{plan}, {price} per {period}', { plan: tx(p.name), price: priceOf(p), period: tx(p.per) })}
-                    to={0.98}
-                    onPress={() => {
-                      if (!on) haptic.select();
-                      setPlan(p.id);
-                      if (startPlan) track('paywall_default_plan', startPlan, `plan_picked_${p.id}`);
-                    }}
-                    style={({ pressed }) => [
-                      styles.plan,
-                      { backgroundColor: c.card, borderColor: on ? c.primary : c.control, opacity: pressed ? 0.85 : 1 },
-                    ]}
-                  >
-                    <RadioDot on={on} />
-                    <View style={styles.flex}>
-                      <View style={styles.nameRow}>
-                        <AppText variant="headline">{tx(p.name)}</AppText>
-                        {p.badge ? (
-                          <View style={[styles.chip, { backgroundColor: c.badge }]}>
-                            <AppText variant="footnote" weight="700" color={c.badgeText}>{tx(p.badge)}</AppText>
-                          </View>
-                        ) : null}
-                      </View>
-                      <AppText variant="footnote">{tx(p.billed)}</AppText>
-                    </View>
-                    <View style={styles.priceCol}>
-                      <AppText style={[styles.price, { fontFamily: fonts.displaySemi }]}>{priceOf(p)}</AppText>
-                      <AppText variant="footnote">{t('per {period}', { period: tx(p.per) })}</AppText>
-                    </View>
-                  </PressableScale>
-                  {p.best ? (
-                    <View pointerEvents="none" style={[styles.best, { backgroundColor: c.primary }]}>
-                      <AppText variant="footnote" weight="700" color={c.onPrimary} style={styles.bestText}>{t('BEST VALUE')}</AppText>
-                    </View>
-                  ) : null}
+        <View style={styles.priceBlock}>
+          {chosen.badge ? (
+            <PopIn delay={1000}>
+              <Breathe amount={1.06}>
+                <View style={[styles.chip, { backgroundColor: c.badge }]}>
+                  <AppText variant="footnote" weight="700" color={c.badgeText}>{tx(chosen.badge)}</AppText>
                 </View>
-              );
-            })}
-          </View>
-        </Reveal>
+              </Breathe>
+            </PopIn>
+          ) : null}
+          <Animated.View style={[styles.center, { transform: [{ scale: pop }] }]}>
+            <AppText
+              style={[styles.bigPrice, { fontFamily: fonts.display }]}
+              accessibilityLabel={`${priceOf(chosen)} ${t('per {period}', { period: tx(chosen.per) })}`}
+            >
+              {heroPrice}
+            </AppText>
+            <AppText color={c.muted} style={styles.center}>{tx(chosen.billed)}</AppText>
+          </Animated.View>
+        </View>
 
         <Reveal index={2}>
-          <View style={styles.benefits}>
-            {benefits.map((b) => (
-              <View key={b} style={styles.benefit}>
-                <View style={[styles.check, { backgroundColor: c.tint }]}>
-                  <Ionicons name="checkmark" size={14} color={c.primaryText} />
-                </View>
+          <AppText variant="headline" accessibilityRole="header" style={styles.center}>
+            {t('Plan every week, stay under budget')}
+          </AppText>
+        </Reveal>
+
+        <View style={styles.benefits}>
+          {benefits.map((b, i) => (
+            <Reveal key={b} index={3 + i} lift={10}>
+              <View style={styles.benefit}>
+                <PopIn delay={700 + i * 140}>
+                  <View style={[styles.check, { backgroundColor: c.tint }]}>
+                    <Ionicons name="checkmark" size={14} color={c.primaryText} />
+                  </View>
+                </PopIn>
                 <AppText style={styles.flex}>{b}</AppText>
               </View>
-            ))}
-          </View>
-        </Reveal>
+            </Reveal>
+          ))}
+        </View>
       </ScrollView>
 
       <View style={[styles.footer, { borderTopColor: c.line }]}>
-        <PrimaryButton
-          label={trial ? t('Start free trial') : t('Continue')}
-          feedback="success"
-          loading={busy}
-          onPress={subscribe}
-        />
+        <Breathe amount={1.025}>
+          <PrimaryButton label={trial ? t('Start free trial') : t('Continue')} feedback="success" loading={busy} onPress={subscribe} />
+        </Breathe>
         {trial ? (
           <AppText variant="footnote" weight="600" style={styles.center}>
             {t('{trial} free, then {price} per {period}', { ...terms, trial: trialText })}
           </AppText>
         ) : null}
+        <TextButton
+          label={plan === 'annual' ? t('Or pay {price} a month', { price: priceOf(monthly) }) : t('Switch to yearly and save {n}%', { n: savePct })}
+          bold={false}
+          color={c.primaryText}
+          onPress={switchPlan}
+        />
         <AppText variant="footnote" style={styles.center}>
           {renewal}
         </AppText>
@@ -244,32 +245,107 @@ function PaywallScreen() {
   );
 }
 
+// Pip drops in from above with a tilt and settles with a bounce, once the sheet is up.
+function PipEntrance({ children }: { children: ReactNode }) {
+  const v = useRef(new Animated.Value(reduceMotion() ? 1 : 0)).current;
+  useEffect(() => {
+    if (reduceMotion()) return;
+    Animated.spring(v, { toValue: 1, useNativeDriver: true, damping: 8, stiffness: 120, mass: 0.9 }).start();
+  }, [v]);
+  return (
+    <Animated.View
+      style={{
+        opacity: v.interpolate({ inputRange: [0, 0.25, 1], outputRange: [0, 1, 1] }),
+        transform: [
+          { translateY: v.interpolate({ inputRange: [0, 1], outputRange: [-80, 0] }) },
+          { rotate: v.interpolate({ inputRange: [0, 1], outputRange: ['-14deg', '0deg'] }) },
+          { scale: v.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] }) },
+        ],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+// Springs its content up from nothing after a delay.
+function PopIn({ delay = 0, children }: { delay?: number; children: ReactNode }) {
+  const v = useRef(new Animated.Value(reduceMotion() ? 1 : 0)).current;
+  useEffect(() => {
+    if (reduceMotion()) return;
+    Animated.sequence([
+      Animated.delay(delay),
+      Animated.spring(v, { toValue: 1, useNativeDriver: true, damping: 6, stiffness: 200, mass: 0.8 }),
+    ]).start();
+  }, [v, delay]);
+  return <Animated.View style={{ transform: [{ scale: v }] }}>{children}</Animated.View>;
+}
+
+// A slow breath, so the saving chip and the button quietly draw the eye.
+function Breathe({ amount = 1.03, children }: { amount?: number; children: ReactNode }) {
+  const v = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (reduceMotion()) return;
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(v, { toValue: amount, duration: 900, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(v, { toValue: 1, duration: 900, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [v, amount]);
+  return <Animated.View style={{ transform: [{ scale: v }] }}>{children}</Animated.View>;
+}
+
+// A small sparkle that pops in around Pip, then drifts and twists.
+function Sparkle({ delay, size, color, style }: { delay: number; size: number; color: string; style: ViewStyle }) {
+  const pop = useRef(new Animated.Value(reduceMotion() ? 1 : 0)).current;
+  const drift = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (reduceMotion()) return;
+    Animated.sequence([Animated.delay(delay), Animated.spring(pop, { toValue: 1, useNativeDriver: true, damping: 6, stiffness: 180 })]).start();
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(drift, { toValue: 1, duration: 1400 + (delay % 400), easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(drift, { toValue: 0, duration: 1400 + (delay % 400), easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [pop, drift, delay]);
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        styles.sparkle,
+        style,
+        {
+          transform: [
+            { scale: pop },
+            { translateY: drift.interpolate({ inputRange: [0, 1], outputRange: [0, -6] }) },
+            { rotate: drift.interpolate({ inputRange: [0, 1], outputRange: ['-12deg', '12deg'] }) },
+          ],
+        },
+      ]}
+    >
+      <Ionicons name="sparkles" size={size} color={color} />
+    </Animated.View>
+  );
+}
+
 const styles = StyleSheet.create({
   root: { flex: 1 },
   flex: { flex: 1, gap: 2 },
   top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, paddingTop: 8 },
-  content: { paddingHorizontal: space.gutter, paddingTop: 4, paddingBottom: 16, gap: 24 },
-  intro: { alignItems: 'center', gap: 10 },
-  center: { textAlign: 'center' },
-  plans: { gap: 18, paddingTop: 8 },
-  planWrap: { position: 'relative' },
-  plan: {
-    minHeight: 76,
-    borderRadius: radius.card,
-    borderWidth: 2,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  nameRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8, rowGap: 4 },
-  chip: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: radius.pill },
-  priceCol: { alignItems: 'flex-end' },
-  price: { fontSize: 22, fontVariant: ['tabular-nums'] },
-  best: { position: 'absolute', top: -11, alignSelf: 'center', paddingHorizontal: 12, paddingVertical: 3, borderRadius: radius.pill },
-  bestText: { letterSpacing: 0.6 },
-  benefits: { gap: 12 },
+  content: { paddingHorizontal: space.gutter, paddingTop: 0, paddingBottom: 12, gap: 12 },
+  center: { textAlign: 'center', alignItems: 'center' },
+  hero: { height: 122, alignItems: 'center', justifyContent: 'center' },
+  sparkle: { position: 'absolute' },
+  priceBlock: { alignItems: 'center', gap: 10 },
+  chip: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.pill },
+  bigPrice: { fontSize: 52, lineHeight: 58, letterSpacing: -1, textAlign: 'center', fontVariant: ['tabular-nums'] },
+  benefits: { gap: 10, paddingTop: 2 },
   benefit: { flexDirection: 'row', gap: 12, alignItems: 'center' },
   check: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 16 },
