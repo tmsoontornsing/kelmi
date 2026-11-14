@@ -168,14 +168,19 @@ function PaywallScreen() {
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
-          <Sparkle delay={900} size={22} color={c.primary} style={{ left: '16%', top: 20 }} />
-          <Sparkle delay={1050} size={16} color="#A7D96B" style={{ right: '14%', top: 12 }} />
-          <Sparkle delay={1200} size={14} color={c.primary} style={{ left: '24%', bottom: 16 }} />
-          <Sparkle delay={1350} size={20} color="#A7D96B" style={{ right: '22%', bottom: 24 }} />
-          <Halo color={c.tint} />
-          <PipEntrance>
-            <Mascot pose="cheer" size={100} tappable label={t('Pip, Kelmi\'s jar, cheering')} />
-          </PipEntrance>
+          <View style={styles.pipBox}>
+            <Sparkle delay={900} size={16} color={c.primary} style={{ left: -4, top: 4 }} />
+            <Sparkle delay={1200} size={14} color="#A7D96B" style={{ right: -4, bottom: 6 }} />
+            <Halo color={c.tint} />
+            <PipEntrance>
+              <Mascot pose="cheer" size={78} tappable label={t('Pip, Kelmi\'s jar, cheering')} />
+            </PipEntrance>
+          </View>
+          <Reveal index={1} style={styles.flex}>
+            <AppText variant="title" accessibilityRole="header">
+              {t('Plan every week, stay under budget')}
+            </AppText>
+          </Reveal>
         </View>
 
         <Reveal index={1}>
@@ -220,12 +225,6 @@ function PaywallScreen() {
             </Animated.View>
             <AppText color={c.muted} style={styles.center}>{tx(chosen.billed)}</AppText>
           </View>
-        </Reveal>
-
-        <Reveal index={2}>
-          <AppText variant="headline" accessibilityRole="header" style={styles.center}>
-            {t('Plan every week, stay under budget')}
-          </AppText>
         </Reveal>
 
         <View style={[styles.benefitCard, { backgroundColor: c.card, borderColor: c.line }]}>
@@ -473,8 +472,9 @@ const styles = StyleSheet.create({
   top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, paddingTop: 8 },
   content: { paddingHorizontal: space.gutter, paddingTop: 0, paddingBottom: 12, gap: 14 },
   center: { textAlign: 'center', alignItems: 'center' },
-  hero: { height: 128, alignItems: 'center', justifyContent: 'center' },
-  halo: { position: 'absolute', width: 118, height: 118, borderRadius: 59 },
+  hero: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  pipBox: { width: 92, height: 92, alignItems: 'center', justifyContent: 'center' },
+  halo: { position: 'absolute', width: 84, height: 84, borderRadius: 42 },
   sparkle: { position: 'absolute' },
   toggle: { flexDirection: 'row', alignSelf: 'center', width: '78%', marginBottom: 12, padding: 4, borderRadius: radius.pill, borderWidth: StyleSheet.hairlineWidth },
   toggleThumb: { position: 'absolute', top: 4, bottom: 4, left: 4, borderRadius: radius.pill },
