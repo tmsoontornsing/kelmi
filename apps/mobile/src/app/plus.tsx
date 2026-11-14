@@ -12,7 +12,7 @@ import { Float, Glint, Orbs, ScrollReveal, Sparkles, Twinkle, WordRise, Wobble }
 import { PLANS } from '../data/mock';
 import { useT } from '../i18n';
 import { PLUS_ENABLED } from '../lib/flags';
-import { FREE_PLANS_PER_MONTH, PLUS_PLANS_PER_MONTH } from '../lib/limits';
+import { FREE_PLANS_PER_MONTH } from '../lib/limits';
 import { haptic, PressableScale, reduceMotion, Reveal, useCountUp } from '../motion';
 import { backOr } from '../navigation';
 import { useApp } from '../state/AppState';
@@ -38,7 +38,7 @@ function PlusScreen() {
 
   // What else Plus adds beyond the two demos above.
   const extras = [
-    t('Up to {n} plans a month', { n: PLUS_PLANS_PER_MONTH }),
+    t('A fresh plan every week'),
     t('Keep meals you love and plan the rest'),
     t('Cook mode with step timers'),
     t('Edit any recipe'),

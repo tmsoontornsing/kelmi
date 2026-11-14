@@ -10,7 +10,7 @@ import { RadioDot } from '../components/Controls';
 import { Mascot } from '../components/Mascot';
 import { money, PLANS } from '../data/mock';
 import { PLUS_ENABLED } from '../lib/flags';
-import { FREE_PLANS_PER_MONTH, PLUS_PLANS_PER_MONTH } from '../lib/limits';
+import { FREE_PLANS_PER_MONTH } from '../lib/limits';
 import * as purchases from '../lib/purchases';
 import { useT } from '../i18n';
 import { track, useExperiment } from '../lib/experiments';
@@ -111,7 +111,7 @@ function PaywallScreen() {
   };
 
   const benefits = [
-    t('Up to {n} plans a month, one for every week', { n: PLUS_PLANS_PER_MONTH }),
+    t('A fresh plan every week'),
     t('Swap any meal and watch the budget update'),
     t('Keep the meals you love and plan the rest again'),
     t('Cook mode with step timers, and edit any recipe'),
