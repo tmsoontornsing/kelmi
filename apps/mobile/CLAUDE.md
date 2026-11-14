@@ -12,7 +12,7 @@ Each recipe's calories, protein, carbs, fiber, sugars, fat, saturated fat, chole
 
 ## Legal
 
-The Terms of Service and Privacy Policy live in `src/legal/documents.ts`, with business details in `src/legal/config.ts`. The app shows them at `/legal/terms` and `/legal/privacy`; `node scripts/build-legal.mjs` writes the same text to `legal/*.md` for the website. When Kelmi starts collecting new data or uses a new service, update the Privacy Policy and the store privacy forms in the same change. `docs/legal-checklist.md` lists what must happen before release. Never describe allergen filtering, prices, or nutrition as guaranteed in UI copy.
+The Terms of Service and Privacy Policy live in `src/legal/documents.ts`, with business details in `src/legal/config.ts`. The app shows them at `/legal/terms` and `/legal/privacy`; `node scripts/build-legal.mjs` writes the same text to `legal/*.md` for the website. When Kelmi starts collecting new data or uses a new service, update the Privacy Policy and the store privacy forms in the same change. `docs/legal-review.md` lists what is fixed, what must happen before release, and the open questions for the US and Thai lawyers. `node scripts/legal-gate.mjs` blocks release while a placeholder remains. Never describe allergen filtering, prices, or nutrition as guaranteed in UI copy.
 
 ## Reminders
 
@@ -28,10 +28,10 @@ Outfit is the one typeface for everything Kelmi draws, loaded in `src/app/_layou
 
 ## Translations
 
-Kelmi runs in English, Spanish, Simplified Chinese, Hindi, French, Brazilian Portuguese and Thai. People pick a language in Settings, under Language (`src/app/language.tsx`); "Same as phone" follows the device. The translator is `src/i18n/index.tsx`, and English text is the key, so a missing translation shows the English instead of a blank.
+Kelmi runs in English, Spanish, Simplified Chinese, Hindi, French, Brazilian Portuguese, Thai and Japanese. People pick a language in Settings, under Language (`src/app/language.tsx`); "Same as phone" follows the device. The translator is `src/i18n/index.tsx`, and English text is the key, so a missing translation shows the English instead of a blank.
 
 - Text in code: `const { t, tn } = useT()`, then `t('Save Your Plan')`, `t('{n} of {total} in cart', { n, total })`, `tn(count, '{n} item', '{n} items')`. Always pass a single-quoted literal (the checker finds keys by scanning for them), and keep whole sentences in one key with placeholders, since other languages reorder words. Outside React, import `t` from `src/i18n` and call it when the code runs.
 - Food data (recipe titles and steps, ingredients, aisles, units, shelves, diets, appliances, chips, day names, and the example data): show it with `tx(value)`, ingredient and grocery lines ("Chicken breast, 1.5 lb") with `line(value)`, and cooking times with `minutes(value)`. Data keeps its English everywhere else: ids, comparisons, saving to Supabase, and allergy matching.
 - Translations live in `src/i18n/locales/ui/<code>.json` (text in code) and `src/i18n/locales/content/<code>.json` (food data, drawn from `data/mock.ts` and `supabase/catalog/starter`). After adding text or recipes, run `node scripts/i18n.mjs` to see what each language is missing, `--missing th ui` to print the gaps as JSON to fill in, and `--prune` to drop keys nothing uses. A recipe added to the catalog shows in English until its title and steps are added to every content file.
-- Outfit only has Latin letters, so `AppText` switches Thai, Hindi and Chinese to the system font in the matching weight, with taller lines for Thai and Hindi. Leave room for longer text: French and Portuguese run about a third longer than English.
+- Outfit only has Latin letters, so `AppText` switches Thai, Hindi, Chinese and Japanese to the system font in the matching weight, with taller lines for Thai and Hindi. Leave room for longer text: French and Portuguese run about a third longer than English.
 - The Terms of Service and Privacy Policy stay in English, and the sheet says so in other languages. Translating them is a job for the lawyer reviewing them. Arabic and other right-to-left languages are not supported yet; they need the layout mirrored.

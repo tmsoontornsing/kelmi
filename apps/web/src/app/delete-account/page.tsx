@@ -21,8 +21,9 @@ export default function Page() {
       </p>
       <h2>Subscriptions</h2>
       <p>
-        Kelmi is free today. If you ever bought a subscription through the App Store or Google Play, deleting your account or the app does not
-        cancel it. Cancel it in your App Store or Google Play subscription settings.
+        If you bought Kelmi Plus through the App Store or Google Play, deleting your account or the app does not cancel it. Cancel it in
+        your App Store or Google Play subscription settings. When you delete your account we also ask RevenueCat, our subscription
+        provider, to delete its record of you.
       </p>
       <h2>Can’t get into the app?</h2>
       <p>

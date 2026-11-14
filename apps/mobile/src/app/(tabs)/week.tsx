@@ -18,6 +18,7 @@ import { applianceName, MEAL_LABELS, type PlannedMeal } from '../../data/mock';
 import { comma, useT } from '../../i18n';
 import { add, labelRound, zero } from '../../lib/nutrition';
 import { onDeviceUnlocked, PLUS_ENABLED } from '../../lib/flags';
+import { openPlus } from '../../lib/plusFeatures';
 import { FREE_PLANS_PER_MONTH } from '../../lib/limits';
 import { haptic, Reveal, useCountUp } from '../../motion';
 import { useApp } from '../../state/AppState';
@@ -76,6 +77,9 @@ export default function Week() {
                 : t('{left} of {total} plans left this month', { left: Math.max(0, FREE_PLANS_PER_MONTH - app.plansUsed), total: FREE_PLANS_PER_MONTH })}
             </AppText>
           )}
+          {!app.subscribed && PLUS_ENABLED && app.plansUsed >= FREE_PLANS_PER_MONTH ? (
+            <TextButton label={t('See What Plus Adds')} onPress={() => openPlus('plans')} />
+          ) : null}
         </View></Reveal>
       ) : null}
       {app.planStatus === 'error' ? (
@@ -151,9 +155,12 @@ function ReplanRow() {
   return (
     <View style={styles.replan}>
       {out ? (
-        <AppText variant="footnote" style={styles.center}>
-          {t('You’ve used your {n} plans this month. Your count resets on the 1st.', { n: FREE_PLANS_PER_MONTH })}
-        </AppText>
+        <>
+          <AppText variant="footnote" style={styles.center}>
+            {t('You’ve used your {n} plans this month. Your count resets on the 1st.', { n: FREE_PLANS_PER_MONTH })}
+          </AppText>
+          {PLUS_ENABLED ? <TextButton label={t('See What Plus Adds')} onPress={() => openPlus('plans')} /> : null}
+        </>
       ) : (
         <>
           <TextButton label={t('Plan this week again')} onPress={ask} />
@@ -173,7 +180,7 @@ const openRecipe = (meal: PlannedMeal) =>
 // Swapping a meal only needs the phone, so it is open to everyone while Plus is hidden. Once Plus is on, free users are
 // taken to what Plus adds instead.
 const openSwap = (meal: PlannedMeal, plus: boolean) =>
-  onDeviceUnlocked(plus) ? router.push({ pathname: '/swap/[slot]', params: { slot: String(meal.slot) } }) : router.push('/plus');
+  onDeviceUnlocked(plus) ? router.push({ pathname: '/swap/[slot]', params: { slot: String(meal.slot) } }) : openPlus('swap');
 
 // Equipment the household lacks, as a warning line, or null when the meal is cookable.
 function useMissing(meal: PlannedMeal) {
@@ -206,7 +213,7 @@ function LockButton({ meal, name }: { meal: PlannedMeal; name: string }) {
       onPress={() => {
         haptic.select();
         if (subscribed) toggleLock(meal.slot);
-        else router.push('/plus');
+        else openPlus('keep');
       }}
       style={({ pressed }) => [styles.tileSwap, { opacity: pressed ? 0.5 : 1 }]}
     >

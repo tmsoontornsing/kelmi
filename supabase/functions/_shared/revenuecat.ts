@@ -156,3 +156,29 @@ export function toTransfer(event: RevenueCatEvent, opts: ParseOptions = {}): Tra
   const at = eventMs(event);
   return at === null ? null : { from, to, event_ms: at };
 }
+
+// Deletes the person's customer record at RevenueCat (their app user id, purchase history and device details), so deleting a
+// Kelmi account removes it there too, as the Privacy Policy says. Needs a RevenueCat secret API key (REVENUECAT_SECRET_KEY,
+// a key that starts "sk_", kept only in Supabase secrets). It does not cancel a store subscription: only the person can do
+// that with Apple or Google. Returns "deleted" (including when RevenueCat had no record), "skipped" when no key is set, or
+// "failed" with the HTTP status when there was one (401 means a wrong key, 429/5xx an outage). Never throws, so a
+// RevenueCat outage cannot stop the account itself from being deleted.
+// API: https://www.revenuecat.com/docs/api-v1#tag/customers/operation/delete-subscriber
+export async function deleteRevenueCatCustomer(
+  appUserId: string,
+  secretKey: string | undefined,
+  fetchImpl: typeof fetch = fetch,
+): Promise<{ result: "deleted" | "skipped" | "failed"; status?: number }> {
+  if (!secretKey) return { result: "skipped" };
+  try {
+    const res = await fetchImpl(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(appUserId)}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${secretKey}` },
+      signal: AbortSignal.timeout(8000),
+    });
+    await res.body?.cancel();
+    return { result: res.ok || res.status === 404 ? "deleted" : "failed", status: res.status };
+  } catch {
+    return { result: "failed" };
+  }
+}

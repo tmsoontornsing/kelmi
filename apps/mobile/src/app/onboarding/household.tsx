@@ -67,7 +67,7 @@ export default function Household() {
       pip="love"
       backLabel={edit ? t('Back to Settings') : t('Back to step 1')}
       title={t('Set Up Your Household')}
-      intro={t('Kelmi uses this to size portions and keep each week under budget.')}
+      intro={t('Kelmi uses this to size portions and plan each week around your budget.')}
       footer={
         <PrimaryButton
           label={edit ? t('Done') : t('Continue')}

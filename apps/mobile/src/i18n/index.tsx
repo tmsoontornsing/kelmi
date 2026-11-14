@@ -4,12 +4,14 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import contentEs from './locales/content/es.json';
 import contentFr from './locales/content/fr.json';
 import contentHi from './locales/content/hi.json';
+import contentJa from './locales/content/ja.json';
 import contentPt from './locales/content/pt.json';
 import contentTh from './locales/content/th.json';
 import contentZh from './locales/content/zh.json';
 import uiEs from './locales/ui/es.json';
 import uiFr from './locales/ui/fr.json';
 import uiHi from './locales/ui/hi.json';
+import uiJa from './locales/ui/ja.json';
 import uiPt from './locales/ui/pt.json';
 import uiTh from './locales/ui/th.json';
 import uiZh from './locales/ui/zh.json';
@@ -30,6 +32,7 @@ export const LANGUAGES = [
   { code: 'fr', native: 'Français', english: 'French', locale: 'fr' },
   { code: 'pt', native: 'Português', english: 'Portuguese', locale: 'pt-BR' },
   { code: 'th', native: 'ไทย', english: 'Thai', locale: 'th-TH' },
+  { code: 'ja', native: '日本語', english: 'Japanese', locale: 'ja-JP' },
 ] as const;
 
 export type Language = (typeof LANGUAGES)[number]['code'];
@@ -37,13 +40,13 @@ export type Language = (typeof LANGUAGES)[number]['code'];
 export type LanguageChoice = Language | 'system';
 
 type Dict = Record<string, string>;
-const UI: Record<Language, Dict> = { en: {}, es: uiEs, zh: uiZh, hi: uiHi, fr: uiFr, pt: uiPt, th: uiTh };
-const CONTENT: Record<Language, Dict> = { en: {}, es: contentEs, zh: contentZh, hi: contentHi, fr: contentFr, pt: contentPt, th: contentTh };
+const UI: Record<Language, Dict> = { en: {}, es: uiEs, zh: uiZh, hi: uiHi, fr: uiFr, pt: uiPt, th: uiTh, ja: uiJa };
+const CONTENT: Record<Language, Dict> = { en: {}, es: contentEs, zh: contentZh, hi: contentHi, fr: contentFr, pt: contentPt, th: contentTh, ja: contentJa };
 
-// Outfit only covers Latin letters. Thai, Hindi and Chinese draw in the system font, which has their scripts in
+// Outfit only covers Latin letters. Thai, Hindi, Chinese and Japanese draw in the system font, which has their scripts in
 // every weight, and Thai and Hindi get taller lines so marks above and below the letters are not clipped.
-export const LATIN: Record<Language, boolean> = { en: true, es: true, fr: true, pt: true, zh: false, hi: false, th: false };
-export const TALL_SCRIPT: Record<Language, boolean> = { en: false, es: false, fr: false, pt: false, zh: false, hi: true, th: true };
+export const LATIN: Record<Language, boolean> = { en: true, es: true, fr: true, pt: true, zh: false, hi: false, th: false, ja: false };
+export const TALL_SCRIPT: Record<Language, boolean> = { en: false, es: false, fr: false, pt: false, zh: false, hi: true, th: true, ja: false };
 
 const STORAGE_KEY = 'kavi.language';
 
@@ -123,8 +126,8 @@ export const t: Translator['t'] = (key, vars) => get(current).t(key, vars);
 export const tx: Translator['tx'] = (text) => get(current).tx(text);
 export const line: Translator['line'] = (text) => get(current).line(text);
 export const currentLanguage = () => current;
-// The separator for a list of names: Chinese uses an enumeration comma, the rest a comma and a space.
-export const comma = () => (current === 'zh' ? '、' : ', ');
+// The separator for a list of names: Chinese and Japanese use an enumeration comma, the rest a comma and a space.
+export const comma = () => (current === 'zh' || current === 'ja' ? '、' : ', ');
 
 type Ctx = { choice: LanguageChoice; lang: Language; setChoice: (c: LanguageChoice) => void };
 const LanguageContext = createContext<Ctx>({ choice: 'system', lang: current, setChoice: () => {} });

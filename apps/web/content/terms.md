@@ -1,14 +1,14 @@
 # Kelmi Terms of Service
 
-Effective November 5, 2026
+Effective November 14, 2026
 
-These Terms of Service ("Terms") are an agreement between you and LOGICBAKER COMPANY LIMITED ("LOGICBAKER COMPANY LIMITED", "we", "us") about your use of the Kelmi app and related services (together, "Kelmi"). By creating an account or using Kelmi, you agree to these Terms and acknowledge our Privacy Policy and Consumer Health Data Privacy Policy. If you do not agree, do not use Kelmi.
+These Terms of Service ("Terms") are an agreement between you and LOGICBAKER COMPANY LIMITED, a company registered in Thailand ("LOGICBAKER COMPANY LIMITED", "we", "us"), about your use of the Kelmi app and related services (together, "Kelmi"). By creating an account or using Kelmi, you agree to these Terms and acknowledge our Privacy Policy and Consumer Health Data Privacy Policy. If you do not agree, do not use Kelmi.
 
 Please read section 3 (food, allergies and health) and section 14 (disputes) carefully. To the extent the law allows, section 14 requires most disputes to be resolved by individual arbitration instead of in court, and waives class actions, unless you opt out within 30 days.
 
 ## 1. Who can use Kelmi
 
-Kelmi is offered only in the United States, and only to people who are at least 13 years old. By using Kelmi you confirm that you are 13 or older and located in the United States. Do not use Kelmi if you are under 13, if you are outside the United States, or if the law forbids you from using it. If you are under 18, you should use Kelmi only with the permission of a parent or guardian. That is a requirement on you: Kelmi does not check for or collect that permission. If you are under 18, you may have rights under your state's law, including rights to cancel certain contracts, that these Terms do not take away. We may end accounts that we believe do not meet these rules.
+Kelmi is offered only in the United States, and only to people who are at least 13 years old. By using Kelmi you confirm that you are 13 or older and located in the United States. Do not use Kelmi if you are under 13, if you are outside the United States, or if the law forbids you from using it. If you are under 18, you should use Kelmi only with the permission of a parent or guardian, and you must not buy Kelmi Plus without that parent or guardian's permission. That is a requirement on you: Kelmi does not check for or collect that permission. Apple and Google offer parents tools, such as Ask to Buy and purchase approvals, to control purchases. If you are under 18, you may have rights under your state's law, including rights to cancel certain contracts, that these Terms do not take away. We may end accounts that we believe do not meet these rules.
 
 ## 2. Your account
 
@@ -25,9 +25,20 @@ Kelmi suggests weekly meal plans, recipes, grocery lists, price estimates and nu
 - Food safety. Follow safe food handling: wash hands and produce, keep raw meat separate, refrigerate promptly, and cook food to safe internal temperatures (for example, 165°F for poultry). Recipe times are estimates. Use care with knives, heat and appliances, and supervise anyone who is learning to cook.
 - Automated suggestions. Meal plans may be created by software, including artificial intelligence services if you allow them, and can contain mistakes. Use your own judgment.
 
-## 4. Cost and limits
+## 4. Free plan, Kelmi Plus, and billing
 
-Kelmi is free to use today, and we do not charge for it. The free plan includes three meal plans a month. We may add paid plans in the future. If we do, we will tell you the features, price and billing terms in the app before you are asked to pay or charged anything, and nothing will be charged unless you clearly choose to buy it. We may also change or end the free plan or its limits, with notice if the change is material (see section 9).
+Kelmi has a free plan and an optional paid subscription, Kelmi Plus. The free plan includes three meal plans a month and up to 20 pantry items. Kelmi Plus adds the features described in the app, and includes up to 40 meal plans a month so the service cannot be abused. You never have to buy Kelmi Plus to use the free plan.
+
+- Buying. Kelmi Plus is sold only through the Apple App Store or Google Play, using your Apple or Google account. The app shows the price, billing period, and any free trial before you buy, and nothing is charged unless you confirm the purchase in Apple's or Google's purchase screen. Apple or Google, not us, take the payment, and their terms for purchases also apply.
+- Automatic renewal. Kelmi Plus is a subscription that renews automatically at the end of each billing period (monthly or yearly, as you chose), at the price then in effect, and your Apple or Google account is charged for each renewal, until you cancel. To avoid being charged for the next period, cancel at least 24 hours before the current period ends.
+- Free trials. If you start a free trial, it turns into a paid subscription and you are charged when the trial ends, unless you cancel at least 24 hours before it ends. A trial is offered once per person, as Apple or Google decide.
+- Cancelling. You can cancel any time in your App Store account settings (iPhone: Settings, your name, Subscriptions) or in Google Play (Payments and subscriptions). Kelmi also links there from Settings. After you cancel, Kelmi Plus stays on until the end of the period you have paid for, then your account moves to the free plan. Deleting the app or your Kelmi account does not cancel a subscription; you must cancel it with Apple or Google.
+- Refunds. Payments are handled by Apple or Google, so refunds are decided by them under their own refund policies, and you request them from Apple (reportaproblem.apple.com) or Google Play. We cannot issue refunds for store purchases ourselves. Except where the law requires otherwise, we do not give refunds or credits for partial periods. Nothing here limits any right to a refund you have under the law of your state.
+- Price changes. We may change the price of Kelmi Plus. A new price will not apply to a period you have already paid for. If the price of your subscription goes up, Apple or Google will tell you before it takes effect and, where the store or the law requires, ask you to agree to it; if you do not want to pay the new price, cancel before it applies.
+- When Plus ends. If your subscription ends, Plus features turn off. You can still see and delete what you made with them (such as your edited recipes), but adding more is limited to the free plan.
+- If we stop offering Plus. If we stop offering Kelmi Plus or end Kelmi, we will stop renewals and tell you in advance, and you can ask Apple or Google about a refund for any unused paid period.
+
+We may change what the free plan or Kelmi Plus includes, or their limits. If a change takes away something material that you are paying for, we will tell you in advance, and it will not apply until your next billing period, so you can cancel first (see section 9).
 
 ## 5. Acceptable use
 
@@ -49,7 +60,7 @@ Kelmi's software, design, Pip the mascot, recipes, text, and data are protected 
 
 ## 8. Third-party services
 
-Kelmi relies on services from other companies, such as Apple and Google for sign-in, AI providers (only if you allow them, see the Privacy Policy), and cloud providers for hosting. Their own terms and privacy policies apply to your use of their services. We are not responsible for services we do not control. Links to other websites are for convenience only.
+Kelmi relies on services from other companies, such as Apple and Google for sign-in and payments, RevenueCat to keep track of subscriptions, AI providers (only if you allow them, see the Privacy Policy), and cloud providers for hosting. Their own terms and privacy policies apply to your use of their services. We are not responsible for services we do not control. Links to other websites are for convenience only.
 
 Maps and stores. Kelmi has a button that opens your phone's maps app (Apple Maps or Google Maps) with a search for grocery stores. The maps app, and the stores it shows, are not ours. We do not choose, check, or endorse the results, and we do not promise that any store exists, is open, is nearby, is safe to visit, has the products you want, or charges the prices Kelmi estimates. Check hours and availability yourself before you go, take care when traveling, and follow local laws, including when driving. We are not responsible for travel, purchases, or products you buy at any store, or for anything that happens there.
 
@@ -82,7 +93,7 @@ To the extent the law allows, you agree to defend and indemnify LOGICBAKER COMPA
 - Exceptions. Either side may bring an individual claim in small claims court, or ask a court to stop infringement of intellectual property.
 - No class actions. Claims may be brought only on an individual basis, not as a plaintiff or class member in any class, consolidated, or representative action. If this waiver is found unenforceable for a claim, that claim proceeds in court, not in arbitration.
 - Opting out. You can opt out of arbitration within 30 days of first accepting these Terms by emailing support@usekelmi.com with your name, the email on your account, and a clear statement that you opt out of arbitration.
-- Governing law and courts. These Terms are governed by the laws of the State of [STATE], without regard to conflict of law rules, except that the Federal Arbitration Act governs this section. Any claim not subject to arbitration will be heard only in the state or federal courts located in [COUNTY], [STATE], and you and we consent to their jurisdiction.
+- Governing law and courts. These Terms are governed by the laws of the State of Delaware, without regard to conflict of law rules, except that the Federal Arbitration Act governs this section. This choice of law does not take away any protection you have under the mandatory consumer protection laws of the state where you live. Any claim not subject to arbitration, other than a small claims case, which you may bring in your own county, will be heard only in the state or federal courts located in New Castle County, Delaware, and you and we consent to their jurisdiction.
 - Time limit. To the extent the law allows, any claim must be brought within one year after it arose, or it is permanently barred.
 
 ## 15. App Store terms
@@ -91,9 +102,12 @@ If you got Kelmi from the Apple App Store, these Terms are between you and us, n
 
 ## 16. General
 
-These Terms, the Privacy Policy and the Consumer Health Data Privacy Policy are the whole agreement between you and us about Kelmi. If any part is unenforceable, the rest stays in effect. Our not enforcing a right is not a waiver of it. You may not transfer these Terms; we may transfer them in connection with a merger, acquisition, or sale of assets. Neither side is liable for delays caused by events beyond its reasonable control.
+These Terms, the Privacy Policy and the Consumer Health Data Privacy Policy are the whole agreement between you and us about Kelmi. If any part is unenforceable, the rest stays in effect. Our not enforcing a right is not a waiver of it. You may not transfer these Terms; we may transfer them in connection with a merger, acquisition, or sale of assets. Neither side is liable for delays caused by events beyond its reasonable control. These Terms are written in English; if a translation differs, the English version controls, to the extent the law allows.
+
+Notice to California residents. Under California Civil Code section 1789.3: Kelmi is provided by LOGICBAKER COMPANY LIMITED, [REGISTERED ADDRESS], support@usekelmi.com. The free plan costs nothing; Kelmi Plus costs the price shown in the app before you buy. To resolve a complaint about Kelmi, contact us at support@usekelmi.com. You may also contact the Complaint Assistance Unit of the Division of Consumer Services of the California Department of Consumer Affairs in writing at 1625 North Market Blvd., Suite N 112, Sacramento, CA 95834, or by telephone at (916) 445-1254 or (800) 952-5210.
 
 ## 17. Contact
 
 LOGICBAKER COMPANY LIMITED  
+[REGISTERED ADDRESS]  
 support@usekelmi.com

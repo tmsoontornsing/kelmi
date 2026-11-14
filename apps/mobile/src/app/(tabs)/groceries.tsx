@@ -16,6 +16,7 @@ import { money } from '../../data/mock';
 import { comma, useT } from '../../i18n';
 import { animateLayout, haptic, PressableScale, reduceMotion, Reveal, useCountUp } from '../../motion';
 import { onDeviceUnlocked } from '../../lib/flags';
+import { openPlus } from '../../lib/plusFeatures';
 import { remindersAvailable, sendToReminders } from '../../lib/reminders';
 import { openStoreSearch } from '../../lib/stores';
 import { share as shareText } from '../../navigation';
@@ -49,7 +50,8 @@ export default function Groceries() {
   const plusLabel = usePlusLabel();
   // Sending the list out only needs the phone, so it is open to everyone while Plus is hidden. Once Plus is on, the free
   // plan's tap opens the paywall as a modal.
-  const seePlus = () => router.push('/paywall');
+  const seeRemindersPlus = () => openPlus('reminders');
+  const seeSharePlus = () => openPlus('share');
   const canSend = onDeviceUnlocked(subscribed);
   const [open, setOpen] = useState<Record<string, boolean>>({ Produce: true });
 
@@ -140,14 +142,14 @@ export default function Groceries() {
           <IconButton
             icon="checkbox-outline"
             label={plusLabel(t('Add list to Reminders'), subscribed)}
-            onPress={canSend ? toReminders : seePlus}
+            onPress={canSend ? toReminders : seeRemindersPlus}
           />
         ) : null}
         <IconButton icon="location-outline" label={t('Find grocery stores near you')} onPress={findStores} />
         <IconButton
           icon="share-outline"
           label={plusLabel(t('Share your grocery list'), subscribed)}
-          onPress={canSend ? share : seePlus}
+          onPress={canSend ? share : seeSharePlus}
         />
       </View>
       <View style={[styles.summary, { backgroundColor: c.card }]}>

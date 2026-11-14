@@ -50,7 +50,7 @@ function PlusScreen() {
 
   // What stays free, kept short so it reads at a glance.
   const keeps = [
-    t('Meals inside your budget'),
+    t('Meals planned around your budget'),
     t('Diet and allergy filters'),
     t('Foods you like'),
     t('Kitchen-aware recipes'),

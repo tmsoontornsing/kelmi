@@ -1,8 +1,9 @@
 // Launch switches. Flip one to true only when the thing behind it is real.
 
-// Kelmi Plus. Billing (RevenueCat and Stripe) is not wired up, so nothing may sell or imply a subscription yet. While this is
-// false the Plus screens redirect away and every price, upgrade button, restore row and "part of Kelmi Plus" lock is hidden.
-// The code stays so it can be switched back on when purchases work.
+// Kelmi Plus, sold through Apple and Google via RevenueCat (src/lib/purchases.ts). Keep this true only while the store
+// products, the RevenueCat keys (REVENUECAT_IOS_KEY / REVENUECAT_ANDROID_KEY) and the webhook are live and a sandbox purchase
+// has been tested end to end: the Terms (section 4) describe Plus as on sale. While false the Plus screens redirect away and
+// every price, upgrade button, restore row and "part of Kelmi Plus" lock is hidden.
 export const PLUS_ENABLED = true;
 
 // A/B tests write to experiment_events in Supabase. Off until the privacy policy covers them (it lists only the three usage

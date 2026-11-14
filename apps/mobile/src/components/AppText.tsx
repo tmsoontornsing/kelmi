@@ -45,7 +45,7 @@ export function AppText({ variant = 'body', color, weight, style, children, ...r
   const own = StyleSheet.flatten(style) ?? {};
   const w = weight ?? own.fontWeight;
   const fontFamily = own.fontFamily ?? (w ? familyFor(w) : base[variant].fontFamily);
-  // Thai, Hindi and Chinese use the system font in the matching weight, with room for marks above and below.
+  // Thai, Hindi, Chinese and Japanese use the system font in the matching weight, with room for marks above and below.
   const lineHeight = own.lineHeight ?? base[variant].lineHeight;
   const script: TextStyle = LATIN[lang]
     ? { fontFamily, fontWeight: 'normal' }

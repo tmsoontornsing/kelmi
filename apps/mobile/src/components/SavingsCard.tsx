@@ -80,7 +80,7 @@ export function SavingsCard() {
           </AppText>
         </>
       ) : (
-        <PlusNotice text={t('See what Kelmi has saved you this month and all time, and how each week compares with your budget.')} />
+        <PlusNotice text={t('See your estimated savings this month and all time, and how each week compares with your budget.')} />
       )}
     </Card>
   );

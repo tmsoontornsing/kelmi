@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert@1";
-import { secretMatches, toSubscriptionRow, toTransfer } from "./revenuecat.ts";
+import { deleteRevenueCatCustomer, secretMatches, toSubscriptionRow, toTransfer } from "./revenuecat.ts";
 
 const user = "123e4567-e89b-12d3-a456-426614174000";
 const other = "223e4567-e89b-12d3-a456-426614174000";
@@ -95,4 +95,25 @@ Deno.test("secretMatches", async () => {
   assertEquals(await secretMatches(null, "abc"), false);
   assertEquals(await secretMatches("ab", "abc"), false);
   assertEquals(await secretMatches("", ""), false);
+});
+
+Deno.test("deleting a RevenueCat customer calls DELETE with the secret key and the encoded user id", async () => {
+  const calls: { url: string; init?: RequestInit }[] = [];
+  const fake = ((url: string, init?: RequestInit) => {
+    calls.push({ url, init });
+    return Promise.resolve(new Response("{}", { status: 200 }));
+  }) as typeof fetch;
+  assertEquals(await deleteRevenueCatCustomer(user, "sk_test", fake), { result: "deleted", status: 200 });
+  assertEquals(calls[0].url, `https://api.revenuecat.com/v1/subscribers/${user}`);
+  assertEquals(calls[0].init?.method, "DELETE");
+  assertEquals((calls[0].init?.headers as Record<string, string>).Authorization, "Bearer sk_test");
+});
+
+Deno.test("deleting a RevenueCat customer: no key skips, 404 counts as deleted, errors fail without throwing", async () => {
+  const status = (s: number) => (() => Promise.resolve(new Response(null, { status: s }))) as unknown as typeof fetch;
+  assertEquals(await deleteRevenueCatCustomer(user, undefined, status(200)), { result: "skipped" });
+  assertEquals(await deleteRevenueCatCustomer(user, "sk_test", status(404)), { result: "deleted", status: 404 });
+  assertEquals(await deleteRevenueCatCustomer(user, "sk_test", status(500)), { result: "failed", status: 500 });
+  const down = (() => Promise.reject(new Error("network"))) as unknown as typeof fetch;
+  assertEquals(await deleteRevenueCatCustomer(user, "sk_test", down), { result: "failed" });
 });

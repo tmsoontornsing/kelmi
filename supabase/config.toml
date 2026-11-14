@@ -22,6 +22,9 @@ verify_jwt = false
 [functions.delete-account]
 verify_jwt = false
 
+[functions.apple-link]
+verify_jwt = false
+
 # The app's door to the project (it holds no anon key, so it has nothing to send for the platform's JWT check; every request
 # is checked at the project itself once forwarded) and the settings the app is handed after sign-in.
 [functions.gateway]

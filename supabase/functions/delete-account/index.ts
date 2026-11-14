@@ -1,4 +1,6 @@
 import { adminClient, asCaller, fail, json, readJson } from "../_shared/http.ts";
+import { appleConfigFromEnv, revokeAppleToken } from "../_shared/apple.ts";
+import { deleteRevenueCatCustomer } from "../_shared/revenuecat.ts";
 
 // POST { confirm: "DELETE" }, Authorization: Bearer <the signed-in user's access token>
 //
@@ -15,11 +17,12 @@ import { adminClient, asCaller, fail, json, readJson } from "../_shared/http.ts"
 // person's waitlist entry. App stores require in-app
 // account deletion for apps with sign-in. Uses the service role key Supabase provides to the function.
 //
-// Sign in with Apple: Apple asks apps to revoke the user's token when they delete their account. That needs the user's
-// Apple refresh token (or authorization code) and a client secret signed with the app's Apple private key. Supabase
-// does not keep Apple's refresh token for a native sign-in (signInWithIdToken), and this function has no Apple key, so
-// it cannot be done here. It has to be done by the app at sign-in time (store the authorization code with the server)
-// plus an APPLE_PRIVATE_KEY secret, or by hand in Apple's developer account. Left undone on purpose.
+// Sign in with Apple: Apple requires apps to revoke the person's token when they delete their account. The apple-link
+// function keeps the refresh token Apple issues at a native sign-in (public.apple_tokens); this function revokes it with
+// Apple, using the APPLE_* secrets, just before deleting the account (the row goes with the account). Best effort: if
+// Apple is down or the secrets are missing, the account is still deleted and the failure is logged. Accounts that signed in
+// before apple-link existed, or through the browser, have no stored token; those people can remove Kelmi in their Apple ID
+// settings (Sign in with Apple).
 
 const REAUTH_WINDOW_S = 10 * 60;
 const NOT_SIGN_IN = new Set(["token_refresh", "anonymous"]);
@@ -81,7 +84,25 @@ Deno.serve(async (req) => {
     if (waitlistError) return fail("delete-account", "waitlist_delete_failed", waitlistError.message);
   }
 
+  // Apple first, while the stored token still exists. It never blocks the deletion: a person must always be able to delete.
+  const { data: apple } = await admin.from("apple_tokens").select("refresh_token").eq("user_id", caller.userId).maybeSingle();
+  if (apple?.refresh_token) {
+    const cfg = appleConfigFromEnv();
+    const revoked = cfg ? await revokeAppleToken(cfg, apple.refresh_token) : { result: "failed" as const, status: undefined };
+    if (revoked.result !== "revoked") {
+      console.error(JSON.stringify({ evt: "apple_revoke_failed", configured: Boolean(cfg), status: revoked.status ?? null, user_id: caller.userId }));
+    }
+  }
+
   const { error } = await admin.auth.admin.deleteUser(caller.userId);
   if (error) return fail("delete-account", "delete_failed", error.message);
+
+  // Then RevenueCat's copy (the Privacy Policy promises it). Only after the account is gone, so a failed account delete
+  // never leaves a live account without its subscription record. A failure here is logged for a manual follow-up in the
+  // RevenueCat dashboard; the person's account is already deleted either way.
+  const rc = await deleteRevenueCatCustomer(caller.userId, Deno.env.get("REVENUECAT_SECRET_KEY"));
+  if (rc.result !== "deleted") {
+    console.error(JSON.stringify({ evt: `revenuecat_delete_${rc.result}`, status: rc.status ?? null, user_id: caller.userId }));
+  }
   return json({ deleted: true });
 });

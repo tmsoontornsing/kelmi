@@ -11,8 +11,8 @@ import { Words } from '../components/Words';
 import { APP_STORE_URL, COMPANY, PLAY_STORE_URL } from '../links';
 
 const FAQ: [string, string][] = [
-  ['What does Kelmi cost?', 'Kelmi is free, with 3 weekly plans a month. Paid plans may come later, and if they do we’ll tell you before you’re charged anything.'],
-  ['How does Kelmi keep meals inside my budget?', 'You set a weekly grocery budget and Pip picks meals that aim to fit it, scaled to your household. Prices are estimates and your store’s prices will vary.'],
+  ['What does Kelmi cost?', 'Kelmi is free, with 3 weekly plans a month. Kelmi Plus is an optional subscription that adds more; the app shows its price, renewal terms and any free trial before you buy, and you can cancel any time in your App Store or Google Play settings.'],
+  ['How does Kelmi plan meals around my budget?', 'You set a weekly grocery budget and Pip picks meals that aim to fit it, scaled to your household. Prices are estimates and your store’s prices will vary.'],
   ['Can Kelmi work around allergies and diets?', 'Kelmi helps you filter out ingredients you list, but it is not a guarantee. Recipe tags can be wrong or incomplete and products vary by brand, so always read labels yourself, and talk to a doctor about food allergies.'],
   ['What if I already have food at home?', 'Add what’s in your pantry and Kelmi leaves it off your grocery list and shows how much that saved.'],
   ['Which phones does Kelmi run on?', 'iPhone and Android. Kelmi is for ages 13 and up in the United States.'],
