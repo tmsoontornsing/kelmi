@@ -710,5 +710,7 @@
   "Enter your email above, then tap Forgot password.": "กรอกอีเมลด้านบนก่อน แล้วแตะ ลืมรหัสผ่าน?",
   "Forgot password?": "ลืมรหัสผ่าน?",
   "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "หากมีบัญชีสำหรับ {email} เราได้ส่งลิงก์สำหรับตั้งรหัสผ่านใหม่แล้ว แตะลิงก์นั้นบนโทรศัพท์เครื่องนี้",
-  "Choose a password you have not used before.": "เลือกรหัสผ่านที่คุณไม่เคยใช้มาก่อน"
+  "Choose a password you have not used before.": "เลือกรหัสผ่านที่คุณไม่เคยใช้มาก่อน",
+  "Full name": "ชื่อ-นามสกุล",
+  "Enter your full name.": "กรอกชื่อ-นามสกุลของคุณ"
 }

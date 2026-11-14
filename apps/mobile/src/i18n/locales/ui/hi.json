@@ -710,5 +710,7 @@
   "Enter your email above, then tap Forgot password.": "ऊपर अपना ईमेल लिखें, फिर “पासवर्ड भूल गए?” पर टैप करें।",
   "Forgot password?": "पासवर्ड भूल गए?",
   "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "अगर {email} का कोई खाता है, तो हमने नया पासवर्ड चुनने का लिंक भेजा है। उसे इसी फ़ोन पर टैप करें।",
-  "Choose a password you have not used before.": "ऐसा पासवर्ड चुनें जो आपने पहले इस्तेमाल न किया हो।"
+  "Choose a password you have not used before.": "ऐसा पासवर्ड चुनें जो आपने पहले इस्तेमाल न किया हो।",
+  "Full name": "पूरा नाम",
+  "Enter your full name.": "अपना पूरा नाम लिखें।"
 }

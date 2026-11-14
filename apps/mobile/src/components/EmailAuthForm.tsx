@@ -33,7 +33,7 @@ export function EmailAuthForm({
   onForgotPassword,
   initialMode = 'signup',
 }: {
-  onSubmit: (mode: Mode, email: string, password: string) => Promise<EmailSignUpResult>;
+  onSubmit: (mode: Mode, email: string, password: string, fullName: string) => Promise<EmailSignUpResult>;
   onBack: () => void;
   // Sends the reset email for the address typed in. Without it the "Forgot password?" link is not shown.
   onForgotPassword?: (email: string) => Promise<void>;
@@ -43,14 +43,16 @@ export function EmailAuthForm({
   const { t } = useT();
   const strengthLabel = [t('Too short'), t('Weak'), t('Okay'), t('Good'), t('Strong')];
   const [mode, setMode] = useState<Mode>(initialMode);
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
-  const [focus, setFocus] = useState<'email' | 'password' | null>(null);
+  const [focus, setFocus] = useState<'name' | 'email' | 'password' | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [resetSentTo, setResetSentTo] = useState<string | null>(null);
+  const emailRef = useRef<ElementRef<typeof TextInput>>(null);
   const passwordRef = useRef<ElementRef<typeof TextInput>>(null);
 
   // Segmented control: a pill that springs between the two labels.
@@ -91,13 +93,14 @@ export function EmailAuthForm({
 
   const submit = async () => {
     if (busy) return;
+    if (mode === 'signup' && fullName.trim().length < 2) return fail(t('Enter your full name.'));
     if (!looksLikeEmail(email)) return fail(t('Enter the email you want to use.'));
     if (mode === 'signup' && password.length < MIN_LENGTH) return fail(t('Use at least {n} characters for the password.', { n: MIN_LENGTH }));
     if (mode === 'signin' && !password) return fail(t('Enter your password.'));
     setBusy(true);
     setError(null);
     try {
-      const result = await onSubmit(mode, email, password);
+      const result = await onSubmit(mode, email, password, fullName);
       if (result === 'confirm') {
         haptic.success();
         animateLayout();
@@ -138,7 +141,7 @@ export function EmailAuthForm({
   if (sentTo) return <CheckInbox email={sentTo} onBack={() => setSentTo(null)} />;
   if (resetSentTo) return <CheckInbox email={resetSentTo} reset onBack={() => setResetSentTo(null)} />;
 
-  const border = (field: 'email' | 'password') => (focus === field ? c.primary : c.control);
+  const border = (field: 'name' | 'email' | 'password') => (focus === field ? c.primary : c.control);
 
   return (
     <Reveal lift={10} style={styles.form}>
@@ -175,7 +178,27 @@ export function EmailAuthForm({
           ))}
         </View>
 
+        {mode === 'signup' ? (
+          <TextInput
+            accessibilityLabel={t('Full name')}
+            autoCapitalize="words"
+            autoComplete="name"
+            autoCorrect={false}
+            textContentType="name"
+            returnKeyType="next"
+            placeholder={t('Full name')}
+            placeholderTextColor={c.muted}
+            value={fullName}
+            onChangeText={setFullName}
+            onFocus={() => setFocus('name')}
+            onBlur={() => setFocus(null)}
+            onSubmitEditing={() => emailRef.current?.focus()}
+            style={[styles.input, { backgroundColor: c.card, color: c.text, borderColor: border('name') }]}
+          />
+        ) : null}
+
         <TextInput
+          ref={emailRef}
           accessibilityLabel={t('Email')}
           autoCapitalize="none"
           autoComplete="email"

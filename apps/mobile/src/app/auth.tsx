@@ -134,7 +134,7 @@ export default function Auth() {
     }
   };
 
-  const withEmail = async (mode: 'signup' | 'signin', email: string, password: string) => {
+  const withEmail = async (mode: 'signup' | 'signin', email: string, password: string, fullName: string) => {
     if (!agreed) throw new Error(t('Agree to the Terms of Service and Privacy Policy to continue.'));
     await markConsentPending();
     if (mode === 'signin') {
@@ -142,7 +142,7 @@ export default function Auth() {
       enter();
       return 'signed-in' as const;
     }
-    const result = await app.signUpWithEmail(email, password);
+    const result = await app.signUpWithEmail(email, password, fullName);
     if (result === 'signed-in') enter();
     return result;
   };

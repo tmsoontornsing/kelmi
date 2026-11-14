@@ -157,7 +157,7 @@ export const PRIVACY: LegalDoc = {
     { h: '1. Information you give us' },
     {
       list: [
-        'Account. Your email address, and your password if you sign up with email (we store only a secure hash of it). If you sign in with Apple or Google, we receive your email address (Apple may give us a private relay address instead) and a user ID, and Google may also share your name and profile picture.',
+        'Account. Your email address, and your full name and password if you sign up with email (we store only a secure hash of the password). We keep your name with your account and do not send it to the AI providers. If you sign in with Apple or Google, we receive your email address (Apple may give us a private relay address instead) and a user ID, and Google may also share your name and profile picture.',
         'Household profile. How many people you cook for, your weekly grocery budget, your diet (for example vegetarian or halal), allergies, foods you dislike, foods you like, your goal and meat preference, any food notes you type in Settings (for example “low sugar”), and the kitchen equipment you have.',
         'Your lists. Pantry items, meal plans, meals you swap, which meals you choose to shop for (and which you skip, like nights eating out), grocery lists and what you check off, leftover meals and how many servings are left, and steps you mark done.',
         'Recipe edits. If you change a recipe, Kelmi saves your own version to your account: the amounts you changed, ingredients you left out, steps you rewrote, and any note you add. The original recipe is not changed.',
