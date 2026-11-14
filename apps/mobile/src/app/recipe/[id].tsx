@@ -17,6 +17,7 @@ import { applianceName, MEAL_LABELS, money, type RecipeView } from '../../data/m
 import { comma, useT } from '../../i18n';
 import * as api from '../../lib/api';
 import { onDeviceUnlocked, PLUS_ENABLED } from '../../lib/flags';
+import { openPlus } from '../../lib/plusFeatures';
 import { animateLayout, haptic, PressableScale, reduceMotion, Reveal } from '../../motion';
 import { backOr, share as shareText } from '../../navigation';
 import { useApp } from '../../state/AppState';
@@ -146,7 +147,7 @@ export default function Recipe() {
             <IconButton
               icon={app.subscribed ? 'create-outline' : 'lock-closed-outline'}
               label={plusLabel(t('Edit this recipe'), app.subscribed)}
-              onPress={() => (app.subscribed ? router.push({ pathname: '/recipe-edit/[id]', params: { id: recipeId } }) : router.push('/plus'))}
+              onPress={() => (app.subscribed ? router.push({ pathname: '/recipe-edit/[id]', params: { id: recipeId } }) : openPlus('edit'))}
             />
           ) : null}
           <IconButton icon="share-outline" label={t('Share this recipe')} onPress={shareRecipe} />
@@ -206,7 +207,7 @@ export default function Recipe() {
                 to={0.97}
                 onPress={() => {
                   haptic.tap();
-                  if (!onDeviceUnlocked(app.subscribed)) return router.push('/plus');
+                  if (!onDeviceUnlocked(app.subscribed)) return openPlus('cook');
                   router.push({ pathname: '/cook/[id]', params: { id: recipeId, ...(slotIndex !== undefined ? { slot: String(slotIndex) } : {}) } });
                 }}
                 style={[styles.cookBtn, styles.flex, { backgroundColor: c.primary }]}
@@ -222,7 +223,7 @@ export default function Recipe() {
                   to={0.95}
                   onPress={() => {
                     haptic.tap();
-                    if (!onDeviceUnlocked(app.subscribed)) return router.push('/plus');
+                    if (!onDeviceUnlocked(app.subscribed)) return openPlus('swap');
                     router.push({ pathname: '/swap/[slot]', params: { slot: String(slotIndex) } });
                   }}
                   style={[styles.swapBtn, { backgroundColor: c.tint }]}

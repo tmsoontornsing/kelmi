@@ -4,12 +4,12 @@ import { StyleSheet, View } from 'react-native';
 
 import { useT } from '../i18n';
 import { PLUS_ENABLED } from '../lib/flags';
+import { openPlus, type PlusFeature } from '../lib/plusFeatures';
 import { radius, useTheme } from '../theme';
 import { AppText } from './AppText';
 import { TextButton } from './Buttons';
 
-// Free pantries hold this many items; Kelmi Plus has no limit.
-export const FREE_PANTRY_LIMIT = 20;
+export { FREE_PANTRY_LIMIT } from '../lib/limits';
 
 // A screen reader label for a locked control: "Swap Monday dinner, a Kelmi Plus feature". Plus members get it unchanged.
 export function usePlusLabel() {
@@ -18,7 +18,7 @@ export function usePlusLabel() {
 }
 
 // A short note where a Plus feature sits behind the free plan: a lock, one sentence, and the way to see what Plus adds.
-export function PlusNotice({ text }: { text: string }) {
+export function PlusNotice({ text, feature }: { text: string; feature?: PlusFeature }) {
   const c = useTheme();
   const { t } = useT();
   // Nothing is for sale yet, so there is nothing to point at.
@@ -28,7 +28,7 @@ export function PlusNotice({ text }: { text: string }) {
       <Ionicons name="lock-closed" size={18} color={c.primaryText} style={styles.icon} />
       <View style={styles.body}>
         <AppText variant="subhead" color={c.text}>{text}</AppText>
-        <TextButton label={t('See What Plus Adds')} onPress={() => router.push('/plus')} />
+        <TextButton label={t('See What Plus Adds')} onPress={() => (feature ? openPlus(feature) : router.push('/plus'))} />
       </View>
     </View>
   );

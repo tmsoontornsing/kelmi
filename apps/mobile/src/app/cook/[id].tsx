@@ -13,6 +13,7 @@ import { type RecipeView } from '../../data/mock';
 import { useT } from '../../i18n';
 import { clock, parseTimers } from '../../lib/cook';
 import { onDeviceUnlocked } from '../../lib/flags';
+import { replaceWithPlus } from '../../lib/plusFeatures';
 import { cancelTimerAlert, scheduleTimerAlert } from '../../lib/timerAlert';
 import { animateLayout, haptic, PressableScale, reduceMotion } from '../../motion';
 import { celebrate } from '../../motion/celebrate';
@@ -35,7 +36,7 @@ export default function Cook() {
   // While Plus is on, Cook mode is part of it, so a free user who arrives by a link is sent to what Plus adds.
   const allowed = onDeviceUnlocked(app.subscribed);
   useEffect(() => {
-    if (!allowed) router.replace('/plus');
+    if (!allowed) replaceWithPlus('cook');
   }, [allowed]);
 
   const [view, setView] = useState<RecipeView | null | undefined>(undefined);

@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Redirect, router } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Alert, Animated, Easing, Platform, Pressable, ScrollView, StyleSheet, View, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +9,7 @@ import { IconButton, PrimaryButton, TextButton } from '../components/Buttons';
 import { Mascot } from '../components/Mascot';
 import { money, PLANS } from '../data/mock';
 import { PLUS_ENABLED } from '../lib/flags';
+import { isPlusFeature, plusPitch } from '../lib/plusFeatures';
 import * as purchases from '../lib/purchases';
 import { useT } from '../i18n';
 import { track, useExperiment } from '../lib/experiments';
@@ -42,6 +43,9 @@ function PaywallScreen() {
   }, [startPlan]);
   const chosen = PLANS.find((p) => p.id === plan) ?? PLANS[0];
   const { t, tn, tx } = useT();
+  // Opened from a locked spot: the header speaks to that one feature, Pip takes a matching pose, and its line is highlighted.
+  const { feature } = useLocalSearchParams<{ feature?: string }>();
+  const pitch = isPlusFeature(feature) ? plusPitch(feature) : null;
 
   const [packages, setPackages] = useState<Awaited<ReturnType<typeof purchases.loadPackages>>>({});
   const [busy, setBusy] = useState(false);
@@ -173,13 +177,20 @@ function PaywallScreen() {
             <Sparkle delay={1200} size={14} color="#A7D96B" style={{ right: -4, bottom: 6 }} />
             <Halo color={c.tint} />
             <PipEntrance>
-              <Mascot pose="cheer" size={78} tappable label={t('Pip, Kelmi\'s jar, cheering')} />
+              <Mascot pose={pitch?.pose ?? 'cheer'} size={78} tappable label={t('Pip, Kelmi\'s jar, cheering')} />
             </PipEntrance>
           </View>
           <Reveal index={1} style={styles.flex}>
+            {pitch ? (
+              <View style={styles.lockedTag}>
+                <Ionicons name="lock-closed" size={12} color={c.primaryText} />
+                <AppText variant="eyebrow" color={c.primaryText}>{t('Part of Kelmi Plus')}</AppText>
+              </View>
+            ) : null}
             <AppText variant="title" accessibilityRole="header">
-              {t('Plan every week, stay under budget')}
+              {pitch ? pitch.title : t('Plan every week, stay under budget')}
             </AppText>
+            {pitch ? <AppText variant="subhead" color={c.muted}>{pitch.body}</AppText> : null}
           </Reveal>
         </View>
 
@@ -230,7 +241,7 @@ function PaywallScreen() {
         <View style={[styles.benefitCard, { backgroundColor: c.card, borderColor: c.line }]}>
           {benefits.map((b, i) => (
             <Reveal key={b} index={3 + i} lift={10}>
-              <View style={[styles.benefit, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: c.line }]}>
+              <View style={[styles.benefit, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: c.line }, pitch?.benefit === i && { backgroundColor: c.tint, borderRadius: 10, marginHorizontal: -6, paddingHorizontal: 6 }]}>
                 <PopIn delay={700 + i * 140}>
                   <View style={[styles.iconTile, { backgroundColor: c.tint }]}>
                     <Ionicons name={benefitIcons[i] ?? 'checkmark'} size={18} color={c.primaryText} />
@@ -492,6 +503,7 @@ const styles = StyleSheet.create({
   iconTile: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 16 },
   fine: { fontSize: 11, lineHeight: 14 },
+  lockedTag: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   footer: { paddingHorizontal: space.gutter, paddingTop: 10, gap: 4, borderTopWidth: StyleSheet.hairlineWidth, alignItems: 'stretch' },
   shineWrap: { borderRadius: radius.pill, overflow: 'hidden' },
   shineBand: { position: 'absolute', top: -20, bottom: -20, width: 46, backgroundColor: 'rgba(255,255,255,0.28)' },
