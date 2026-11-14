@@ -27,7 +27,10 @@ const SHORT_VIEWPORT = 800;
 export default function Auth() {
   const c = useTheme();
   const app = useApp();
-  const from = safeAuthFrom(useLocalSearchParams<{ from?: string }>().from);
+  const params = useLocalSearchParams<{ from?: string; preview?: string }>();
+  const from = safeAuthFrom(params.from);
+  // Development only: ?preview=1 keeps the page open for someone who is already signed in, so it can be looked at.
+  const preview = __DEV__ && params.preview === "1";
   const { t, tn, tx } = useT();
   // Came from "I Already Have an Account": a plain log-in page, with no plan to save and no household to show.
   const loginOnly = from === 'welcome';
@@ -72,8 +75,8 @@ export default function Auth() {
   useEffect(() => {
     if (!app.authReady) return;
     if (openedSignedIn.current === null) openedSignedIn.current = app.signedIn;
-    if (openedSignedIn.current && app.signedIn) router.back();
-  }, [app.authReady, app.signedIn]);
+    if (openedSignedIn.current && app.signedIn && !preview) router.back();
+  }, [app.authReady, app.signedIn, preview]);
 
   const [emailOpen, setEmailOpen] = useState(false);
   // While the keyboard is up over the email form, the receipt and the intro line step aside so the fields stay in view above it.
