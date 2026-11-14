@@ -43,7 +43,7 @@ function PaywallScreen() {
     track('paywall_default_plan', startPlan, 'paywall_viewed');
   }, [startPlan]);
   const chosen = PLANS.find((p) => p.id === plan) ?? PLANS[0];
-  const { t, tx } = useT();
+  const { t, tn, tx } = useT();
 
   const [packages, setPackages] = useState<Awaited<ReturnType<typeof purchases.loadPackages>>>({});
   const [busy, setBusy] = useState(false);
@@ -52,6 +52,18 @@ function PaywallScreen() {
   }, []);
   // The store's own price string ("$59.99", "59,99 €") once loaded.
   const priceOf = (p: (typeof PLANS)[number]) => packages[p.id]?.product.priceString ?? price(p.price);
+
+  // A free trial, when the store offers one on this plan: the length is the store's, so it can change without an update.
+  const trial = purchases.freeTrialOf(packages[plan]);
+  const trialText = trial
+    ? trial.unit === 'day'
+      ? tn(trial.n, '{n} day', '{n} days')
+      : trial.unit === 'week'
+        ? tn(trial.n, '{n} week', '{n} weeks')
+        : trial.unit === 'month'
+          ? tn(trial.n, '{n} month', '{n} months')
+          : tn(trial.n, '{n} year', '{n} years')
+    : '';
 
   const finish = () => {
     router.back();
@@ -111,8 +123,11 @@ function PaywallScreen() {
   // Apple's required renewal terms, one whole paragraph per store so each names its own account and settings the way
   // that store does.
   const terms = { price: priceOf(chosen), period: tx(chosen.per) };
-  const renewal =
-    Platform.OS === 'ios'
+  const renewal = trial
+    ? Platform.OS === 'ios'
+      ? t('Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.', { ...terms, trial: trialText })
+      : t('Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.', { ...terms, trial: trialText })
+    : Platform.OS === 'ios'
       ? t('Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID when you confirm. Turn off auto-renew at least 24 hours before the period ends to avoid the next charge. Manage or cancel any time in your App Store account settings.', terms)
       : t('Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account when you confirm. Turn off auto-renew at least 24 hours before the period ends to avoid the next charge. Manage or cancel any time in Google Play, under Payments and subscriptions.', terms);
 
@@ -206,11 +221,16 @@ function PaywallScreen() {
 
       <View style={[styles.footer, { borderTopColor: c.line }]}>
         <PrimaryButton
-          label={t('Continue')}
+          label={trial ? t('Start free trial') : t('Continue')}
           feedback="success"
           loading={busy}
           onPress={subscribe}
         />
+        {trial ? (
+          <AppText variant="footnote" weight="600" style={styles.center}>
+            {t('{trial} free, then {price} per {period}', { ...terms, trial: trialText })}
+          </AppText>
+        ) : null}
         <AppText variant="footnote" style={styles.center}>
           {renewal}
         </AppText>

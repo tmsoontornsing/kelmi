@@ -686,5 +686,15 @@
   "Usage counts": "Contagens de uso",
   "Counts which parts of Kelmi get used": "Conta quais partes do Kelmi são usadas",
   "Share usage counts": "Compartilhar contagens de uso",
-  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it isn’t linked to your account.": "Desligado, a menos que você ative. Nunca inclui suas alergias, anotações de comida ou seu e-mail, e não é vinculado à sua conta."
+  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it isn’t linked to your account.": "Desligado, a menos que você ative. Nunca inclui suas alergias, anotações de comida ou seu e-mail, e não é vinculado à sua conta.",
+  "Start free trial": "Começar teste grátis",
+  "{n} day": "{n} dia",
+  "{n} days": "{n} dias",
+  "{n} month": "{n} mês",
+  "{n} months": "{n} meses",
+  "{n} year": "{n} ano",
+  "{n} years": "{n} anos",
+  "{trial} free, then {price} per {period}": "{trial} grátis, depois {price} por {period}",
+  "Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "Seu teste grátis de {trial} começa hoje. Depois, o Kelmi Plus renova automaticamente por {price} por {period} até você cancelar. A cobrança é feita no seu ID Apple, a menos que você desative a renovação automática pelo menos 24 horas antes do fim do teste. Gerencie ou cancele quando quiser nos ajustes da sua conta da App Store.",
+  "Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "Seu teste grátis de {trial} começa hoje. Depois, o Kelmi Plus renova automaticamente por {price} por {period} até você cancelar. A cobrança é feita na sua conta do Google Play, a menos que você cancele pelo menos 24 horas antes do fim do teste. Gerencie ou cancele quando quiser no Google Play, em Pagamentos e assinaturas."
 }

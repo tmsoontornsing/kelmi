@@ -38,3 +38,38 @@ About $59 a year, shown as roughly $4.92 a month, billed yearly. Cancel any time
 - Decide whether any free feature is too generous to give people a reason to upgrade (for example calories on every
   recipe). Better decided from real usage than guessed. The A/B test switch (`EXPERIMENTS_ENABLED`) is off for now.
 - The privacy policy must cover any paywall analytics before experiments are turned on.
+
+## Free trial
+
+Recommendation: a **7-day free trial on the yearly plan only**, none on monthly.
+
+- The free plan already gives 3 plans a month, so people can try Kelmi without a card. A trial on top mainly helps the
+  person who hit the 3-plan limit and wants to see a full month before paying about $59 for the year.
+- Seven days covers one full weekly plan and a shop, which is the moment people see the value.
+- No trial on monthly keeps the yearly plan the obviously better deal.
+- Review it after launch with real data (trial starts, trial-to-paid rate, refunds) before changing it.
+
+How it works in the app: the trial is configured in the store (an introductory offer with a free period), not in the app.
+`freeTrialOf()` in `src/lib/purchases.ts` reads it from the RevenueCat package, so the paywall then shows "Start free trial",
+"7 days free, then $X per year", and the trial renewal wording Apple requires. With no trial in the store, the paywall is
+unchanged. Changing the trial length later needs no app update.
+
+## What is built, and what is left
+
+Built in the app and on the server: purchases (`src/lib/purchases.ts`), the paywall and Plus screens, the RevenueCat webhook
+(`supabase/functions/revenuecat-webhook`), server-enforced plan limits, and a gate on every Plus feature in the table above.
+
+Left, all outside the code (each needs your accounts):
+
+1. **App Store Connect:** create the subscription group and the yearly (and monthly) auto-renewing subscriptions; add the
+   7-day free introductory offer to the yearly one; fill in the subscription review details and screenshot.
+2. **Google Play:** same products, if Android ships.
+3. **RevenueCat:** create the project and the iOS (and Android) apps; import the products; create the entitlement `plus`
+   (the id the app expects), an offering marked current with Annual and Monthly packages; add the webhook pointing at the
+   `revenuecat-webhook` function.
+4. **Supabase secrets:** the RevenueCat public SDK key per platform (handed to the app by `app-config`) and the webhook secret.
+5. **Test with a sandbox account** on a TestFlight build: buy, trial start, restore, cancel, expiry; confirm the server
+   shows the account as Plus afterwards.
+6. **Then** set `PLUS_ENABLED = true` in `src/lib/flags.ts`, update the privacy form if needed, and ship a build.
+
+Do not set `PLUS_ENABLED` before step 5 passes: it makes every price and upgrade button visible.

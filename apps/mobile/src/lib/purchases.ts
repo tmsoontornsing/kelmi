@@ -115,3 +115,16 @@ export async function restore(): Promise<boolean> {
   if (!(await configure())) throw new Error('Purchases are not set up');
   return isPlus(await Purchases.restorePurchases());
 }
+
+export type FreeTrial = { n: number; unit: 'day' | 'week' | 'month' | 'year' };
+
+// The free trial the store attaches to a package, if it has one (an introductory offer that costs nothing). The length
+// comes from the store, so changing it in App Store Connect or Google Play changes the paywall with no app update.
+export function freeTrialOf(pkg: PurchasesPackage | undefined): FreeTrial | null {
+  const intro = pkg?.product.introPrice;
+  if (!intro || intro.price !== 0) return null;
+  const unit = String(intro.periodUnit).toLowerCase() as FreeTrial['unit'];
+  const n = intro.periodNumberOfUnits * Math.max(1, intro.cycles || 1);
+  if (!n || !['day', 'week', 'month', 'year'].includes(unit)) return null;
+  return { n, unit };
+}
