@@ -14,7 +14,7 @@ const FUNCTIONS_PREFIX = "fn/";
 
 // The Edge Functions the app calls. The gateway itself and the RevenueCat webhook (which RevenueCat calls directly, with
 // its own secret) are not on the list.
-export const ALLOWED_FUNCTIONS = ["generate-plan", "grocery-list", "meal-options", "delete-account", "app-config"] as const;
+export const ALLOWED_FUNCTIONS = ["generate-plan", "grocery-list", "meal-options", "delete-account", "app-config", "apple-link"] as const;
 
 const METHODS = new Set(["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"]);
 export const MAX_BODY_BYTES = 1_500_000;

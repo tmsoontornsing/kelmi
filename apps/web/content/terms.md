@@ -1,6 +1,6 @@
 # Kelmi Terms of Service
 
-Effective November 5, 2026
+Effective November 14, 2026
 
 These Terms of Service ("Terms") are an agreement between you and LOGICBAKER COMPANY LIMITED, a company registered in Thailand ("LOGICBAKER COMPANY LIMITED", "we", "us"), about your use of the Kelmi app and related services (together, "Kelmi"). By creating an account or using Kelmi, you agree to these Terms and acknowledge our Privacy Policy and Consumer Health Data Privacy Policy. If you do not agree, do not use Kelmi.
 

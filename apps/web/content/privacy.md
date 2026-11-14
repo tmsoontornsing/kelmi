@@ -1,6 +1,6 @@
 # Kelmi Privacy Policy
 
-Effective November 5, 2026
+Effective November 14, 2026
 
 This Privacy Policy explains what information LOGICBAKER COMPANY LIMITED ("we", "us") collects through the Kelmi app, the usekelmi.com website and related services ("Kelmi"), how we use and share it, and the choices and rights you have. Kelmi is offered only in the United States and only to people 13 or older. Our Consumer Health Data Privacy Policy gives more detail about the diet and allergy information you enter.
 
@@ -8,7 +8,7 @@ Who is responsible. LOGICBAKER COMPANY LIMITED, a company registered in Thailand
 
 ## 1. Information you give us
 
-- Account. Your email address, and your full name and password if you sign up with email (we store only a secure hash of the password). We keep your name with your account and do not send it to the AI providers. If you sign in with Apple or Google, we receive your email address (Apple may give us a private relay address instead) and a user ID, and Google may also share your name and profile picture.
+- Account. Your email address, and your full name and password if you sign up with email (we store only a secure hash of the password). We keep your name with your account and do not send it to the AI providers. If you sign in with Apple or Google, we receive your email address (Apple may give us a private relay address instead) and a user ID, and Google may also share your name and profile picture. If you sign in with Apple on an iPhone, we also keep a token Apple issues for your sign-in, used only to tell Apple to disconnect Kelmi from your Apple ID when you delete your account.
 - Household profile. How many people you cook for, your weekly grocery budget, your diet (for example vegetarian or halal), allergies, foods you dislike, foods you like, your goal and meat preference, any food notes you type in Settings (for example “low sugar”), and the kitchen equipment you have.
 - Your lists. Pantry items, meal plans, meals you swap, which meals you choose to shop for (and which you skip, like nights eating out), grocery lists and what you check off, leftover meals and how many servings are left, and steps you mark done.
 - Recipe edits. If you change a recipe, Kelmi saves your own version to your account: the amounts you changed, ingredients you left out, steps you rewrote, and any note you add. The original recipe is not changed.
@@ -73,6 +73,7 @@ An email address is needed to create an account, and we cannot provide an accoun
 
 - Account and profile data (email, household profile, pantry, plans, lists, ratings, recipe edits): kept while your account exists. We delete it from our active systems when you delete your account in Settings.
 - Meal plan request records: kept while your account exists, and deleted with it.
+- Apple sign-in token: kept while your account exists. When you delete your account we ask Apple to revoke it, then delete it.
 - Subscription records: kept while your account exists. When you delete your account, we delete our copy and ask RevenueCat to delete its record of you. Apple and Google keep their own purchase records, and sales reports from them that the law requires us to keep for tax and accounting do not include your name or email.
 - Backups: copies of deleted data in backups are removed on our database provider's backup cycle, which we expect to be up to about 30 days.
 - Waitlist emails: kept until Kelmi launches and we send the launch email, or until you ask us to remove you, and then deleted within a reasonable time (see section 9).

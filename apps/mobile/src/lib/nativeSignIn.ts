@@ -76,6 +76,7 @@ async function withApple(): Promise<NativeResult> {
 
   const nonce = await newNonce();
   let identityToken: string | null;
+  let authorizationCode: string | null = null;
   try {
     const credential = await AppleAuthentication.signInAsync({
       requestedScopes: [
@@ -85,12 +86,24 @@ async function withApple(): Promise<NativeResult> {
       nonce: nonce.hashed,
     });
     identityToken = credential.identityToken;
+    authorizationCode = credential.authorizationCode;
   } catch (e) {
     return failed(e);
   }
   if (!identityToken) throw new Error(t('Sign-in did not finish. Try again.'));
 
-  return exchange({ provider: 'apple', token: identityToken, nonce: nonce.raw });
+  const result = await exchange({ provider: 'apple', token: identityToken, nonce: nonce.raw });
+  if (result === 'done' && authorizationCode) linkApple(authorizationCode);
+  return result;
+}
+
+// Hands Apple's one-time code to the server, which keeps the token Apple gives for it so that deleting the account can
+// revoke Kelmi's access to the Apple ID, as Apple requires (supabase/functions/apple-link). Fire and forget: the code
+// expires in minutes, and signing in never waits on this or fails because of it.
+function linkApple(code: string) {
+  db()
+    .functions.invoke('apple-link', { body: { code } })
+    .catch(() => {});
 }
 
 type GoogleModule = typeof import('@react-native-google-signin/google-signin');

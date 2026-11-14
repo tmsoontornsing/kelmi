@@ -17,8 +17,8 @@ export const LEGAL = {
   // The county for court claims.
   county: 'New Castle County',
   // When these versions take effect. Change it, and tell users, whenever the documents change materially.
-  // PLACEHOLDER DATE: this must be changed to the real publication date before release.
-  effective: 'November 5, 2026',
+  // Set to the date of this version (TERMS_VERSION). If the app and website go live later, change it to that day.
+  effective: 'November 14, 2026',
   // Where the same documents live on the web. App Store Connect and Google Play need these URLs.
   termsUrl: 'https://usekelmi.com/terms',
   privacyUrl: 'https://usekelmi.com/privacy',
