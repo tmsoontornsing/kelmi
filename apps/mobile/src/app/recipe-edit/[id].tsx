@@ -11,6 +11,7 @@ import { allergensIn } from '../../lib/allergens';
 import { friendlyAmount } from '../../lib/amounts';
 import * as api from '../../lib/api';
 import { PLUS_ENABLED, serverPlusUnlocked } from '../../lib/flags';
+import { replaceWithPlus } from '../../lib/plusFeatures';
 import { haptic } from '../../motion';
 import { modalEdges } from '../../navigation';
 import { useApp } from '../../state/AppState';
@@ -32,7 +33,7 @@ export default function RecipeEdit() {
   // Editing recipes is part of Kelmi Plus, which is hidden until billing works. Anyone who arrives by a link is sent back.
   const allowed = serverPlusUnlocked(app.subscribed);
   useEffect(() => {
-    if (!allowed) router.replace(PLUS_ENABLED ? '/plus' : '/week');
+    if (!allowed) (PLUS_ENABLED ? replaceWithPlus('edit') : router.replace('/week'));
   }, [allowed]);
 
   const [data, setData] = useState<api.EditableRecipe | null | undefined>(undefined);

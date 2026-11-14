@@ -48,7 +48,7 @@ export function NutritionFacts({ nutrition, serves, locked = false }: { nutritio
       </View>
 
       {locked ? (
-        <PlusNotice text={t('Protein, carbs, fat, sodium and % Daily Value are part of Kelmi Plus.')} />
+        <PlusNotice feature="nutrition" text={t('Protein, carbs, fat, sodium and % Daily Value are part of Kelmi Plus.')} />
       ) : (
         <>
       <View

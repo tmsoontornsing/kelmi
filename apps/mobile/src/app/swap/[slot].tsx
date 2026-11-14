@@ -12,6 +12,7 @@ import { Mascot } from '../../components/Mascot';
 import { MEAL_LABELS, type Meal } from '../../data/mock';
 import { useT } from '../../i18n';
 import { onDeviceUnlocked } from '../../lib/flags';
+import { replaceWithPlus } from '../../lib/plusFeatures';
 import { haptic, PressableScale } from '../../motion';
 import { modalEdges } from '../../navigation';
 import { useApp } from '../../state/AppState';
@@ -52,7 +53,7 @@ export default function Swap() {
   // While Plus is on, swapping is a Plus feature, so a free user who lands here (a link, an old tab) is sent to what Plus adds.
   const allowed = onDeviceUnlocked(app.subscribed);
   useEffect(() => {
-    if (!allowed) router.replace('/plus');
+    if (!allowed) replaceWithPlus('swap');
   }, [allowed]);
 
   if (!current || !allowed) return null;

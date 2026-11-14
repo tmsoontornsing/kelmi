@@ -183,7 +183,7 @@ export default function Pantry() {
               </View>
             </View>
 
-            {full ? <PlusNotice text={t('Free pantries hold {n} items. Kelmi Plus has no limit.', { n: FREE_PANTRY_LIMIT })} /> : null}
+            {full ? <PlusNotice feature="pantry" text={t('Free pantries hold {n} items. Kelmi Plus has no limit.', { n: FREE_PANTRY_LIMIT })} /> : null}
 
             <View style={styles.pickRow} accessibilityRole="radiogroup" accessibilityLabel={t('Shelf')}>
               {SHELVES.map((s) => {
