@@ -698,5 +698,17 @@
   "{n} years": "{n} ปี",
   "{trial} free, then {price} per {period}": "ฟรี {trial} จากนั้น {price} ต่อ{period}",
   "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "การทดลองใช้ฟรี {trial} ของคุณเริ่มวันนี้ เมื่อสิ้นสุดแล้ว Kelmi Plus จะต่ออายุอัตโนมัติที่ {price} ต่อ{period} จนกว่าคุณจะยกเลิก ระบบจะเรียกเก็บเงินจาก Apple ID ของคุณ เว้นแต่คุณปิดการต่ออายุอัตโนมัติอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดการทดลอง จัดการหรือยกเลิกได้ทุกเมื่อในการตั้งค่าบัญชี App Store",
-  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "การทดลองใช้ฟรี {trial} ของคุณเริ่มวันนี้ เมื่อสิ้นสุดแล้ว Kelmi Plus จะต่ออายุอัตโนมัติที่ {price} ต่อ{period} จนกว่าคุณจะยกเลิก ระบบจะเรียกเก็บเงินจากบัญชี Google Play ของคุณ เว้นแต่คุณยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดการทดลอง จัดการหรือยกเลิกได้ทุกเมื่อใน Google Play ภายใต้การชำระเงินและการสมัครใช้งาน"
+  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "การทดลองใช้ฟรี {trial} ของคุณเริ่มวันนี้ เมื่อสิ้นสุดแล้ว Kelmi Plus จะต่ออายุอัตโนมัติที่ {price} ต่อ{period} จนกว่าคุณจะยกเลิก ระบบจะเรียกเก็บเงินจากบัญชี Google Play ของคุณ เว้นแต่คุณยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดการทดลอง จัดการหรือยกเลิกได้ทุกเมื่อใน Google Play ภายใต้การชำระเงินและการสมัครใช้งาน",
+  "Checking your link…": "กำลังตรวจสอบลิงก์ของคุณ…",
+  "It may have expired or already been used, or it was opened on a different phone. Ask for a new link from the sign-in page.": "ลิงก์อาจหมดอายุ ถูกใช้ไปแล้ว หรือเปิดบนโทรศัพท์เครื่องอื่น ขอลิงก์ใหม่ได้จากหน้าลงชื่อเข้าใช้",
+  "Almost there": "ใกล้เสร็จแล้ว",
+  "Choose a new password": "ตั้งรหัสผ่านใหม่",
+  "You are signed in. Pick a password to use next time.": "คุณลงชื่อเข้าใช้แล้ว เลือกรหัสผ่านสำหรับครั้งหน้า",
+  "New password": "รหัสผ่านใหม่",
+  "Save new password": "บันทึกรหัสผ่านใหม่",
+  "Skip for now": "ข้ามไปก่อน",
+  "Enter your email above, then tap Forgot password.": "กรอกอีเมลด้านบนก่อน แล้วแตะ ลืมรหัสผ่าน?",
+  "Forgot password?": "ลืมรหัสผ่าน?",
+  "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "หากมีบัญชีสำหรับ {email} เราได้ส่งลิงก์สำหรับตั้งรหัสผ่านใหม่แล้ว แตะลิงก์นั้นบนโทรศัพท์เครื่องนี้",
+  "Choose a password you have not used before.": "เลือกรหัสผ่านที่คุณไม่เคยใช้มาก่อน"
 }

@@ -698,5 +698,17 @@
   "{n} years": "{n} साल",
   "{trial} free, then {price} per {period}": "{trial} मुफ़्त, फिर {price} प्रति {period}",
   "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "आपका {trial} का मुफ़्त ट्रायल आज शुरू होता है। इसके बाद, आपके रद्द करने तक Kelmi Plus अपने आप {price} प्रति {period} पर नवीनीकृत होता है। जब तक आप ट्रायल ख़त्म होने से कम से कम 24 घंटे पहले ऑटो-रिन्यू बंद नहीं करते, भुगतान आपकी Apple ID से लिया जाता है। App Store खाता सेटिंग में कभी भी प्रबंधित या रद्द करें।",
-  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "आपका {trial} का मुफ़्त ट्रायल आज शुरू होता है। इसके बाद, आपके रद्द करने तक Kelmi Plus अपने आप {price} प्रति {period} पर नवीनीकृत होता है। जब तक आप ट्रायल ख़त्म होने से कम से कम 24 घंटे पहले रद्द नहीं करते, भुगतान आपके Google Play खाते से लिया जाता है। Google Play में “भुगतान और सदस्यताएँ” के अंतर्गत कभी भी प्रबंधित या रद्द करें।"
+  "Your free trial of {trial} starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "आपका {trial} का मुफ़्त ट्रायल आज शुरू होता है। इसके बाद, आपके रद्द करने तक Kelmi Plus अपने आप {price} प्रति {period} पर नवीनीकृत होता है। जब तक आप ट्रायल ख़त्म होने से कम से कम 24 घंटे पहले रद्द नहीं करते, भुगतान आपके Google Play खाते से लिया जाता है। Google Play में “भुगतान और सदस्यताएँ” के अंतर्गत कभी भी प्रबंधित या रद्द करें।",
+  "Checking your link…": "आपका लिंक जाँचा जा रहा है…",
+  "It may have expired or already been used, or it was opened on a different phone. Ask for a new link from the sign-in page.": "हो सकता है लिंक की समय-सीमा खत्म हो गई हो, वह पहले इस्तेमाल हो चुका हो, या किसी दूसरे फ़ोन पर खोला गया हो। साइन-इन पेज से नया लिंक माँगें।",
+  "Almost there": "बस थोड़ा और",
+  "Choose a new password": "नया पासवर्ड चुनें",
+  "You are signed in. Pick a password to use next time.": "आप साइन इन हैं। अगली बार के लिए एक पासवर्ड चुनें।",
+  "New password": "नया पासवर्ड",
+  "Save new password": "नया पासवर्ड सेव करें",
+  "Skip for now": "अभी छोड़ें",
+  "Enter your email above, then tap Forgot password.": "ऊपर अपना ईमेल लिखें, फिर “पासवर्ड भूल गए?” पर टैप करें।",
+  "Forgot password?": "पासवर्ड भूल गए?",
+  "If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.": "अगर {email} का कोई खाता है, तो हमने नया पासवर्ड चुनने का लिंक भेजा है। उसे इसी फ़ोन पर टैप करें।",
+  "Choose a password you have not used before.": "ऐसा पासवर्ड चुनें जो आपने पहले इस्तेमाल न किया हो।"
 }

@@ -30,10 +30,13 @@ function strength(pw: string) {
 export function EmailAuthForm({
   onSubmit,
   onBack,
+  onForgotPassword,
   initialMode = 'signup',
 }: {
   onSubmit: (mode: Mode, email: string, password: string) => Promise<EmailSignUpResult>;
   onBack: () => void;
+  // Sends the reset email for the address typed in. Without it the "Forgot password?" link is not shown.
+  onForgotPassword?: (email: string) => Promise<void>;
   initialMode?: Mode;
 }) {
   const c = useTheme();
@@ -47,6 +50,7 @@ export function EmailAuthForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<string | null>(null);
+  const [resetSentTo, setResetSentTo] = useState<string | null>(null);
   const passwordRef = useRef<ElementRef<typeof TextInput>>(null);
 
   // Segmented control: a pill that springs between the two labels.
@@ -106,6 +110,23 @@ export function EmailAuthForm({
     }
   };
 
+  const forgot = async () => {
+    if (busy || !onForgotPassword) return;
+    if (!looksLikeEmail(email)) return fail(t('Enter your email above, then tap Forgot password.'));
+    setBusy(true);
+    setError(null);
+    try {
+      await onForgotPassword(email);
+      haptic.success();
+      animateLayout();
+      setResetSentTo(email.trim());
+    } catch (e) {
+      fail((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const switchMode = (next: Mode) => {
     if (next === mode) return;
     haptic.select();
@@ -115,6 +136,7 @@ export function EmailAuthForm({
   };
 
   if (sentTo) return <CheckInbox email={sentTo} onBack={() => setSentTo(null)} />;
+  if (resetSentTo) return <CheckInbox email={resetSentTo} reset onBack={() => setResetSentTo(null)} />;
 
   const border = (field: 'email' | 'password') => (focus === field ? c.primary : c.control);
 
@@ -204,6 +226,12 @@ export function EmailAuthForm({
           </Pressable>
         </View>
 
+        {mode === 'signin' && onForgotPassword ? (
+          <View style={styles.forgot}>
+            <TextButton label={t('Forgot password?')} bold={false} onPress={forgot} />
+          </View>
+        ) : null}
+
         {mode === 'signup' && password.length > 0 ? (
           <Reveal lift={0} style={styles.meterRow}>
             <View style={styles.meter}>
@@ -256,7 +284,7 @@ export function EmailAuthForm({
 }
 
 // Shown when the project asks for the address to be confirmed before the first sign-in.
-function CheckInbox({ email, onBack }: { email: string; onBack: () => void }) {
+function CheckInbox({ email, onBack, reset = false }: { email: string; onBack: () => void; reset?: boolean }) {
   const c = useTheme();
   const { t } = useT();
   const pop = useRef(new Animated.Value(reduceMotion() ? 1 : 0)).current;
@@ -274,7 +302,9 @@ function CheckInbox({ email, onBack }: { email: string; onBack: () => void }) {
       </Animated.View>
       <AppText variant="headline" accessibilityRole="header">{t('Check your email')}</AppText>
       <AppText variant="subhead" style={styles.centerText}>
-        {t('We sent a link to {email}. Tap it on this phone to finish creating your account, then sign in here.', { email })}
+        {reset
+          ? t('If there is an account for {email}, we sent a link to choose a new password. Tap it on this phone.', { email })
+          : t('We sent a link to {email}. Tap it on this phone to finish creating your account, then sign in here.', { email })}
       </AppText>
       <TextButton label={t('Use a different email')} onPress={onBack} />
     </Reveal>
@@ -307,6 +337,7 @@ const styles = StyleSheet.create({
   meterLabel: { width: 62, textAlign: 'right' },
   submit: { minHeight: 52, borderRadius: radius.control, alignItems: 'center', justifyContent: 'center' },
   center: { alignItems: 'center' },
+  forgot: { alignItems: 'flex-end', marginTop: -4 },
   inbox: { alignItems: 'center', gap: 8, paddingVertical: 8 },
   badge: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center' },
   centerText: { textAlign: 'center' },
