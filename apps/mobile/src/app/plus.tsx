@@ -266,13 +266,16 @@ function WeekGrid() {
         <View style={styles.gridRow}>
           <AppText style={[styles.rowLabel, { color: c.primaryText }]}>Plus</AppText>
           {fills.map((v, i) => (
-            <View key={i} style={[styles.cell, { backgroundColor: c.tint, borderColor: c.primary }]}>
+            // No border on the clipping box itself: the border is drawn over the fill, so the green reaches the very edge
+            // instead of stopping a hair inside it.
+            <View key={i} style={[styles.cellPlus, { backgroundColor: c.tint }]}>
               <Animated.View
                 style={[styles.fill, { backgroundColor: c.primary, transformOrigin: '0% 50%', transform: [{ scaleX: v }] }]}
               />
               <Animated.View style={{ opacity: v }}>
                 <Ionicons name="checkmark" size={18} color={c.onPrimary} />
               </Animated.View>
+              <View pointerEvents="none" style={[styles.cellRim, { borderColor: c.primary }]} />
             </View>
           ))}
         </View>
@@ -452,6 +455,8 @@ const styles = StyleSheet.create({
   rowLabel: { width: 64, fontFamily: fonts.displaySemi, fontSize: 16 },
   gridRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   cell: { flex: 1, height: 42, borderRadius: 10, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  cellPlus: { flex: 1, height: 42, borderRadius: 10, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  cellRim: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, borderWidth: 1.5, borderRadius: 10 },
   locked: { borderStyle: 'dashed' },
   fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
   replay: { textAlign: 'center', marginTop: 2 },
