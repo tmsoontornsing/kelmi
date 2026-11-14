@@ -686,5 +686,15 @@
   "Usage counts": "จำนวนการใช้งาน",
   "Counts which parts of Kelmi get used": "นับว่าส่วนใดของ Kelmi ถูกใช้งาน",
   "Share usage counts": "แชร์จำนวนการใช้งาน",
-  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it isn’t linked to your account.": "ปิดอยู่จนกว่าคุณจะเปิด ไม่เคยรวมอาการแพ้ บันทึกอาหาร หรืออีเมลของคุณ และไม่เชื่อมโยงกับบัญชีของคุณ"
+  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it isn’t linked to your account.": "ปิดอยู่จนกว่าคุณจะเปิด ไม่เคยรวมอาการแพ้ บันทึกอาหาร หรืออีเมลของคุณ และไม่เชื่อมโยงกับบัญชีของคุณ",
+  "Start free trial": "เริ่มทดลองใช้ฟรี",
+  "{n} day": "{n} วัน",
+  "{n} days": "{n} วัน",
+  "{n} month": "{n} เดือน",
+  "{n} months": "{n} เดือน",
+  "{n} year": "{n} ปี",
+  "{n} years": "{n} ปี",
+  "{trial} free, then {price} per {period}": "ฟรี {trial} จากนั้น {price} ต่อ{period}",
+  "Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "การทดลองใช้ฟรี {trial} ของคุณเริ่มวันนี้ เมื่อสิ้นสุดแล้ว Kelmi Plus จะต่ออายุอัตโนมัติที่ {price} ต่อ{period} จนกว่าคุณจะยกเลิก ระบบจะเรียกเก็บเงินจาก Apple ID ของคุณ เว้นแต่คุณปิดการต่ออายุอัตโนมัติอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดการทดลอง จัดการหรือยกเลิกได้ทุกเมื่อในการตั้งค่าบัญชี App Store",
+  "Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "การทดลองใช้ฟรี {trial} ของคุณเริ่มวันนี้ เมื่อสิ้นสุดแล้ว Kelmi Plus จะต่ออายุอัตโนมัติที่ {price} ต่อ{period} จนกว่าคุณจะยกเลิก ระบบจะเรียกเก็บเงินจากบัญชี Google Play ของคุณ เว้นแต่คุณยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดการทดลอง จัดการหรือยกเลิกได้ทุกเมื่อใน Google Play ภายใต้การชำระเงินและการสมัครใช้งาน"
 }

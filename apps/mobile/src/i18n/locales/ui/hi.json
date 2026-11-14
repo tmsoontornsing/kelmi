@@ -686,5 +686,15 @@
   "Usage counts": "उपयोग की गिनती",
   "Counts which parts of Kelmi get used": "गिनती करता है कि Kelmi के कौन-से हिस्से इस्तेमाल होते हैं",
   "Share usage counts": "उपयोग की गिनती साझा करें",
-  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it isn’t linked to your account.": "जब तक आप चालू न करें, यह बंद रहता है। इसमें आपकी एलर्जी, खाने के नोट या ईमेल कभी शामिल नहीं होते, और यह आपके खाते से जुड़ा नहीं होता।"
+  "Off unless you turn it on. It never includes your allergies, food notes, or email, and it isn’t linked to your account.": "जब तक आप चालू न करें, यह बंद रहता है। इसमें आपकी एलर्जी, खाने के नोट या ईमेल कभी शामिल नहीं होते, और यह आपके खाते से जुड़ा नहीं होता।",
+  "Start free trial": "मुफ़्त ट्रायल शुरू करें",
+  "{n} day": "{n} दिन",
+  "{n} days": "{n} दिन",
+  "{n} month": "{n} महीना",
+  "{n} months": "{n} महीने",
+  "{n} year": "{n} साल",
+  "{n} years": "{n} साल",
+  "{trial} free, then {price} per {period}": "{trial} मुफ़्त, फिर {price} प्रति {period}",
+  "Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Apple ID unless you turn off auto-renew at least 24 hours before the trial ends. Manage or cancel any time in your App Store account settings.": "आपका {trial} का मुफ़्त ट्रायल आज शुरू होता है। इसके बाद, आपके रद्द करने तक Kelmi Plus अपने आप {price} प्रति {period} पर नवीनीकृत होता है। जब तक आप ट्रायल ख़त्म होने से कम से कम 24 घंटे पहले ऑटो-रिन्यू बंद नहीं करते, भुगतान आपकी Apple ID से लिया जाता है। App Store खाता सेटिंग में कभी भी प्रबंधित या रद्द करें।",
+  "Your {trial} free trial starts today. After it ends, Kelmi Plus renews automatically at {price} per {period} until you cancel. Payment is charged to your Google Play account unless you cancel at least 24 hours before the trial ends. Manage or cancel any time in Google Play, under Payments and subscriptions.": "आपका {trial} का मुफ़्त ट्रायल आज शुरू होता है। इसके बाद, आपके रद्द करने तक Kelmi Plus अपने आप {price} प्रति {period} पर नवीनीकृत होता है। जब तक आप ट्रायल ख़त्म होने से कम से कम 24 घंटे पहले रद्द नहीं करते, भुगतान आपके Google Play खाते से लिया जाता है। Google Play में “भुगतान और सदस्यताएँ” के अंतर्गत कभी भी प्रबंधित या रद्द करें।"
 }
