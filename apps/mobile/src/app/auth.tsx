@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppText } from '../components/AppText';
 import { IconButton, ProviderButton, TextButton } from '../components/Buttons';
 import { EmailAuthForm } from '../components/EmailAuthForm';
-import { Mascot } from '../components/Mascot';
+import { LivelyPip, LoginBackdrop } from '../components/LoginScene';
 import { HouseholdReceipt } from '../components/HouseholdReceipt';
 import { BudgetPreview } from '../components/BudgetPreview';
 import { dietAllowsMeat, DIETS, GOALS, MEAT_LEVELS } from '../data/mock';
@@ -186,6 +186,7 @@ export default function Auth() {
 
   return (
     <SafeAreaView edges={modalEdges} style={[styles.root, { backgroundColor: c.bg }]}>
+      {loginOnly ? <LoginBackdrop /> : null}
       <View style={styles.top}>
         <IconButton icon="close" label={t('Close, sign in later')} onPress={() => router.back()} />
       </View>
@@ -224,7 +225,7 @@ export default function Auth() {
             emailOpen ? null : (
               <View style={[styles.waiting, { backgroundColor: c.card, borderColor: c.line }]}>
                 <View style={styles.waitPip}>
-                  <Mascot pose="wave" size={110} decorative />
+                  <LivelyPip size={110} />
                 </View>
                 <AppText variant="eyebrow" color={c.muted}>
                   {t('Waiting for you')}
